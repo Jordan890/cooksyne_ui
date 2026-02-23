@@ -1,0 +1,125 @@
+# =========================
+
+# Angular build output
+
+# =========================
+
+/dist/
+/tmp/
+/out-tsc/
+/.angular/
+/.cache/
+
+# =========================
+
+# Node
+
+# =========================
+
+/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# (Optional)
+
+# Keep lockfile if you want reproducible builds
+
+#!package-lock.json
+
+# =========================
+
+# Environment files
+
+# =========================
+
+src/environments/environment.local.ts
+src/environments/environment.\*.local.ts
+
+# =========================
+
+# Logs
+
+# =========================
+
+logs
+\*.log
+
+# =========================
+
+# OS files
+
+# =========================
+
+.DS_Store
+Thumbs.db
+
+# =========================
+
+# IDEs
+
+# =========================
+
+.idea/
+.vscode/
+_.suo
+_.ntvs\*
+_.njsproj
+_.sln
+
+# =========================
+
+# Testing
+
+# =========================
+
+/coverage/
+/test-results/
+
+# =========================
+
+# Angular cache
+
+# =========================
+
+.angular/cache
+
+# =========================
+
+# Temporary files
+
+# =========================
+
+_.tmp
+_.temp
+\*.swp
+
+# =========================
+
+# Firebase / hosting (if used later)
+
+# =========================
+
+.firebase/
+.firebaserc
+
+# =========================
+
+# Storybook (if added later)
+
+# =========================
+
+storybook-static/
+
+# =========================
+
+# Misc
+
+# =========================
+
+.env
+.env.local
