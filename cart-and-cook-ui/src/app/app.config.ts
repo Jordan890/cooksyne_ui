@@ -6,6 +6,7 @@ import { provideAuth } from 'angular-auth-oidc-client';
 import { authConfig } from './auth/auth.config';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,5 +16,6 @@ export const appConfig: ApplicationConfig = {
       config: authConfig.config
     }),
     provideHttpClient(withInterceptors([authInterceptor])),
+    provideAnimationsAsync(),
   ]
 };
