@@ -1,0 +1,36 @@
+.shell {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 240px;
+  border-right: 1px solid #e3e7e5;
+  padding: 8px 0;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 600;
+  padding: 16px;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.title {
+  margin-left: 8px;
+  font-weight: 600;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.content {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
