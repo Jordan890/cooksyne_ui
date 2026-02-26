@@ -3,15 +3,38 @@
 }
 
 .sidenav {
-  width: 240px;
+  width: 16rem; /* 256px equivalent in rem */
   border-right: 1px solid #e3e7e5;
-  padding: 8px 0;
+  padding: 0.5rem 0;
+  /* prevent CSS width transitions conflicting with Material's transform animation */
+  transition: none;
 }
 
-.logo {
-  font-size: 18px;
+.logo-link {
+  font-size: clamp(0.95rem, 2.2vw, 1.125rem);
   font-weight: 600;
-  padding: 16px;
+  padding: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start; /* keep icon left and text visible */
+  gap: 0.5rem;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logo-text {
+  display: none; /* hidden by default on smallest screens */
+  margin-left: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.title-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .toolbar {
@@ -21,8 +44,14 @@
 }
 
 .title {
-  margin-left: 8px;
+  margin-left: 0.5rem;
   font-weight: 600;
+  font-size: clamp(1rem, 2.6vw, 1.25rem);
+}
+
+/* hide toolbar title when sidenav is open (desktop/tablet) */
+.title.hidden-on-sidenav-open {
+  display: none;
 }
 
 .spacer {
@@ -30,7 +59,62 @@
 }
 
 .content {
-  padding: 24px;
+  padding: 1.25rem;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+/* Mobile-first: collapse/hide large elements on small screens */
+@media (max-width: 767px) {
+  .sidenav {
+    width: 4rem; /* compact icon-only when closed */
+  }
+
+  .title {
+    display: none; /* avoid duplication and save horizontal space */
+  }
+
+  .content {
+    padding: 0.75rem;
+  }
+}
+
+/* When the compact sidenav is opened (overlay mode) show full labels */
+.sidenav.opened {
+  width: 16rem;
+}
+
+/* show logo text when sidenav is opened (overlay or expanded) */
+.sidenav.opened .logo-text {
+  display: inline-block;
+}
+
+/* Ensure the Material drawer transform is smooth when opening/closing */
+.mat-drawer, .mat-sidenav {
+  will-change: transform;
+}
+
+/* ensure nav items aren't clipped */
+.sidenav .mat-list-item {
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sidenav {
+    width: 12rem;
+  }
+  .logo-text {
+    display: inline-block; /* show label on tablet and up */
+  }
+}
+
+@media (min-width: 1024px) {
+  .sidenav {
+    width: 16rem;
+  }
+  .logo-text {
+    display: inline-block;
+  }
 }
