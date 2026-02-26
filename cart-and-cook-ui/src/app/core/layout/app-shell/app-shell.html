@@ -29,9 +29,19 @@
 
       <span class="spacer"></span>
 
-      <button mat-icon-button>
+      <button mat-icon-button [matMenuTriggerFor]="accountMenu">
         <mat-icon>account_circle</mat-icon>
       </button>
+
+      <mat-menu #accountMenu="matMenu">
+        @if (auth.isAuthenticated()) {
+          <button mat-menu-item (click)="auth.logout()">Logout</button>
+        }
+
+        @if (!auth.isAuthenticated()) {
+          <button mat-menu-item (click)="auth.login()">Login</button>
+        }
+      </mat-menu>
 
     </mat-toolbar>
 

@@ -1,4 +1,4 @@
-import { Injectable, Signal, signal } from '@angular/core';
+import { computed, Injectable, Signal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { OidcSecurityService, UserDataResult } from 'angular-auth-oidc-client';
 
