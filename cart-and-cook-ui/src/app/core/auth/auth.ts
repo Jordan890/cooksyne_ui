@@ -8,7 +8,7 @@ import { OidcSecurityService, UserDataResult } from 'angular-auth-oidc-client';
 export class AuthService {
   // Reactive signals
   public isAuthenticated = signal(false);
-  public user = signal<UserDataResult | null>(null);
+  public user = signal<any | null>(null);
   public accessToken!: Signal<string>;
 
   constructor(private oidc: OidcSecurityService) {

@@ -1,12 +1,15 @@
-<mat-toolbar color="primary">
-  <span>Cart & Cook</span>
+<mat-toolbar>
+  <span class="brand">Cart & Cook</span>
 
   <span class="spacer"></span>
 
-  <button mat-button>Recipes</button>
-  <button mat-button>Grocery Lists</button>
+  @if (auth.isAuthenticated()) {
+    <span class="user">
+      {{ auth.user()?.name || auth.user()?.email }}
+    </span>
 
-  <button mat-raised-button color="accent">
-    Login
-  </button>
+    <button mat-button (click)="auth.logout()">Logout</button>
+  } @else {
+    <button mat-button (click)="auth.login()">Login</button>
+  }
 </mat-toolbar>
