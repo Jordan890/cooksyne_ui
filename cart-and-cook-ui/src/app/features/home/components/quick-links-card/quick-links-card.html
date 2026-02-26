@@ -1,7 +1,30 @@
 <mat-card class="quick-links-card">
   <h2>Quick Links</h2>
-  <div class="buttons">
-    <button mat-raised-button color="primary" routerLink="/recipes">Recipes</button>
-    <button mat-raised-button color="accent" routerLink="/grocery-lists">Grocery Lists</button>
+
+  <section class="section grocery-lists">
+    <h3>Recent Grocery Lists</h3>
+    <div class="lists">
+      <a class="card-link list-card" *ngFor="let g of recentGroceryLists()" [routerLink]="['/grocery-lists', g.id]">
+        <div class="name">{{ g.name }}</div>
+        <div class="meta">{{ g.itemCount }} items • {{ g.date }}</div>
+      </a>
+    </div>
+  </section>
+
+  <section class="section recipes">
+    <h3>Favorited Recipes</h3>
+    <div class="recipes-row">
+      <a class="card-link recipe-card" *ngFor="let r of favoriteRecipes()" [routerLink]="['/recipes', r.id]">
+        <div class="thumb" aria-hidden="true"></div>
+        <div class="title">{{ r.title }}</div>
+        <div class="meta">{{ r.minutes }} min</div>
+      </a>
+    </div>
+  </section>
+
+  <div class="actions">
+    <button mat-stroked-button routerLink="/grocery-lists">View All Lists</button>
+    <button mat-stroked-button routerLink="/recipes">Browse Recipes</button>
   </div>
+
 </mat-card>
