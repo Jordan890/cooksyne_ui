@@ -1,0 +1,19 @@
+@use '@angular/material' as mat;
+
+/* ===== Define theme ===== */
+
+$cart-and-cook-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$green-palette,
+    tertiary: mat.$orange-palette,
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+/* ===== Apply theme ===== */
+
+@include mat.core();
+@include mat.all-component-themes($cart-and-cook-theme);
