@@ -1,4 +1,6 @@
 <div class="page-container">
   <home-welcome-card></home-welcome-card>
-  <home-quick-links-card></home-quick-links-card>
+  @if (auth.isAuthenticated()) {
+    <home-quick-links-card></home-quick-links-card>
+  }
 </div>
