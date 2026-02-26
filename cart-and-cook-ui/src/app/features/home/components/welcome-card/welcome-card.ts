@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { AuthService } from '../../../../core/auth/auth';
 
 @Component({
   selector: 'home-welcome-card',
@@ -8,4 +9,6 @@ import { MatCardModule } from '@angular/material/card';
   templateUrl: './welcome-card.html',
   styleUrls: ['./welcome-card.scss'],
 })
-export class WelcomeCard {}
+export class WelcomeCard {
+  constructor(public auth: AuthService) {}
+}
