@@ -1,4 +1,4 @@
-<mat-card class="welcome-card">
+<mat-card class="welcome-card" [class.logged-in]="auth.isAuthenticated()">
   @if (auth.isAuthenticated()) {
     <h1>Welcome, {{ auth.user()?.name }}</h1>
     <p>Manage your recipes and grocery lists all in one place.</p>

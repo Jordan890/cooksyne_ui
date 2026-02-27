@@ -1,23 +1,27 @@
 <mat-card class="quick-links-card">
-  
 
   <section class="section grocery-lists">
     <h3>Recent Grocery Lists</h3>
     <div class="lists">
       <a class="card-link list-card" *ngFor="let g of recentGroceryLists()" [routerLink]="['/grocery-lists', g.id]">
-        <div class="name">{{ g.name }}</div>
-        <div class="meta">{{ g.itemCount }} items • {{ g.date }}</div>
+        <span class="list-icon" aria-hidden="true">🛒</span>
+        <div class="list-info">
+          <div class="name">{{ g.name }}</div>
+          <div class="meta">{{ g.itemCount }} items · {{ g.date }}</div>
+        </div>
       </a>
     </div>
   </section>
 
   <section class="section recipes">
     <h3>Favorited Recipes</h3>
-    <div class="recipes-row">
+    <div class="recipes-grid">
       <a class="card-link recipe-card" *ngFor="let r of favoriteRecipes()" [routerLink]="['/recipes', r.id]">
         <div class="thumb" aria-hidden="true"></div>
-        <div class="title">{{ r.title }}</div>
-        <div class="meta">{{ r.minutes }} min</div>
+        <div class="recipe-info">
+          <div class="title">{{ r.title }}</div>
+          <div class="meta">{{ r.minutes }} min</div>
+        </div>
       </a>
     </div>
   </section>

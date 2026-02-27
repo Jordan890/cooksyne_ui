@@ -1,56 +1,47 @@
 @use '../../../../../styles/breakpoints' as *;
 
-/* ===== Base (mobile-first — stacked column) ===== */
+/* ===== Host ===== */
+
+:host {
+  display: block;
+}
+
+/* ===== Card shell ===== */
 
 .quick-links-card {
-  --card-radius: 1rem;
-  --gap: 1rem;
-  --pad: 1rem;
-  border-radius: var(--card-radius);
-  padding: var(--pad);
+  border-radius: 1rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  gap: var(--gap);
+  gap: 1.25rem;
 }
 
-.buttons {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.quick-links-card h2 {
-  margin: 0 0 0.75rem 0;
-  font-weight: 600;
-  font-size: clamp(1.125rem, 2.4vw, 1.5rem);
-}
+/* ===== Sections ===== */
 
 .section {
   width: 100%;
 }
 
-.grocery-lists .lists {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: flex-start;
-  overflow-x: auto;
+.section h3 {
+  margin: 0 0 0.75rem 0;
+  font-weight: 600;
 }
+
+/* ===== Shared card-link styles ===== */
 
 .card-link {
   display: block;
   color: inherit;
   text-decoration: none;
-  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+  transition: transform 160ms ease, box-shadow 160ms ease;
   will-change: transform;
   outline: none;
 }
 
 .card-link:hover,
 .card-link:focus-visible {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
 }
 
 .card-link:focus-visible {
@@ -58,114 +49,332 @@
   outline-offset: 2px;
 }
 
-.card-link:hover .list-card,
-.card-link:hover .recipe-card {
-  background-color: rgba(33,150,243,0.03);
+/* ============================================================
+   GROCERY LIST CARDS
+   – grid layout, icon + info side by side
+   ============================================================ */
+
+.lists {
+  display: grid;
+  grid-template-columns: 1fr;          /* XS: single column, full width */
+  gap: 0.75rem;
 }
 
 .list-card {
-  padding: 0.75rem;
-  border-radius: 0.5rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
   background: rgba(0,0,0,0.03);
-  min-width: 14rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.recipes-row {
-  display: flex;
+.list-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.list-info .name {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin-bottom: 0.125rem;
+}
+
+.list-info .meta {
+  font-size: 0.8125rem;
+  color: #666;
+}
+
+/* ============================================================
+   RECIPE CARDS
+   – grid layout, thumb + info stacked inside each card
+   ============================================================ */
+
+.recipes-grid {
+  display: grid;
+  grid-template-columns: 1fr;          /* XS: single column */
   gap: 0.75rem;
-  overflow-x: auto;
-  padding-bottom: 6px;
 }
 
 .recipe-card {
-  min-width: 12.5rem;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
+  padding: 0;
+  border-radius: 0.75rem;
   background: rgba(0,0,0,0.04);
-  flex: 0 0 auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 }
 
 .recipe-card .thumb {
   width: 100%;
-  height: 6.25rem;
+  height: 7rem;
   background: linear-gradient(135deg, #e0e0e0 25%, #f5f5f5 100%);
-  border-radius: 0.375rem;
 }
 
+.recipe-info {
+  padding: 0.625rem 0.75rem;
+}
+
+.recipe-info .title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.125rem;
+}
+
+.recipe-info .meta {
+  font-size: 0.8125rem;
+  color: #666;
+}
+
+/* ===== Actions ===== */
+
 .actions {
-  width: 100%;
   display: flex;
   gap: 0.75rem;
   justify-content: center;
-  margin-top: 0.5rem;
+  flex-shrink: 0;
 }
 
-/* ===== SM: wider cards, no overflow ===== */
+/* ============================================================
+   XS – PORTRAIT  (0-599 portrait)
+   Lots of height: stack everything, 1 col, let items breathe
+   ============================================================ */
 
-@include sm-up {
+@include xs-portrait {
+  .lists {
+    grid-template-columns: 1fr;
+  }
+
+  .list-card {
+    padding: 1rem;
+  }
+
+  .recipes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recipe-card .thumb {
+    height: 8rem;
+  }
+}
+
+/* ============================================================
+   XS – LANDSCAPE  (0-599 landscape)
+   Very short: horizontal row for both, compact
+   ============================================================ */
+
+@include xs-landscape {
+  .quick-links-card {
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .lists {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .list-card {
+    padding: 0.625rem;
+  }
+
+  .list-icon {
+    font-size: 1.25rem;
+  }
+
+  .recipes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .recipe-card .thumb {
+    height: 4.5rem;
+  }
+
+  .section h3 {
+    font-size: 0.9375rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* ============================================================
+   SM – PORTRAIT  (600-959 portrait — Surface Pro 7 portrait,
+   large phones portrait)
+   Tall screen: go single-column vertical with generous sizing
+   to fill the height naturally, like the MD portrait layout.
+   ============================================================ */
+
+@include sm-portrait {
+  .quick-links-card {
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
+
+  /* Grocery lists: single column, large cards */
+  .lists {
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .list-card {
+    padding: 1.125rem 1.25rem;
+  }
+
+  .list-icon {
+    font-size: 1.75rem;
+  }
+
+  .list-info .name {
+    font-size: 1rem;
+  }
+
+  .list-info .meta {
+    font-size: 0.875rem;
+  }
+
+  /* Recipes: single column, big thumbnails */
+  .recipes-grid {
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .recipe-card .thumb {
+    height: 12rem;
+  }
+
+  .recipe-info {
+    padding: 0.75rem 1rem;
+  }
+
+  .recipe-info .title {
+    font-size: 1rem;
+  }
+
+  .recipe-info .meta {
+    font-size: 0.875rem;
+  }
+
+  .section h3 {
+    font-size: 1.125rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* ============================================================
+   SM – LANDSCAPE  (600-959 landscape)
+   Short & wide: 3-col everything
+   ============================================================ */
+
+@include sm-landscape {
+  .quick-links-card {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .lists {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .recipes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .recipe-card .thumb {
+    height: 5.5rem;
+  }
+}
+
+/* ============================================================
+   MD – PORTRAIT  (960-1279 portrait — iPad Pro portrait)
+   Very tall screen: go vertical like mobile but with generous
+   sizing so content fills the viewport naturally.
+   ============================================================ */
+
+@include md-portrait {
+  .quick-links-card {
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  /* Grocery lists: single column, large cards */
+  .lists {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .list-card {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .list-icon {
+    font-size: 2rem;
+  }
+
+  .list-info .name {
+    font-size: 1.0625rem;
+  }
+
+  .list-info .meta {
+    font-size: 0.9375rem;
+  }
+
+  /* Recipes: single column, hero-style thumbnails */
+  .recipes-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .recipe-card .thumb {
+    height: 14rem;
+  }
+
+  .recipe-info {
+    padding: 0.875rem 1rem;
+  }
+
+  .recipe-info .title {
+    font-size: 1.0625rem;
+  }
+
+  .recipe-info .meta {
+    font-size: 0.9375rem;
+  }
+
+  .section h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.875rem;
+  }
+}
+
+/* ============================================================
+   MD – LANDSCAPE  (960-1279 landscape — iPad landscape)
+   Wide, shorter: 3-col both, compact vertical
+   ============================================================ */
+
+@include md-landscape {
   .quick-links-card {
     padding: 1.25rem;
     gap: 1rem;
   }
 
-  .grocery-lists .lists {
-    overflow-x: visible;
-    flex-wrap: wrap;
+  .lists {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
   }
 
-  .recipes-row {
-    gap: 1rem;
+  .recipes-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
   }
 
-  .actions {
-    justify-content: space-between;
-  }
-}
-
-/* ===== MD: two-column layout ===== */
-
-@include md-up {
-  .quick-links-card {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
-    align-items: start;
-  }
-
-  .section {
-    width: auto;
-  }
-
-  .grocery-lists {
-    grid-column: 1 / -1;
-  }
-
-  .recipes {
-    grid-column: 1 / -1;
-  }
-
-  .grocery-lists .lists {
-    flex-wrap: nowrap;
-    gap: 1rem;
-    overflow-x: auto;
-  }
-
-  .list-card {
-    min-width: 12rem;
-    flex: 0 0 12rem;
-    max-width: none;
-  }
-
-  .actions {
-    grid-column: 1 / -1;
-    justify-content: center;
+  .recipe-card .thumb {
+    height: 6.5rem;
   }
 }
 
-/* ===== LG: more spacing, bigger thumb ===== */
+/* ============================================================
+   LG  (1280-1919 — desktops)
+   Grocery lists in a row, recipes in a row
+   ============================================================ */
 
 @include lg {
   .quick-links-card {
@@ -173,12 +382,24 @@
     gap: 1.5rem;
   }
 
+  .lists {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .recipes-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
   .recipe-card .thumb {
     height: 7.5rem;
   }
 }
 
-/* ===== XL: generous spacing ===== */
+/* ============================================================
+   XL  (1920+ — large desktops)
+   ============================================================ */
 
 @include xl {
   .quick-links-card {
@@ -186,16 +407,33 @@
     gap: 1.75rem;
   }
 
-  .recipe-card .thumb {
-    height: 8.75rem;
-  }
-
-  .recipe-card {
-    min-width: 15rem;
+  .lists {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
   }
 
   .list-card {
-    min-width: 14rem;
-    flex-basis: 14rem;
+    padding: 1.25rem;
+  }
+
+  .list-icon {
+    font-size: 1.75rem;
+  }
+
+  .recipes-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .recipe-card .thumb {
+    height: 9rem;
+  }
+
+  .recipe-info {
+    padding: 0.75rem 1rem;
+  }
+
+  .actions {
+    justify-content: center;
   }
 }

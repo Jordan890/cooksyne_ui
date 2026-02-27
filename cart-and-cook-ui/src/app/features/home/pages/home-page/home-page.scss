@@ -1,17 +1,32 @@
 @use '../../../../../styles/breakpoints' as *;
 
+// toolbar is ~64px on mobile, ~64px on desktop
+$toolbar-height: 64px;
+
+:host {
+  display: block;
+}
+
 .page-container {
-  min-height: calc(100dvh - 140px);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   gap: 1rem;
 }
 
-/* SM-up: less toolbar overhead */
+/*
+ * On phones & tablets (XS / SM / MD) the page should fill the viewport
+ * so the welcome card can stretch and eliminate dead whitespace.
+ */
+@include md-down {
+  .page-container {
+    min-height: calc(100dvh - #{$toolbar-height});
+  }
+}
+
+/* SM-up: slightly larger gap */
 @include sm-up {
   .page-container {
-    min-height: calc(100dvh - 120px);
     gap: 1.25rem;
   }
 }
@@ -20,6 +35,13 @@
 @include md-up {
   .page-container {
     gap: 1.5rem;
+  }
+}
+
+/* LG-up: let content be intrinsic height (no forced stretch) */
+@include lg-up {
+  .page-container {
+    min-height: auto;
   }
 }
 

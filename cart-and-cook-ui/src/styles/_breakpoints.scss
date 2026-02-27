@@ -74,3 +74,39 @@ $bp-xl:  1920px;
 @mixin lg-down {
   @media (max-width: #{$bp-xl - 1}) { @content; }
 }
+
+// ---- orientation mixins ----
+
+@mixin portrait {
+  @media (orientation: portrait) { @content; }
+}
+
+@mixin landscape {
+  @media (orientation: landscape) { @content; }
+}
+
+// ---- combined device + orientation helpers ----
+
+@mixin xs-portrait {
+  @media (max-width: #{$bp-sm - 1}) and (orientation: portrait) { @content; }
+}
+
+@mixin xs-landscape {
+  @media (max-width: #{$bp-sm - 1}) and (orientation: landscape) { @content; }
+}
+
+@mixin sm-portrait {
+  @media (min-width: #{$bp-sm}) and (max-width: #{$bp-md - 1}) and (orientation: portrait) { @content; }
+}
+
+@mixin sm-landscape {
+  @media (min-width: #{$bp-sm}) and (max-width: #{$bp-md - 1}) and (orientation: landscape) { @content; }
+}
+
+@mixin md-portrait {
+  @media (min-width: #{$bp-md}) and (max-width: #{$bp-lg - 1}) and (orientation: portrait) { @content; }
+}
+
+@mixin md-landscape {
+  @media (min-width: #{$bp-md}) and (max-width: #{$bp-lg - 1}) and (orientation: landscape) { @content; }
+}

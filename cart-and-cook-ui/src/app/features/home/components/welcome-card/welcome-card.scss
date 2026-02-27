@@ -2,12 +2,43 @@
 
 /* ===== Base (mobile-first) ===== */
 
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;         /* stretch to fill parent on mobile/tablet (logged-out) */
+}
+
+/* When logged in the card is just a small banner — never stretch */
+:host-context(.page-container) :host {
+  /* overridden below via .logged-in */
+}
+
+/* On desktop+ stop stretching – content-height only */
+@include lg-up {
+  :host {
+    flex: 0 1 auto;
+  }
+}
+
 .welcome-card {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;        /* parent gap handles spacing */
   text-align: center;
   background-color: #e8f5e9;
   border-radius: 16px;
   padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;          /* grow into the host */
+}
+
+/* ===== Logged-in compact banner ===== */
+.welcome-card.logged-in {
+  flex: 0 0 auto;          /* don't grow — just fit content */
+  padding: 1.25rem 1rem;
+}
+
+:host:has(.logged-in) {
+  flex: 0 0 auto;          /* stop the host from stretching too */
 }
 
 .welcome-card h1 {
@@ -20,12 +51,15 @@
   font-size: 1rem;
 }
 
-/* Logged-out specific styles */
+/* ===== Logged-out wrapper – fills available space ===== */
+
 .welcome-card .logged-out {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   align-items: center;
+  flex: 1 1 auto;
+  justify-content: center;  /* vertically center content when there's extra room */
 }
 
 .welcome-card .subtext {
@@ -34,18 +68,32 @@
 }
 
 .welcome-card .cta {
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
 }
 
-/* ===== Recipe grid (mobile-first: single column) ===== */
+/* ===== Samples section – also grows to absorb space ===== */
+
+.welcome-card .samples {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.welcome-card .samples h2 {
+  margin: 0 0 0.5rem 0;
+}
+
+/* ===== Recipe grid (mobile-first: 2 columns) ===== */
 
 .welcome-card .recipes {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
   width: 100%;
   max-width: 860px;
-  margin-top: 0.5rem;
+  flex: 1 1 auto;          /* let grid grow so images fill height */
 }
 
 .welcome-card .recipe {
@@ -54,11 +102,14 @@
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
   text-align: left;
+  display: flex;
+  flex-direction: column;
 }
 
 .welcome-card .recipe img {
   width: 100%;
-  height: 80px;
+  min-height: 80px;
+  flex: 1 1 auto;         /* image stretches to fill extra card height */
   object-fit: cover;
   display: block;
 }
@@ -68,6 +119,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .welcome-card .recipe .name {
@@ -83,15 +135,16 @@
   border-radius: 12px;
 }
 
-/* ===== Feature cards (hidden on XS) ===== */
+/* ===== Feature cards (hidden on XS by default) ===== */
 
 .welcome-card .features {
-  display: none; /* hidden on XS */
+  display: none;
   gap: 0.75rem;
   margin-top: 0.75rem;
   width: 100%;
   max-width: 720px;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .welcome-card .feature-card {
@@ -104,33 +157,120 @@
   font-size: 0.8125rem;
 }
 
-/* ===== XS extras: hide 4th recipe, full-width CTA ===== */
+/* ================================================================
+   XS  –  PORTRAIT  (phones held upright, 0-599px)
+   Tall & narrow: stack 2-col grid, let images grow vertically
+   ================================================================ */
 
-@include xs {
-  .welcome-card .recipes .recipe:nth-child(4) {
-    display: none;
+@include xs-portrait {
+  .welcome-card .recipes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .welcome-card .recipe img {
+    min-height: 90px;
   }
 
   .welcome-card .cta button {
     width: 100%;
     max-width: 320px;
   }
+
+  // show feature cards stacked vertically since we have the height
+  .welcome-card .features {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .welcome-card .feature-card {
+    width: 100%;
+    max-width: 280px;
+    min-width: 0;
+  }
 }
 
-/* ===== SM: 2-column recipe grid, show features ===== */
+/* ================================================================
+   XS  –  LANDSCAPE  (phones on their side, 0-599px)
+   Very short viewport, lots of width: go horizontal, compact
+   ================================================================ */
 
-@include sm {
+@include xs-landscape {
+  .welcome-card {
+    padding: 0.75rem 1rem;
+  }
+
+  .welcome-card h1 {
+    font-size: 1.125rem;
+  }
+
+  .welcome-card .subtext {
+    font-size: 0.8125rem;
+  }
+
+  .welcome-card .logged-out {
+    gap: 0.5rem;
+  }
+
+  .welcome-card .samples h2 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  // 4-column single row – everything visible, compact
+  .welcome-card .recipes {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+
+  .welcome-card .recipe img {
+    min-height: 50px;
+    max-height: 70px;
+  }
+
+  .welcome-card .recipe .meta {
+    padding: 0.25rem 0.5rem;
+  }
+
+  .welcome-card .recipe .name {
+    font-size: 0.75rem;
+  }
+
+  .welcome-card .recipe .badge {
+    display: none;  /* save horizontal space */
+  }
+
+  .welcome-card .features {
+    display: none;
+  }
+
+  .welcome-card .cta button {
+    width: auto;
+    padding: 0 1.5rem;
+  }
+}
+
+/* ================================================================
+   SM  –  PORTRAIT  (Surface Pro 7, small tablets upright, 600-959px)
+   Tall screen: single-column with large images to fill height.
+   ================================================================ */
+
+@include sm-portrait {
   .welcome-card {
     padding: 1.5rem;
   }
 
   .welcome-card .recipes {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
+    gap: 0.875rem;
   }
 
   .welcome-card .recipe img {
-    height: 90px;
+    min-height: 120px;
+  }
+
+  .welcome-card .recipe .name {
+    font-size: 0.9375rem;
   }
 
   .welcome-card .features {
@@ -139,29 +279,74 @@
   }
 
   .welcome-card .feature-card {
-    min-width: 140px;
-    font-size: 0.8125rem;
+    min-width: 160px;
+    font-size: 0.875rem;
+    padding: 0.875rem 1rem;
   }
 }
 
-/* ===== MD: 3-column recipe grid, larger images ===== */
+/* ================================================================
+   SM  –  LANDSCAPE  (phones landscape / small tablets landscape)
+   ================================================================ */
 
-@include md {
+@include sm-landscape {
+  .welcome-card {
+    padding: 1rem 1.25rem;
+  }
+
+  .welcome-card .logged-out {
+    gap: 0.75rem;
+  }
+
+  .welcome-card .recipes {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.625rem;
+  }
+
+  .welcome-card .recipe img {
+    min-height: 60px;
+    max-height: 90px;
+  }
+
+  .welcome-card .features {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .welcome-card .feature-card {
+    min-width: 130px;
+    font-size: 0.8125rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* ================================================================
+   MD  –  PORTRAIT  (iPad portrait, small laptops, 960-1279px)
+   Generous vertical space: 2×2 grid with large images fills the
+   height nicely and avoids an orphaned 4th card on a second row.
+   ================================================================ */
+
+@include md-portrait {
   .welcome-card {
     padding: 2rem 1.5rem;
   }
 
   .welcome-card .recipes {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.875rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    max-width: 680px;
   }
 
   .welcome-card .recipe img {
-    height: 100px;
+    min-height: 140px;
   }
 
   .welcome-card .recipe .name {
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
+  }
+
+  .welcome-card .recipe .badge {
+    font-size: 0.75rem;
   }
 
   .welcome-card .features {
@@ -174,21 +359,69 @@
   }
 }
 
-/* ===== LG: full 4-column grid, all features visible ===== */
+/* ================================================================
+   MD  –  LANDSCAPE  (iPad landscape, 960-1279px)
+   Less height, lots of width: 4-col grid, compact vertical
+   ================================================================ */
+
+@include md-landscape {
+  .welcome-card {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .welcome-card .logged-out {
+    gap: 0.75rem;
+  }
+
+  .welcome-card .recipes {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.875rem;
+  }
+
+  .welcome-card .recipe img {
+    min-height: 80px;
+    max-height: 110px;
+  }
+
+  .welcome-card .recipe .name {
+    font-size: 0.875rem;
+  }
+
+  .welcome-card .features {
+    display: flex;
+  }
+
+  .welcome-card .feature-card {
+    min-width: 160px;
+    font-size: 0.875rem;
+    padding: 0.625rem 1rem;
+  }
+}
+
+/* ================================================================
+   LG  (1280-1919px)  – desktop, orientation doesn't matter much
+   ================================================================ */
 
 @include lg {
   .welcome-card {
     padding: 2rem;
+    flex: 0 1 auto;  /* stop stretching on desktop */
+  }
+
+  .welcome-card .logged-out {
+    justify-content: flex-start;
   }
 
   .welcome-card .recipes {
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
     max-width: 960px;
+    flex: 0 0 auto;
   }
 
   .welcome-card .recipe img {
-    height: 110px;
+    min-height: 110px;
+    flex: 0 0 auto;
   }
 
   .welcome-card .features {
@@ -202,22 +435,31 @@
   }
 }
 
-/* ===== XL: extra-large images, more spacing ===== */
+/* ================================================================
+   XL  (1920px+)  – extra-large desktops
+   ================================================================ */
 
 @include xl {
   .welcome-card {
     padding: 2.5rem;
     border-radius: 20px;
+    flex: 0 1 auto;
+  }
+
+  .welcome-card .logged-out {
+    justify-content: flex-start;
   }
 
   .welcome-card .recipes {
     grid-template-columns: repeat(4, 1fr);
     gap: 1.25rem;
     max-width: 1100px;
+    flex: 0 0 auto;
   }
 
   .welcome-card .recipe img {
-    height: 130px;
+    min-height: 130px;
+    flex: 0 0 auto;
   }
 
   .welcome-card .features {
