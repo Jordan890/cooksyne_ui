@@ -1,4 +1,4 @@
-<mat-card class="recipe-card" tabindex="0" role="article">
+<mat-card class="recipe-card" tabindex="0" role="article" (click)="open()" (keydown.enter)="open()">
   <mat-card-header>
     <mat-card-title class="recipe-title">{{ recipe().title }}</mat-card-title>
     <mat-card-subtitle class="recipe-meta">
@@ -14,7 +14,7 @@
   </mat-card-content>
 
   <mat-card-actions align="end">
-    <!-- extension point: favourite / edit / delete buttons go here -->
-    <button mat-button>View</button>
+    <!-- extension point: favourite / delete buttons go here -->
+    <button mat-button color="primary" (click)="open(); $event.stopPropagation()">Edit</button>
   </mat-card-actions>
 </mat-card>

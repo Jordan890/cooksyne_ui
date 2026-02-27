@@ -1,0 +1,91 @@
+@use '../../../../../styles/breakpoints' as *;
+
+/* ── Shell ── */
+.form-shell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+}
+
+.save-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* ── Toolbar ── */
+.toolbar {
+  background: transparent;
+  padding: 0;
+  gap: 0.5rem;
+}
+.toolbar-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.spacer { flex: 1 1 auto; }
+
+/* ── Form body ── */
+.form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+/* ── Sections ── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.section-title {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant, #444);
+}
+
+/* ── Full-width fields ── */
+.full-width { width: 100%; }
+
+/* ── Metadata two-up on ≥ sm ── */
+.meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  @include sm-up {
+    flex-direction: row;
+    gap: 1rem;
+
+    mat-form-field { flex: 1; }
+  }
+}
+
+/* ── Ingredient rows ── */
+.ingredient-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.ing-name { flex: 2; }
+.ing-qty  { flex: 1; }
+
+.add-ing-btn {
+  align-self: flex-start;
+}
+
+/* ── Responsive tweaks ── */
+@include xs {
+  .toolbar {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  .ingredient-row {
+    flex-wrap: wrap;
+
+    .ing-name,
+    .ing-qty { flex: 1 1 100%; }
+  }
+}

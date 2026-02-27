@@ -6,7 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../../../core/auth/auth';
-import { RecipeCard, Recipe } from '../../components/recipe-card/recipe-card';
+import { RecipeCard } from '../../components/recipe-card/recipe-card';
+import { Recipe } from '../../models/recipe.model';
 
 @Component({
   selector: 'app-recipes-page',
