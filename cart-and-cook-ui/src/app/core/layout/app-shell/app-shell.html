@@ -2,14 +2,15 @@
 
   <!-- Side Navigation -->
   <mat-sidenav
+    #drawer="matSidenav"
     class="sidenav"
     [class.opened]="sidenavOpen()"
     [mode]="sidenavMode()"
     [opened]="sidenavOpen()"
+    (openedChange)="onOpenedChange($event)"
   >
     <a routerLink="/" class="logo-link" title="Cart & Cook" (click)="isMobile() && sidenavOpen.set(false)">
       <mat-icon aria-hidden="false" aria-label="Cart & Cook icon">local_grocery_store</mat-icon>
-      <span class="logo-text">Cart & Cook</span>
     </a>
 
     <mat-nav-list>
@@ -32,7 +33,7 @@
         <mat-icon>menu</mat-icon>
       </button>
 
-      <a routerLink="/" class="title title-link" [class.hidden-on-sidenav-open]="sidenavOpen()" (click)="isMobile() && sidenavOpen.set(false)">Cart & Cook</a>
+      <a routerLink="/" class="title title-link" (click)="isMobile() && sidenavOpen.set(false)">Cart & Cook</a>
 
       <span class="spacer"></span>
 

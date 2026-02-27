@@ -15,3 +15,152 @@
   margin: 0;
   font-size: 16px;
 }
+
+/* Logged-out specific styles */
+.welcome-card .logged-out {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.welcome-card .subtext {
+  color: #2e2e2e;
+  max-width: 560px;
+}
+
+.welcome-card .cta {
+  margin-top: 8px;
+}
+
+.welcome-card .recipes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  width: 100%;
+  max-width: 860px;
+  margin-top: 8px;
+}
+
+.welcome-card .recipe {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  text-align: left;
+}
+
+.welcome-card .recipe img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  display: block;
+}
+
+.welcome-card .recipe .meta {
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.welcome-card .recipe .name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.welcome-card .recipe .badge {
+  font-size: 11px;
+  color: #555;
+  background: rgba(0,0,0,0.04);
+  padding: 4px 6px;
+  border-radius: 12px;
+}
+
+.welcome-card .features {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  width: 100%;
+  max-width: 720px;
+  justify-content: center;
+}
+
+.welcome-card .feature-card {
+  background: rgba(255,255,255,0.9);
+  padding: 12px 16px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  min-width: 180px;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 800px) {
+  .welcome-card {
+    padding: 24px 16px;
+  }
+
+  .welcome-card .recipes {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .welcome-card .recipe img {
+    height: 90px;
+  }
+
+  .welcome-card .feature-card {
+    min-width: 140px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-card {
+    padding: 16px 12px;
+    border-radius: 12px;
+  }
+
+  .welcome-card h1 {
+    font-size: 20px;
+  }
+
+  .welcome-card .subtext {
+    font-size: 14px;
+  }
+
+  .welcome-card .recipes {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome-card .recipe img {
+    height: 80px;
+  }
+
+  .welcome-card .recipe .name {
+    font-size: 13px;
+  }
+
+  .welcome-card .features {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .welcome-card .feature-card {
+    width: 100%;
+    min-width: 0;
+    padding: 10px;
+  }
+
+  .welcome-card .cta button {
+    width: 100%;
+    max-width: 320px;
+  }
+  /* show spicy tacos, roasted veggie bowl, and creamy pasta on small screens; hide salad */
+  .welcome-card .recipes .recipe:nth-child(4) {
+    display: none;
+  }
+}

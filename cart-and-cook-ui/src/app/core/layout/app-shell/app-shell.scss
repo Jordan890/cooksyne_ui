@@ -49,10 +49,7 @@
   font-size: clamp(1rem, 2.6vw, 1.25rem);
 }
 
-/* hide toolbar title when sidenav is open (desktop/tablet) */
-.title.hidden-on-sidenav-open {
-  display: none;
-}
+/* removed: toolbar title should remain visible even when sidenav opens */
 
 .spacer {
   flex: 1;
@@ -67,7 +64,8 @@
 /* Mobile-first: collapse/hide large elements on small screens */
 @media (max-width: 767px) {
   .sidenav {
-    width: 4rem; /* compact icon-only when closed */
+    /* keep full width even on small screens to avoid a visible width jump when opening */
+    width: 9rem;
   }
 
   .title {
@@ -81,7 +79,7 @@
 
 /* When the compact sidenav is opened (overlay mode) show full labels */
 .sidenav.opened {
-  width: 16rem;
+  width: 9rem;
 }
 
 /* show logo text when sidenav is opened (overlay or expanded) */
