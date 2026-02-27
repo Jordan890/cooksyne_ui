@@ -1,0 +1,76 @@
+// ============================================================
+// Responsive Breakpoint System
+// ============================================================
+//
+// Breakpoint ranges:
+//   XS (extra small) :   0 – 599px   → small phones
+//   SM (small)       : 600 – 959px   → phones / small tablets
+//   MD (medium)      : 960 – 1279px  → tablets / small laptops
+//   LG (large)       : 1280 – 1919px → laptops / desktops
+//   XL (extra large) : 1920px +      → large desktops / wide-screens
+// ============================================================
+
+// ---- raw values (used by mixins; prefer the mixins below) ----
+$bp-sm:  600px;
+$bp-md:  960px;
+$bp-lg:  1280px;
+$bp-xl:  1920px;
+
+// ---- "only" mixins – match exactly one range ----
+
+@mixin xs {
+  // 0 – 599 px
+  @media (max-width: #{$bp-sm - 1}) { @content; }
+}
+
+@mixin sm {
+  // 600 – 959 px
+  @media (min-width: #{$bp-sm}) and (max-width: #{$bp-md - 1}) { @content; }
+}
+
+@mixin md {
+  // 960 – 1279 px
+  @media (min-width: #{$bp-md}) and (max-width: #{$bp-lg - 1}) { @content; }
+}
+
+@mixin lg {
+  // 1280 – 1919 px
+  @media (min-width: #{$bp-lg}) and (max-width: #{$bp-xl - 1}) { @content; }
+}
+
+@mixin xl {
+  // 1920 px +
+  @media (min-width: #{$bp-xl}) { @content; }
+}
+
+// ---- "up" mixins – from breakpoint and wider ----
+
+@mixin sm-up {
+  @media (min-width: #{$bp-sm}) { @content; }
+}
+
+@mixin md-up {
+  @media (min-width: #{$bp-md}) { @content; }
+}
+
+@mixin lg-up {
+  @media (min-width: #{$bp-lg}) { @content; }
+}
+
+@mixin xl-up {
+  @media (min-width: #{$bp-xl}) { @content; }
+}
+
+// ---- "down" mixins – from breakpoint and narrower ----
+
+@mixin sm-down {
+  @media (max-width: #{$bp-md - 1}) { @content; }
+}
+
+@mixin md-down {
+  @media (max-width: #{$bp-lg - 1}) { @content; }
+}
+
+@mixin lg-down {
+  @media (max-width: #{$bp-xl - 1}) { @content; }
+}

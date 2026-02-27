@@ -40,7 +40,7 @@ export class AppShell {
   constructor(public auth: AuthService) {
     // initialize based on current viewport (track mobile only)
     if (typeof window !== 'undefined' && 'matchMedia' in window) {
-      this.mql = window.matchMedia('(max-width: 767px)');
+      this.mql = window.matchMedia('(max-width: 599px)');
       this.isMobile.set(this.mql.matches);
 
       this.mqlListener = (e: MediaQueryListEvent) => {

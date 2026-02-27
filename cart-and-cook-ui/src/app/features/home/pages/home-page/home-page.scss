@@ -1,12 +1,31 @@
+@use '../../../../../styles/breakpoints' as *;
+
 .page-container {
-	min-height: calc(100dvh - 140px);
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
+  min-height: calc(100dvh - 140px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1rem;
 }
 
-@media (min-width: 768px) {
-	.page-container {
-		min-height: calc(100dvh - 120px);
-	}
+/* SM-up: less toolbar overhead */
+@include sm-up {
+  .page-container {
+    min-height: calc(100dvh - 120px);
+    gap: 1.25rem;
+  }
+}
+
+/* MD-up: more breathing room */
+@include md-up {
+  .page-container {
+    gap: 1.5rem;
+  }
+}
+
+/* XL: extra vertical space */
+@include xl {
+  .page-container {
+    gap: 2rem;
+  }
 }

@@ -1,3 +1,6 @@
+@use 'breakpoints' as *;
+@use 'variables' as *;
+
 /* ===== App Background ===== */
 
 body {
@@ -5,34 +8,53 @@ body {
   background: #f7f9f8;
   color: #1f2a24;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: $font-size-body;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* ===== Responsive Typography ===== */
+
+h1 { font-size: $font-size-h1; }
+h2 { font-size: $font-size-h2; }
+h3 { font-size: $font-size-h3; }
+small, .text-small { font-size: $font-size-small; }
 
 /* ===== Page Container ===== */
 
 .page-container {
-  max-width: 1200px;
+  max-width: $content-max-width;
   margin: 0 auto;
-  padding: 16px;
+  padding: $space-md;
 
-  @media (min-width: 768px) {
-    padding: 24px;
+  @include sm-up {
+    padding: $space-lg;
+  }
+
+  @include lg-up {
+    padding: $space-lg $space-xl;
+  }
+
+  @include xl-up {
+    max-width: $content-max-width-xl;
+    padding: $space-xl;
   }
 }
 
 /* ===== Spacing Utilities ===== */
 
-.mt-1 { margin-top: 8px; }
-.mt-2 { margin-top: 16px; }
-.mt-3 { margin-top: 24px; }
+.mt-1 { margin-top: $space-xs; }
+.mt-2 { margin-top: $space-md; }
+.mt-3 { margin-top: $space-lg; }
 
-.mb-1 { margin-bottom: 8px; }
-.mb-2 { margin-bottom: 16px; }
-.mb-3 { margin-bottom: 24px; }
+.mb-1 { margin-bottom: $space-xs; }
+.mb-2 { margin-bottom: $space-md; }
+.mb-3 { margin-bottom: $space-lg; }
 
 /* ===== Section Rhythm ===== */
 
 .section {
-  margin-bottom: 32px;
+  margin-bottom: $space-xl;
 }
 
 /* ===== Card Polish ===== */
@@ -48,3 +70,14 @@ body {
   top: 0;
   z-index: 1000;
 }
+
+/* ===== Responsive visibility helpers ===== */
+
+.hide-xs  { @include xs  { display: none !important; } }
+.hide-sm  { @include sm  { display: none !important; } }
+.hide-md  { @include md  { display: none !important; } }
+.hide-lg  { @include lg  { display: none !important; } }
+
+.show-sm-up { display: none !important; @include sm-up { display: initial !important; } }
+.show-md-up { display: none !important; @include md-up { display: initial !important; } }
+.show-lg-up { display: none !important; @include lg-up { display: initial !important; } }

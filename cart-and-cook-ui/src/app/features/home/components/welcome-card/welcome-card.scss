@@ -1,26 +1,30 @@
+@use '../../../../../styles/breakpoints' as *;
+
+/* ===== Base (mobile-first) ===== */
+
 .welcome-card {
-  margin-bottom: 24px;
+  margin-bottom: 1.5rem;
   text-align: center;
-  background-color: #e8f5e9; /* light green background */
+  background-color: #e8f5e9;
   border-radius: 16px;
-  padding: 32px 24px;
+  padding: 1.5rem 1rem;
 }
 
 .welcome-card h1 {
-  margin: 0 0 8px 0;
+  margin: 0 0 0.5rem 0;
   font-weight: 600;
 }
 
 .welcome-card p {
   margin: 0;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 /* Logged-out specific styles */
 .welcome-card .logged-out {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
   align-items: center;
 }
 
@@ -30,16 +34,18 @@
 }
 
 .welcome-card .cta {
-  margin-top: 8px;
+  margin-top: 0.5rem;
 }
+
+/* ===== Recipe grid (mobile-first: single column) ===== */
 
 .welcome-card .recipes {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
   width: 100%;
   max-width: 860px;
-  margin-top: 8px;
+  margin-top: 0.5rem;
 }
 
 .welcome-card .recipe {
@@ -52,13 +58,13 @@
 
 .welcome-card .recipe img {
   width: 100%;
-  height: 100px;
+  height: 80px;
   object-fit: cover;
   display: block;
 }
 
 .welcome-card .recipe .meta {
-  padding: 8px 10px;
+  padding: 0.5rem 0.625rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -66,21 +72,23 @@
 
 .welcome-card .recipe .name {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 0.8125rem;
 }
 
 .welcome-card .recipe .badge {
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: #555;
   background: rgba(0,0,0,0.04);
-  padding: 4px 6px;
+  padding: 0.25rem 0.375rem;
   border-radius: 12px;
 }
 
+/* ===== Feature cards (hidden on XS) ===== */
+
 .welcome-card .features {
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
+  display: none; /* hidden on XS */
+  gap: 0.75rem;
+  margin-top: 0.75rem;
   width: 100%;
   max-width: 720px;
   justify-content: center;
@@ -88,77 +96,138 @@
 
 .welcome-card .feature-card {
   background: rgba(255,255,255,0.9);
-  padding: 12px 16px;
+  padding: 0.75rem 1rem;
   border-radius: 10px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  min-width: 180px;
+  min-width: 140px;
   text-align: center;
-  font-size: 14px;
+  font-size: 0.8125rem;
 }
 
-/* Responsive adjustments */
-@media (max-width: 800px) {
-  .welcome-card {
-    padding: 24px 16px;
-  }
+/* ===== XS extras: hide 4th recipe, full-width CTA ===== */
 
-  .welcome-card .recipes {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-
-  .welcome-card .recipe img {
-    height: 90px;
-  }
-
-  .welcome-card .feature-card {
-    min-width: 140px;
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 480px) {
-  .welcome-card {
-    padding: 16px 12px;
-    border-radius: 12px;
-  }
-
-  .welcome-card h1 {
-    font-size: 20px;
-  }
-
-  .welcome-card .subtext {
-    font-size: 14px;
-  }
-
-  .welcome-card .recipes {
-    grid-template-columns: 1fr;
-  }
-
-  .welcome-card .recipe img {
-    height: 80px;
-  }
-
-  .welcome-card .recipe .name {
-    font-size: 13px;
-  }
-
-  .welcome-card .features {
+@include xs {
+  .welcome-card .recipes .recipe:nth-child(4) {
     display: none;
-  }
-
-  .welcome-card .feature-card {
-    width: 100%;
-    min-width: 0;
-    padding: 10px;
   }
 
   .welcome-card .cta button {
     width: 100%;
     max-width: 320px;
   }
-  /* show spicy tacos, roasted veggie bowl, and creamy pasta on small screens; hide salad */
-  .welcome-card .recipes .recipe:nth-child(4) {
-    display: none;
+}
+
+/* ===== SM: 2-column recipe grid, show features ===== */
+
+@include sm {
+  .welcome-card {
+    padding: 1.5rem;
+  }
+
+  .welcome-card .recipes {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .welcome-card .recipe img {
+    height: 90px;
+  }
+
+  .welcome-card .features {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .welcome-card .feature-card {
+    min-width: 140px;
+    font-size: 0.8125rem;
+  }
+}
+
+/* ===== MD: 3-column recipe grid, larger images ===== */
+
+@include md {
+  .welcome-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .welcome-card .recipes {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.875rem;
+  }
+
+  .welcome-card .recipe img {
+    height: 100px;
+  }
+
+  .welcome-card .recipe .name {
+    font-size: 0.875rem;
+  }
+
+  .welcome-card .features {
+    display: flex;
+  }
+
+  .welcome-card .feature-card {
+    min-width: 180px;
+    font-size: 0.875rem;
+  }
+}
+
+/* ===== LG: full 4-column grid, all features visible ===== */
+
+@include lg {
+  .welcome-card {
+    padding: 2rem;
+  }
+
+  .welcome-card .recipes {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    max-width: 960px;
+  }
+
+  .welcome-card .recipe img {
+    height: 110px;
+  }
+
+  .welcome-card .features {
+    display: flex;
+  }
+
+  .welcome-card .feature-card {
+    min-width: 200px;
+    font-size: 0.9375rem;
+    padding: 0.875rem 1.25rem;
+  }
+}
+
+/* ===== XL: extra-large images, more spacing ===== */
+
+@include xl {
+  .welcome-card {
+    padding: 2.5rem;
+    border-radius: 20px;
+  }
+
+  .welcome-card .recipes {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    max-width: 1100px;
+  }
+
+  .welcome-card .recipe img {
+    height: 130px;
+  }
+
+  .welcome-card .features {
+    display: flex;
+    gap: 1rem;
+    max-width: 860px;
+  }
+
+  .welcome-card .feature-card {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
   }
 }

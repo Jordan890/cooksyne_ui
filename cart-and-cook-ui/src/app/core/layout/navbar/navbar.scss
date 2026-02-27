@@ -1,3 +1,25 @@
+@use '../../../../styles/breakpoints' as *;
+
 .spacer {
   flex: 1 1 auto;
+}
+
+/* XS: hide the user name text, keep buttons compact */
+@include xs {
+  .user {
+    display: none;
+  }
+}
+
+/* SM-up: show user name */
+@include sm-up {
+  .user {
+    margin-right: 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+.brand {
+  font-weight: 600;
+  font-size: clamp(1rem, 2.6vw, 1.25rem);
 }

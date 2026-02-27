@@ -1,0 +1,15 @@
+@use '../../../../../styles/breakpoints' as *;
+
+.page-container {
+  min-height: calc(100dvh - 140px);
+
+  h2 {
+    margin-top: 0;
+  }
+}
+
+@include sm-up {
+  .page-container {
+    min-height: calc(100dvh - 120px);
+  }
+}
