@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 
 interface GroceryList {
@@ -20,7 +21,7 @@ interface Recipe {
 @Component({
   selector: 'home-quick-links-card',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, RouterLink],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, RouterLink],
   templateUrl: './quick-links-card.html',
   styleUrls: ['./quick-links-card.scss'],
 })
