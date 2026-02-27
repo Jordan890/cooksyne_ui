@@ -1,4 +1,54 @@
 <div class="page-container">
-    <h2>Recipes</h2>
-    <p>Manage your recipes here.</p>
+  <!-- Toolbar -->
+  <mat-toolbar class="toolbar" color="primary">
+    <span class="toolbar-title">My Recipes</span>
+  </mat-toolbar>
+
+  <!-- Search -->
+  <div class="search-row">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search recipes</mat-label>
+      <input
+        matInput
+        type="search"
+        placeholder="e.g. salmon, chili…"
+        [value]="search()"
+        (input)="search.set($any($event.target).value)"
+      />
+      @if (search()) {
+        <button matSuffix mat-icon-button aria-label="Clear search" (click)="search.set('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+  </div>
+
+  <!-- Content area -->
+  <div class="content">
+    @if (filteredRecipes().length === 0) {
+      <!-- Empty state -->
+      <div class="empty-state">
+        <mat-icon class="empty-icon">menu_book</mat-icon>
+        <h3>No recipes yet</h3>
+        <p>Start building your personal recipe library.</p>
+        <button mat-flat-button color="primary" (click)="goAdd()">
+          <mat-icon>add</mat-icon> Add your first recipe
+        </button>
+      </div>
+    } @else {
+      <!-- Responsive recipe grid -->
+      <div class="recipes-grid">
+        @for (r of filteredRecipes(); track r.id) {
+          <app-recipe-card [recipe]="r" />
+        }
+      </div>
+
+      <!-- Supporting CTA -->
+      <div class="grid-footer">
+        <button mat-stroked-button color="primary" (click)="goAdd()">
+          <mat-icon>add</mat-icon> Add another recipe
+        </button>
+      </div>
+    }
+  </div>
 </div>
