@@ -8,6 +8,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../auth/auth';
 
 @Component({
@@ -22,6 +23,7 @@ import { AuthService } from '../../auth/auth';
     MatIconModule,
     MatButtonModule,
     MatMenuModule,
+    MatProgressSpinnerModule,
 ],
   templateUrl: './app-shell.html',
   styleUrls: ['./app-shell.scss'],

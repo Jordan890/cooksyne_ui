@@ -1,4 +1,12 @@
-<mat-sidenav-container class="shell">
+@if (auth.isLoading()) {
+  <div class="auth-loading">
+    <mat-icon class="auth-loading-icon">local_grocery_store</mat-icon>
+    <mat-spinner diameter="48" color="primary"></mat-spinner>
+    <p class="auth-loading-text">Signing you in…</p>
+  </div>
+}
+
+<mat-sidenav-container class="shell" [class.hidden]="auth.isLoading()">
 
   <!-- Side Navigation -->
   <mat-sidenav

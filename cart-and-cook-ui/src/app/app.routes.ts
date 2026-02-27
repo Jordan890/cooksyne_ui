@@ -4,12 +4,17 @@ import { RecipeFormPage } from './features/recipes/pages/recipe-form-page/recipe
 import { HomePage } from './features/home/pages/home-page/home-page';
 import { GroceryListsPage } from './features/grocery-lists/pages/grocery-lists-page/grocery-lists-page';
 import { GroceryListFormPage } from './features/grocery-lists/pages/grocery-list-form-page/grocery-list-form-page';
+import { LoginPage } from './features/auth/pages/login-page/login-page';
 import { authGuard } from './core/guards/authguard';
 
 export const routes: Routes = [
   {
     path: '',
     loadComponent: () => HomePage,
+  },
+  {
+    path: 'login',
+    loadComponent: () => LoginPage,
   },
   {
     path: 'recipes',

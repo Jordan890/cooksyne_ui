@@ -1,38 +1,33 @@
-import { computed, Injectable, Signal, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { OidcSecurityService, UserDataResult } from 'angular-auth-oidc-client';
+import { Signal } from '@angular/core';
+import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AuthService {
-  // Reactive signals
-  public isAuthenticated = signal(false);
-  public user = signal<any | null>(null);
-  public accessToken!: Signal<string>;
+/**
+ * Runtime-agnostic authentication contract.
+ *
+ * Every component, guard, and interceptor depends on this abstract class.
+ * The concrete implementation is swapped at bootstrap time:
+ *   • OidcAuthService  – self-hosted / cloud (redirect-based OIDC)
+ *   • DesktopAuthService – offline desktop (local username / password)
+ */
+export abstract class AuthService {
+  /** Whether the auth check is still in progress (e.g. OIDC callback). */
+  abstract readonly isLoading: Signal<boolean>;
 
-  constructor(private oidc: OidcSecurityService) {
+  /** Whether the current user is authenticated. */
+  abstract readonly isAuthenticated: Signal<boolean>;
 
-    this.accessToken = toSignal(this.oidc.getAccessToken(), {
-      initialValue: '',
-    });
+  /** Authenticated user profile (null when logged out). */
+  abstract readonly user: Signal<any | null>;
 
-    // Initialize
-    this.oidc.checkAuth().subscribe(({ isAuthenticated, userData }) => {
-      this.isAuthenticated.set(isAuthenticated);
-      this.user.set(userData);
-    });
-  }
+  /** Current access / session token (empty string when logged out). */
+  abstract readonly accessToken: Signal<string>;
 
-  login() {
-    this.oidc.authorize();
-  }
+  /** Trigger the login flow (OIDC redirect **or** navigate to local login). */
+  abstract login(): void;
 
-  logout() {
-    this.oidc.logoff().subscribe();
-  }
+  /** Log the user out and clear session state. */
+  abstract logout(): void;
 
-  getAccessToken$() {
-    return this.oidc.getAccessToken();
-  }
+  /** Observable wrapper kept for the HTTP interceptor. */
+  abstract getAccessToken$(): Observable<string>;
 }

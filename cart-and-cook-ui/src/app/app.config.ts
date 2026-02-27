@@ -2,19 +2,17 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideAuth } from 'angular-auth-oidc-client';
-import { authConfig } from './auth/auth.config';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideOidcAuth, provideDesktopAuth } from './core/auth/auth-runtime';
+import { environment } from '../environments/environment.development';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideAuth({
-      config: authConfig.config
-    }),
+    ...(environment.authRuntime === 'oidc' ? provideOidcAuth() : provideDesktopAuth()),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimationsAsync(),
   ]

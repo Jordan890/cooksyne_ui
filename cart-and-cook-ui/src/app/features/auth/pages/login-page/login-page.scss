@@ -1,0 +1,124 @@
+@use '../../../../../styles/breakpoints' as *;
+
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100dvh - 64px); /* below the toolbar */
+  padding: 1.5rem;
+  background: #f8f6f2;
+}
+
+.top-loader {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  z-index: 900;
+}
+
+/* ── Card ────────────────────────────────────────────────────────── */
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  border: 1px solid #e0dcd6;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Brand / header ──────────────────────────────────────────────── */
+
+.brand {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.brand-icon {
+  font-size: 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #4a7c59;
+  margin-bottom: 0.5rem;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c2c2c;
+}
+
+.brand .subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: #6b6b6b;
+}
+
+/* ── Error banner ────────────────────────────────────────────────── */
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fef2f2;
+  color: #b91c1c;
+  padding: 0.625rem 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+
+  mat-icon {
+    font-size: 1.125rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+  }
+}
+
+/* ── Form ────────────────────────────────────────────────────────── */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.login-btn {
+  margin-top: 0.5rem;
+  height: 44px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 10px;
+}
+
+/* ── Responsive tweaks ───────────────────────────────────────────── */
+
+@include xs {
+  .login-wrapper {
+    padding: 1rem;
+    min-height: calc(100dvh - 56px);
+  }
+
+  .login-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .top-loader {
+    top: 56px;
+  }
+}
+
+@include sm-up {
+  .login-card {
+    padding: 2.5rem 2rem;
+  }
+}
