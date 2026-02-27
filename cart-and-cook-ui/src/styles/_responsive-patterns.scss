@@ -1,0 +1,37 @@
+@use 'breakpoints' as *;
+
+// Reusable responsive layout patterns for pages/components.
+// Use these mixins to make tall viewports (phones/tablets in portrait)
+// adopt a vertical, hero-style layout similar to the welcome page.
+
+@mixin vertical-fill($toolbar-height: 64px) {
+  // On phones/tablets, make the page container fill viewport height
+  @include md-down {
+    min-height: calc(100dvh - #{$toolbar-height});
+    display: flex;
+    flex-direction: column;
+  }
+
+  // On desktop and wider, use intrinsic height
+  @include lg-up {
+    min-height: auto;
+  }
+}
+
+@mixin section-hero-grid($portrait-cols: 1, $landscape-cols: 3, $portrait-thumb: 12rem, $landscape-thumb: 6rem) {
+  // Make sections use a single-column hero layout in portrait tall screens
+  @include portrait {
+    display: grid;
+    grid-template-columns: repeat($portrait-cols, 1fr);
+    gap: 1rem;
+  }
+
+  @include landscape {
+    display: grid;
+    grid-template-columns: repeat($landscape-cols, 1fr);
+    gap: 0.75rem;
+  }
+
+  // Thumb defaults for portrait / landscape contexts
+  // Consumers should set `.thumb` height where appropriate using these vars
+}

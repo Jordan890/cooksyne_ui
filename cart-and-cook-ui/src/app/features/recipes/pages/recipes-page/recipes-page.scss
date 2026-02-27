@@ -1,15 +1,16 @@
 @use '../../../../../styles/breakpoints' as *;
+@use '../../../../../styles/responsive-patterns' as patterns;
 
 .page-container {
-  min-height: calc(100dvh - 140px);
-
-  h2 {
-    margin-top: 0;
-  }
+  h2 { margin-top: 0; }
+  @include patterns.vertical-fill(64px);
 }
 
-@include sm-up {
+/* Example: page content can adopt hero grids for tall portrait devices */
+@include md-portrait {
   .page-container {
-    min-height: calc(100dvh - 120px);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 }
