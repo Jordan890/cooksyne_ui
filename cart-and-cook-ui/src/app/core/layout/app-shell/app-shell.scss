@@ -61,28 +61,7 @@
   margin: 0 auto;
 }
 
-/* Mobile-first: collapse/hide large elements on small screens */
-@media (max-width: 767px) {
-  .sidenav {
-    /* keep full width even on small screens to avoid a visible width jump when opening */
-    width: 9rem;
-  }
-
-  .title {
-    display: none; /* avoid duplication and save horizontal space */
-  }
-
-  .content {
-    padding: 0.75rem;
-  }
-}
-
-/* When the compact sidenav is opened (overlay mode) show full labels */
-.sidenav.opened {
-  width: 9rem;
-}
-
-/* show logo text when sidenav is opened (overlay or expanded) */
+/* show logo text when sidenav is opened */
 .sidenav.opened .logo-text {
   display: inline-block;
 }
@@ -99,18 +78,26 @@
   text-overflow: clip;
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
-  .sidenav {
-    width: 12rem;
+/* Mobile: always 9rem open or closed */
+@media (max-width: 767px) {
+  .sidenav,
+  .sidenav.opened {
+    width: 9rem;
   }
-  .logo-text {
-    display: inline-block; /* show label on tablet and up */
+
+  .title {
+    display: none;
+  }
+
+  .content {
+    padding: 0.75rem;
   }
 }
 
-@media (min-width: 1024px) {
-  .sidenav {
-    width: 16rem;
+@media (min-width:1024px){
+  .sidenav,
+  .sidenav.opened {
+    width: 12rem;
   }
   .logo-text {
     display: inline-block;

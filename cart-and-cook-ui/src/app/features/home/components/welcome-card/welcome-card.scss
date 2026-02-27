@@ -144,9 +144,7 @@
   }
 
   .welcome-card .features {
-    flex-direction: column;
-    gap: 8px;
-    align-items: stretch;
+    display: none;
   }
 
   .welcome-card .feature-card {
