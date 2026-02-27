@@ -14,15 +14,8 @@
 }
 
 /* ── Toolbar ── */
-.toolbar {
-  background: transparent;
-  padding: 0;
-  gap: 0.5rem;
-}
-.toolbar-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
+.toolbar { background: transparent; padding: 0; gap: 0.5rem; }
+.toolbar-title { font-size: 1.25rem; font-weight: 600; }
 .spacer { flex: 1 1 auto; }
 
 /* ── Form body ── */
@@ -46,46 +39,25 @@
   color: var(--mat-sys-on-surface-variant, #444);
 }
 
-/* ── Full-width fields ── */
 .full-width { width: 100%; }
 
-/* ── Metadata two-up on ≥ sm ── */
-.meta-row {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-
-  @include sm-up {
-    flex-direction: row;
-    gap: 1rem;
-
-    mat-form-field { flex: 1; }
-  }
-}
-
-/* ── Ingredient rows ── */
-.ingredient-row {
+/* ── Item rows ── */
+.item-row {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
 }
-.ing-name { flex: 2; }
-.ing-qty  { flex: 1; }
+.item-name { flex: 2; }
+.item-qty  { flex: 1; }
 
-.add-ing-btn {
-  align-self: flex-start;
-}
+.add-item-btn { align-self: flex-start; }
 
-/* ── Responsive tweaks ── */
+/* ── XS responsive ── */
 @include xs {
-  .toolbar {
+  .toolbar { flex-wrap: wrap; gap: 0.25rem; }
+  .item-row {
     flex-wrap: wrap;
-    gap: 0.25rem;
-  }
-  .ingredient-row {
-    flex-wrap: wrap;
-
-    .ing-name,
-    .ing-qty { flex: 1 1 100%; }
+    .item-name,
+    .item-qty { flex: 1 1 100%; }
   }
 }

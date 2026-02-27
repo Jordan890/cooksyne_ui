@@ -69,6 +69,18 @@ small, .text-small { font-size: $font-size-small; }
   position: sticky;
   top: 0;
   z-index: 1000;
+  /* Ensure the toolbar has an opaque background so content scrolls behind it */
+  background: inherit;
+}
+
+/* ===== Scroll-overlap safeguard ===== */
+/*
+ * Angular Material's mat-sidenav-content is the single scroll container.
+ * Pages must NOT create competing overflow; let the shell handle scrolling.
+ */
+html, body {
+  overflow: hidden;   /* body never scrolls — mat-sidenav-content does */
+  height: 100%;
 }
 
 /* ===== Responsive visibility helpers ===== */

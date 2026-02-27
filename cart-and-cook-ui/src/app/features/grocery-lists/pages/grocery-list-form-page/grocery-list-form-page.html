@@ -1,0 +1,90 @@
+<div class="form-shell">
+  <!-- Loading bar -->
+  @if (saving()) {
+    <mat-progress-bar mode="indeterminate" class="save-bar"></mat-progress-bar>
+  }
+
+  <!-- Header -->
+  <mat-toolbar class="toolbar">
+    <span class="toolbar-title">{{ pageTitle() }}</span>
+    <span class="spacer"></span>
+    <button mat-button (click)="cancel()">Cancel</button>
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="!isValid() || saving()"
+      (click)="save()"
+    >
+      @if (saving()) {
+        Saving…
+      } @else {
+        Save
+      }
+    </button>
+  </mat-toolbar>
+
+  <!-- Form body -->
+  <div class="form-body">
+    <!-- ─── List name ─── -->
+    <section class="section">
+      <h3 class="section-title">List Details</h3>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>List name</mat-label>
+        <input
+          matInput
+          required
+          placeholder="e.g. Weekly Essentials"
+          [value]="name()"
+          (input)="name.set($any($event.target).value)"
+        />
+        @if (!name().trim()) {
+          <mat-error>List name is required</mat-error>
+        }
+      </mat-form-field>
+    </section>
+
+    <!-- ─── Items ─── -->
+    <section class="section">
+      <h3 class="section-title">Items</h3>
+
+      @for (item of items(); track $index) {
+        <div class="item-row">
+          <mat-form-field appearance="outline" class="item-name">
+            <mat-label>Item</mat-label>
+            <input
+              matInput
+              required
+              placeholder="e.g. Milk"
+              [value]="item.name"
+              (input)="updateItem($index, 'name', $any($event.target).value)"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="item-qty">
+            <mat-label>Qty</mat-label>
+            <input
+              matInput
+              placeholder="e.g. 1 gal"
+              [value]="item.quantity"
+              (input)="updateItem($index, 'quantity', $any($event.target).value)"
+            />
+          </mat-form-field>
+
+          <button
+            mat-icon-button
+            color="warn"
+            aria-label="Remove item"
+            (click)="removeItem($index)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+
+      <button mat-stroked-button (click)="addItem()" class="add-item-btn">
+        <mat-icon>add</mat-icon> Add item
+      </button>
+    </section>
+  </div>
+</div>

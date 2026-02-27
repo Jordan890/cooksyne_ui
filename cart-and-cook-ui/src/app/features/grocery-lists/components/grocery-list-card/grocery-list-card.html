@@ -1,0 +1,13 @@
+<mat-card class="list-card" tabindex="0" role="article" (click)="open()" (keydown.enter)="open()">
+  <mat-card-header>
+    <mat-icon mat-card-avatar class="list-avatar">shopping_cart</mat-icon>
+    <mat-card-title class="list-name">{{ list().name }}</mat-card-title>
+    <mat-card-subtitle class="list-meta">
+      {{ list().items.length }} {{ list().items.length === 1 ? 'item' : 'items' }}
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-actions align="end">
+    <button mat-button color="primary" (click)="open(); $event.stopPropagation()">Edit</button>
+  </mat-card-actions>
+</mat-card>

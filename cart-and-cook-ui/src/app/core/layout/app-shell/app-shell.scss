@@ -46,6 +46,8 @@
   position: sticky;
   top: 0;
   z-index: 1000;
+  /* Opaque background so scrolled content never shows through */
+  background: var(--mat-toolbar-container-background-color, var(--mat-sys-surface, #fff));
 }
 
 .title {
@@ -60,10 +62,22 @@
 
 /* ===== Main Content ===== */
 
+/*
+ * mat-sidenav-content is the scroll container (overflow: auto by default).
+ * The sticky toolbar stays pinned at the top of that scroll container.
+ * <main class="content"> simply provides padding below the toolbar —
+ * no extra overflow or height so there's only ONE scroll context.
+ */
 .content {
   padding: 1rem;
   max-width: 1200px;
   margin: 0 auto;
+  /* Create a stacking context below the toolbar so child elements
+     (Material buttons, form fields, etc.) can never overlap the
+     sticky toolbar on scroll — especially visible on mobile. */
+  position: relative;
+  z-index: 1;
+  /* Do NOT set height / overflow here — let mat-sidenav-content scroll */
 }
 
 /* show logo text when sidenav is opened */

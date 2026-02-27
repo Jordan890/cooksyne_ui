@@ -1,4 +1,55 @@
 <div class="page-container">
-    <h2>Grocery Lists</h2>
-    <p>Manage your grocery lists here.</p>
+  <!-- Toolbar -->
+  <mat-toolbar class="toolbar" color="primary">
+    <span class="toolbar-title">My Grocery Lists</span>
+    <span class="spacer"></span>
+    <button mat-icon-button aria-label="Create list" (click)="goCreate()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <!-- Search -->
+  <div class="search-row">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search lists</mat-label>
+      <input
+        matInput
+        type="search"
+        placeholder="e.g. Weekly…"
+        [value]="search()"
+        (input)="search.set($any($event.target).value)"
+      />
+      @if (search()) {
+        <button matSuffix mat-icon-button aria-label="Clear search" (click)="search.set('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    @if (filteredLists().length === 0) {
+      <div class="empty-state">
+        <mat-icon class="empty-icon">checklist</mat-icon>
+        <h3>No grocery lists yet</h3>
+        <p>Create your first list and start adding items.</p>
+        <button mat-flat-button color="primary" (click)="goCreate()">
+          <mat-icon>add</mat-icon> Create your first list
+        </button>
+      </div>
+    } @else {
+      <div class="lists-grid">
+        @for (l of filteredLists(); track l.id) {
+          <app-grocery-list-card [list]="l" />
+        }
+      </div>
+
+      <div class="grid-footer">
+        <button mat-stroked-button color="primary" (click)="goCreate()">
+          <mat-icon>add</mat-icon> Create another list
+        </button>
+      </div>
+    }
+  </div>
 </div>
