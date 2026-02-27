@@ -23,7 +23,7 @@
 .welcome-card {
   margin-bottom: 0;        /* parent gap handles spacing */
   text-align: center;
-  background-color: #f0ede8;  /* warm surface-dim from the Cart & Cook palette */
+  background-color: var(--cart-surface-alt);  /* warm surface-dim from the Cart & Cook palette */
   border-radius: 16px;
   padding: 1.5rem 1rem;
   display: flex;
@@ -63,18 +63,17 @@
 }
 
 .welcome-card .subtext {
-  color: #6b6b6b;
-  max-width: 560px;
+  color: var(--cart-text-secondary);
 }
 
 .welcome-card .cta {
   margin-top: 0.25rem;
 }
 
-/* ===== Samples section – also grows to absorb space ===== */
+/* ===== Samples section ===== */
 
 .welcome-card .samples {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -93,15 +92,14 @@
   gap: 0.75rem;
   width: 100%;
   max-width: 860px;
-  flex: 1 1 auto;          /* let grid grow so images fill height */
 }
 
 .welcome-card .recipe {
-  background: #ffffff;
+  background: var(--cart-surface);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  border: 1px solid #e0dcd6;
+  box-shadow: var(--cart-shadow);
+  border: 1px solid var(--cart-divider);
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -126,8 +124,7 @@
 .welcome-card .recipe .name {
   font-weight: 600;
   font-size: 0.8125rem;
-  color: #2c2c2c;
-  line-height: 1.3;
+  color: var(--cart-text-primary);
 }
 
 /* ===== Feature cards (hidden on XS by default) ===== */
@@ -143,15 +140,15 @@
 }
 
 .welcome-card .feature-card {
-  background: #ffffff;
+  background: var(--cart-surface);
   padding: 0.75rem 1rem;
   border-radius: 10px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  border: 1px solid #e0dcd6;
+  box-shadow: var(--cart-shadow);
+  border: 1px solid var(--cart-divider);
   min-width: 140px;
   text-align: center;
   font-size: 0.8125rem;
-  color: #2c2c2c;
+  color: var(--cart-text-primary);
 }
 
 /* ================================================================

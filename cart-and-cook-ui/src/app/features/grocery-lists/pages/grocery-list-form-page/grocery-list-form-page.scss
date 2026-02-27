@@ -14,7 +14,7 @@
 }
 
 /* ── Toolbar ── */
-.toolbar { background: transparent; color: #2c2c2c; padding: 0; gap: 0.5rem; }
+.toolbar { background: transparent; color: var(--cart-text-primary); padding: 0; gap: 0.5rem; }
 .toolbar-title { font-size: 1.25rem; font-weight: 600; }
 .spacer { flex: 1 1 auto; }
 
@@ -36,12 +36,10 @@
   margin: 0 0 0.25rem;
   font-size: 1rem;
   font-weight: 600;
-  color: #6b6b6b;
+  color: var(--cart-text-secondary);
 }
 
 .full-width { width: 100%; }
-
-/* ── Item rows ── */
 .item-row {
   display: flex;
   align-items: flex-start;

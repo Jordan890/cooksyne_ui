@@ -11,7 +11,7 @@
   align-items: center;
   justify-content: center;
   gap: 1.25rem;
-  background: #f8f6f2;
+  background: var(--cart-background);
   animation: fadeIn 0.2s ease-out;
 }
 
@@ -19,14 +19,14 @@
   font-size: 3rem;
   width: 3rem;
   height: 3rem;
-  color: #4a7c59;
+  color: var(--cart-primary-color);
 }
 
 .auth-loading-text {
   margin: 0;
   font-size: 1rem;
   font-weight: 500;
-  color: #6b6b6b;
+  color: var(--cart-text-secondary);
   letter-spacing: 0.01em;
 }
 
@@ -48,7 +48,7 @@
 
 .sidenav {
   width: 14rem;
-  border-right: 1px solid #e0dcd6;
+  border-right: 1px solid var(--cart-divider);
   padding: 0.5rem 0;
   transition: none; /* prevent CSS width transitions conflicting with Material's transform animation */
 }
@@ -88,12 +88,12 @@
   z-index: 1000;
   /* Cart & Cook primary green toolbar */
   background: var(--mat-toolbar-container-background-color, #4a7c59);
-  color: #fff;
+  color: var(--mat-toolbar-container-text-color, #fff);
 
-  /* Force all icons / icon-buttons in the app toolbar to be white */
+  /* Force all icons / icon-buttons in the app toolbar to match */
   .mat-icon,
   .mat-mdc-icon-button {
-    color: #fff;
+    color: var(--mat-toolbar-container-text-color, #fff);
   }
 }
 

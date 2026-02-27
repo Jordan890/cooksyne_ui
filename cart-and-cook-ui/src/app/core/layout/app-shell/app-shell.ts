@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../auth/auth';
+import { ThemeService } from '../../theme/theme.service';
 
 @Component({
   selector: 'app-shell',
@@ -39,7 +40,7 @@ export class AppShell {
   private mql?: MediaQueryList;
   private mqlListener?: (e: MediaQueryListEvent) => void;
 
-  constructor(public auth: AuthService) {
+  constructor(public auth: AuthService, private themeService: ThemeService) {
     // initialize based on current viewport (track mobile only)
     if (typeof window !== 'undefined' && 'matchMedia' in window) {
       this.mql = window.matchMedia('(max-width: 599px)');

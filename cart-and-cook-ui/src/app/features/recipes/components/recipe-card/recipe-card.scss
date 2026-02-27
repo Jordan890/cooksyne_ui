@@ -10,11 +10,11 @@
   flex-direction: column;
   cursor: pointer;
   transition: box-shadow 0.2s ease, transform 0.15s ease;
-  border: 1px solid #e0dcd6;
+  border: 1px solid var(--cart-divider);
 
   &:hover,
   &:focus-visible {
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10);
+    box-shadow: var(--cart-shadow-hover);
     transform: translateY(-2px);
   }
 }
@@ -39,8 +39,7 @@
 
 .recipe-desc {
   margin: 0.5rem 0 0;
-  color: #6b6b6b;
-  font-size: 0.9rem;
+  color: var(--cart-text-secondary);
   line-height: 1.45;
   /* clamp to 3 lines */
   display: -webkit-box;
