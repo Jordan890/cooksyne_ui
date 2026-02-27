@@ -5,8 +5,8 @@
 
 body {
   margin: 0;
-  background: #f7f9f8;
-  color: #1f2a24;
+  background: $color-background;
+  color: $color-text;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   font-size: $font-size-body;
   -webkit-font-smoothing: antialiased;
@@ -61,6 +61,8 @@ small, .text-small { font-size: $font-size-small; }
 
 .mat-mdc-card {
   border-radius: 16px;
+  box-shadow: $shadow-card;
+  border: 1px solid $color-border;
 }
 
 /* ===== Toolbar polish ===== */

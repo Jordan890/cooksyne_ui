@@ -8,7 +8,7 @@
 
 .sidenav {
   width: 14rem;
-  border-right: 1px solid #e3e7e5;
+  border-right: 1px solid #e0dcd6;
   padding: 0.5rem 0;
   transition: none; /* prevent CSS width transitions conflicting with Material's transform animation */
 }
@@ -46,8 +46,15 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  /* Opaque background so scrolled content never shows through */
-  background: var(--mat-toolbar-container-background-color, var(--mat-sys-surface, #fff));
+  /* Cart & Cook primary green toolbar */
+  background: var(--mat-toolbar-container-background-color, #4a7c59);
+  color: #fff;
+
+  /* Force all icons / icon-buttons in the app toolbar to be white */
+  .mat-icon,
+  .mat-mdc-icon-button {
+    color: #fff;
+  }
 }
 
 .title {

@@ -6,16 +6,17 @@
   height: 100%;
   cursor: pointer;
   transition: box-shadow 0.2s ease, transform 0.15s ease;
+  border: 1px solid #e0dcd6;
 
   &:hover,
   &:focus-visible {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10);
     transform: translateY(-2px);
   }
 }
 
 .list-avatar {
-  color: var(--mat-sys-primary, #2e7d32);
+  color: #4a7c59;
   font-size: 2rem;
   width: 2rem;
   height: 2rem;
