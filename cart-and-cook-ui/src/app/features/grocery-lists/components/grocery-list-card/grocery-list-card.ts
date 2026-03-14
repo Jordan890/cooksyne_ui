@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +18,21 @@ export class GroceryListCard {
   private router = inject(Router);
 
   list = input.required<GroceryList>();
+
+  /** Comma-separated preview of item names, truncated with "…" */
+  itemPreview = computed(() => {
+    const names = this.list().items.map(i => i.name).filter(Boolean);
+    const maxLen = 60;
+    let result = '';
+    for (let i = 0; i < names.length; i++) {
+      const next = result ? `${result}, ${names[i]}` : names[i];
+      if (next.length > maxLen) {
+        return result ? `${result}, …` : `${names[i].slice(0, maxLen)}…`;
+      }
+      result = next;
+    }
+    return result;
+  });
 
   open(): void {
     this.router.navigate(['/grocery-lists', this.list().id, 'edit']);

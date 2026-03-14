@@ -46,6 +46,13 @@
   @include lg-up  { grid-template-columns: repeat(4, 1fr); }
 }
 
+/* Portrait devices: always single scrollable list */
+@media (orientation: portrait) {
+  .recipes-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 /* ── Grid footer CTA ── */
 .grid-footer {
   display: flex;

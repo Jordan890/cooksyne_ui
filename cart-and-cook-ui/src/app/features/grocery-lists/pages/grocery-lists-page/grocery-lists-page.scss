@@ -34,6 +34,18 @@
   @include lg-up  { grid-template-columns: repeat(4, 1fr); }
 }
 
+/* Portrait devices: 1 col on small, 2 col on wider */
+@media (orientation: portrait) and (max-width: #{$bp-sm - 1}) {
+  .lists-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+@media (orientation: portrait) and (min-width: #{$bp-sm}) {
+  .lists-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
 /* ── Footer CTA ── */
 .grid-footer {
   display: flex;

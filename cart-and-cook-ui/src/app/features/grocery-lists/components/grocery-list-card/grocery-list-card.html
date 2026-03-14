@@ -7,6 +7,12 @@
     </mat-card-subtitle>
   </mat-card-header>
 
+  @if (itemPreview()) {
+    <mat-card-content>
+      <p class="item-preview">{{ itemPreview() }}</p>
+    </mat-card-content>
+  }
+
   <mat-card-actions align="end">
     <button mat-button color="primary" (click)="open(); $event.stopPropagation()">Edit</button>
   </mat-card-actions>
