@@ -1,5 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject, Injector } from '@angular/core';
+import { switchMap, take } from 'rxjs';
 import { AuthService } from '../auth/auth';
 
 /**
@@ -26,17 +27,23 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // own HTTP calls (which would trigger the cycle).
   const injector = inject(Injector);
   const auth = injector.get(AuthService);
-  const token = auth.accessToken();
 
-  if (!token) {
-    return next(req);
-  }
+  // Wait for the token observable to emit so we don't fire a bare request
+  // before the OIDC library has resolved the access token.
+  return auth.getAccessToken$().pipe(
+    take(1),
+    switchMap(token => {
+      if (!token) {
+        return next(req);
+      }
 
-  const authReq = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+      const authReq = req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  return next(authReq);
+      return next(authReq);
+    }),
+  );
 };
