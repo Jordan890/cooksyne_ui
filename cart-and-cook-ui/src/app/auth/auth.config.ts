@@ -5,7 +5,7 @@ export const authConfig: PassedInitialConfig = {
               authority: 'http://localhost:8080/realms/cart_and_cook',
               redirectUrl: window.location.origin,
               postLogoutRedirectUri: window.location.origin,
-              clientId: 'cart_and_cook_ui',
+              clientId: 'cart-and-cook-ui',
               scope: 'openid profile email', // 'openid profile offline_access ' + your scopes
               responseType: 'code',
               silentRenew: true,
