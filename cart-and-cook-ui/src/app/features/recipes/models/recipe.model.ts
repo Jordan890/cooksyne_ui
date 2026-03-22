@@ -53,6 +53,7 @@ export interface Recipe {
   description: string;
   imageUrl?: string;
   ingredients: IngredientQuantity[];
+  estimatedCalories?: number | null;
 }
 
 /**
@@ -66,4 +67,19 @@ export interface RecipeRequest {
   description: string;
   imageUrl?: string;
   ingredients: IngredientQuantity[];
+  estimatedCalories?: number | null;
+}
+
+/** Single ingredient returned by the AI analysis endpoint. */
+export interface IngredientEstimate {
+  name: string;
+  amount: string;
+  calories: number | null;
+}
+
+/** Response from POST /api/ai/analyze-food or /api/ai/analyze-recipe. */
+export interface RecipeAnalysis {
+  title: string;
+  ingredients: IngredientEstimate[];
+  estimatedCalories: number | null;
 }

@@ -31,6 +31,16 @@
     </div>
   } @else {
   <div class="form-body">
+    <!-- ─── AI Image Analysis ─── -->
+    <app-image-analyzer (analyzed)="applyAnalysis($event)" />
+
+    @if (estimatedCalories()) {
+      <div class="calorie-banner">
+        <mat-icon class="calorie-icon">local_fire_department</mat-icon>
+        <span class="calorie-text">Estimated calories: <strong>{{ estimatedCalories() }}</strong></span>
+      </div>
+    }
+
     <!-- ─── Basic info ─── -->
     <section class="section">
       <h3 class="section-title">Basic Information</h3>

@@ -11,6 +11,12 @@
     @if (recipe().description) {
       <p class="recipe-desc">{{ recipe().description }}</p>
     }
+    @if (recipe().estimatedCalories) {
+      <p class="recipe-calories">
+        <mat-icon class="calorie-icon" fontIcon="local_fire_department"></mat-icon>
+        {{ recipe().estimatedCalories }} cal
+      </p>
+    }
   </mat-card-content>
 
   <mat-card-actions align="end">

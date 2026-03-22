@@ -64,6 +64,22 @@
   color: var(--cart-text-secondary);
 }
 
+/* ── Calorie banner ── */
+.calorie-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: var(--mat-sys-primary-container, #e8f5e9);
+  color: var(--mat-sys-on-primary-container, #1b5e20);
+  font-size: 0.95rem;
+}
+
+.calorie-icon {
+  color: #e65100;
+}
+
 /* ── Full-width fields ── */
 .full-width { width: 100%; }
 

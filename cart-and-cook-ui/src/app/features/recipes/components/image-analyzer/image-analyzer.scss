@@ -1,0 +1,97 @@
+@use '../../../../../styles/breakpoints' as *;
+
+.analyzer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cart-text-secondary);
+}
+
+.title-icon {
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--cart-text-secondary);
+}
+
+.type-toggle {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ── Upload area ── */
+.upload-area {
+  min-height: 120px;
+}
+
+.drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  border: 2px dashed var(--cart-divider);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--cart-text-secondary);
+  transition: border-color 0.2s, background 0.2s;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--mat-sys-primary);
+    background: rgba(var(--mat-sys-primary-rgb, 0 0 0), 0.04);
+  }
+}
+
+.drop-icon {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  opacity: 0.6;
+}
+
+/* ── Preview ── */
+.preview-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.preview-img {
+  max-width: 100%;
+  max-height: 240px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.clear-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+/* ── Feedback ── */
+.error-msg {
+  color: var(--mat-sys-error, #b00020);
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.analyze-btn {
+  align-self: flex-start;
+}

@@ -9,8 +9,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { IngredientQuantity, Recipe, RecipeRequest, UNITS, Unit } from '../../models/recipe.model';
+import { MatChipsModule } from '@angular/material/chips';
+import { IngredientQuantity, Recipe, RecipeAnalysis, RecipeRequest, UNITS, Unit } from '../../models/recipe.model';
 import { RecipeService } from '../../data/recipe.service';
+import { ImageAnalyzer } from '../../components/image-analyzer/image-analyzer';
 
 @Component({
   selector: 'app-recipe-form-page',
@@ -25,6 +27,8 @@ import { RecipeService } from '../../data/recipe.service';
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatChipsModule,
+    ImageAnalyzer,
   ],
   templateUrl: './recipe-form-page.html',
   styleUrls: ['./recipe-form-page.scss'],
@@ -49,6 +53,9 @@ export class RecipeFormPage implements OnInit {
   readonly ingredients = signal<IngredientQuantity[]>([
     { name: '', quantity: { amount: 1, unit: 'COUNT' } },
   ]);
+
+  /* ── AI analysis ── */
+  readonly estimatedCalories = signal<number | null>(null);
 
   /* ── UI state ── */
   readonly saving = signal(false);
@@ -120,6 +127,7 @@ export class RecipeFormPage implements OnInit {
       category: this.category().trim(),
       description: this.description().trim(),
       ingredients: this.ingredients().filter(i => i.name.trim()),
+      estimatedCalories: this.estimatedCalories(),
     };
 
     this.saving.set(true);
@@ -136,6 +144,22 @@ export class RecipeFormPage implements OnInit {
     });
   }
 
+  /** Apply AI analysis results to the form. */
+  applyAnalysis(result: RecipeAnalysis): void {
+    if (result.title && !this.name().trim()) {
+      this.name.set(result.title);
+    }
+    this.estimatedCalories.set(result.estimatedCalories);
+    if (result.ingredients?.length) {
+      this.ingredients.set(
+        result.ingredients.map(i => ({
+          name: i.name,
+          quantity: { amount: parseFloat(i.amount) || 1, unit: 'COUNT' as Unit },
+        })),
+      );
+    }
+  }
+
   cancel(): void {
     this.router.navigate(['/recipes']);
   }
@@ -147,6 +171,7 @@ export class RecipeFormPage implements OnInit {
         this.name.set(recipe.name);
         this.category.set(recipe.category);
         this.description.set(recipe.description ?? '');
+        this.estimatedCalories.set(recipe.estimatedCalories ?? null);
         this.ingredients.set(
           recipe.ingredients?.length
             ? recipe.ingredients
