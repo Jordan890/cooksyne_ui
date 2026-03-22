@@ -44,7 +44,7 @@
       <!-- Responsive recipe grid -->
       <div class="recipes-grid">
         @for (r of filteredRecipes(); track r.id) {
-          <app-recipe-card [recipe]="r" />
+          <app-recipe-card [recipe]="r" (deleted)="deleteRecipe($event)" />
         }
       </div>
 

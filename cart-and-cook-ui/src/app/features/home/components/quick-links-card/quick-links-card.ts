@@ -1,41 +1,47 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
-
-interface GroceryList {
-  id: string;
-  name: string;
-  date: string;
-  itemCount: number;
-}
-
-interface Recipe {
-  id: number;
-  name: string;
-  category: string;
-}
+import { RecipeService } from '../../../recipes/data/recipe.service';
+import { GroceryListService } from '../../../grocery-lists/data/grocery-list.service';
+import { Recipe } from '../../../recipes/models/recipe.model';
+import { GroceryList } from '../../../grocery-lists/models/grocery-list.model';
 
 @Component({
   selector: 'home-quick-links-card',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, RouterLink],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
   templateUrl: './quick-links-card.html',
   styleUrls: ['./quick-links-card.scss'],
 })
-export class QuickLinksCard {
-  // Mock data — replace with backend data later
-  recentGroceryLists = signal<GroceryList[]>([
-    { id: 'g1', name: 'Weekly Groceries', date: '2026-02-22', itemCount: 14 },
-    { id: 'g2', name: 'Party Supplies', date: '2026-02-16', itemCount: 8 },
-    { id: 'g3', name: 'Veggie Restock', date: '2026-02-10', itemCount: 6 },
-  ]);
+export class QuickLinksCard implements OnInit {
+  private recipeService = inject(RecipeService);
+  private groceryListService = inject(GroceryListService);
 
-  favoriteRecipes = signal<Recipe[]>([
-    { id: 1, name: 'Lemon Garlic Salmon', category: 'seafood' },
-    { id: 2, name: 'One-Pan Chicken Veg', category: 'poultry' },
-    { id: 3, name: 'Vegan Chili', category: 'vegetarian' },
-  ]);
+  readonly loadingRecipes = signal(true);
+  readonly loadingLists = signal(true);
+
+  recentGroceryLists = signal<GroceryList[]>([]);
+  recentRecipes = signal<Recipe[]>([]);
+
+  ngOnInit(): void {
+    this.groceryListService.getAll().subscribe({
+      next: lists => {
+        this.recentGroceryLists.set(lists.slice(0, 3));
+        this.loadingLists.set(false);
+      },
+      error: () => this.loadingLists.set(false),
+    });
+
+    this.recipeService.getAll().subscribe({
+      next: recipes => {
+        this.recentRecipes.set(recipes.slice(0, 3));
+        this.loadingRecipes.set(false);
+      },
+      error: () => this.loadingRecipes.set(false),
+    });
+  }
 }

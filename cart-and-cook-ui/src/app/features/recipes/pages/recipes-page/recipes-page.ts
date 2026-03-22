@@ -64,6 +64,14 @@ export class RecipesPage implements OnInit {
     this.router.navigate(['/recipes', 'new']);
   }
 
+  /** Delete a recipe by ID, then remove it from the local list */
+  deleteRecipe(id: number): void {
+    this.recipeService.delete(id).subscribe({
+      next: () => this.recipes.update(list => list.filter(r => r.id !== id)),
+      error: err => console.error('Failed to delete recipe', err),
+    });
+  }
+
   /** Fetch all recipes from the backend */
   private loadRecipes(): void {
     this.loading.set(true);

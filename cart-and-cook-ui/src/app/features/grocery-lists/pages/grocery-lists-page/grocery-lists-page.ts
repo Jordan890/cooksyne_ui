@@ -59,6 +59,14 @@ export class GroceryListsPage implements OnInit {
     this.router.navigate(['/grocery-lists', 'new']);
   }
 
+  /** Delete a grocery list by ID, then remove it from the local list */
+  deleteList(id: number): void {
+    this.groceryListService.delete(id).subscribe({
+      next: () => this.lists.update(all => all.filter(l => l.id !== id)),
+      error: err => console.error('Failed to delete grocery list', err),
+    });
+  }
+
   private loadLists(): void {
     this.loading.set(true);
     this.groceryListService.getAll().subscribe({

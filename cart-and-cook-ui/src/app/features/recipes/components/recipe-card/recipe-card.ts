@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,11 +20,24 @@ export class RecipeCard {
   /** The recipe data to display */
   recipe = input.required<Recipe>();
 
+  /** Emitted when the user confirms deletion */
+  deleted = output<number>();
+
   /** Navigate to the edit page for this recipe */
   open(): void {
     const id = this.recipe().id;
     if (id != null) {
       this.router.navigate(['/recipes', id, 'edit']);
+    }
+  }
+
+  /** Ask for confirmation then emit delete event */
+  confirmDelete(event: Event): void {
+    event.stopPropagation();
+    const id = this.recipe().id;
+    if (id == null) return;
+    if (confirm(`Delete "${this.recipe().name}"?`)) {
+      this.deleted.emit(id);
     }
   }
 }

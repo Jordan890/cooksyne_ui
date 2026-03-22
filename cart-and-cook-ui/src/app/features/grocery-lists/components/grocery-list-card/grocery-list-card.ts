@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +19,9 @@ export class GroceryListCard {
 
   list = input.required<GroceryList>();
 
+  /** Emitted when the user confirms deletion */
+  deleted = output<number>();
+
   /** Comma-separated preview of ingredient names, truncated with "…" */
   itemPreview = computed(() => {
     const names = this.list().ingredients.map(i => i.name).filter(Boolean);
@@ -37,5 +40,15 @@ export class GroceryListCard {
   open(): void {
     if (this.list().id == null) return;
     this.router.navigate(['/grocery-lists', this.list().id, 'edit']);
+  }
+
+  /** Ask for confirmation then emit delete event */
+  confirmDelete(event: Event): void {
+    event.stopPropagation();
+    const id = this.list().id;
+    if (id == null) return;
+    if (confirm(`Delete "${this.list().name}"?`)) {
+      this.deleted.emit(id);
+    }
   }
 }

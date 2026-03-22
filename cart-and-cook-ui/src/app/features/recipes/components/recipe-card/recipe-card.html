@@ -14,7 +14,9 @@
   </mat-card-content>
 
   <mat-card-actions align="end">
-    <!-- extension point: favourite / delete buttons go here -->
+    <button mat-button color="warn" (click)="confirmDelete($event)">
+      <mat-icon>delete</mat-icon> Delete
+    </button>
     <button mat-button color="primary" (click)="open(); $event.stopPropagation()">Edit</button>
   </mat-card-actions>
 </mat-card>

@@ -43,7 +43,7 @@
     } @else {
       <div class="lists-grid">
         @for (l of filteredLists(); track l.id) {
-          <app-grocery-list-card [list]="l" />
+          <app-grocery-list-card [list]="l" (deleted)="deleteList($event)" />
         }
       </div>
 

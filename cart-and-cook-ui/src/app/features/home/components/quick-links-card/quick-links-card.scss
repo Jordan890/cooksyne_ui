@@ -50,6 +50,14 @@
   outline-offset: 2px;
 }
 
+/* ===== Section loading spinner ===== */
+
+.section-loading {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 0;
+}
+
 /* ============================================================
    GROCERY LIST CARDS
    – grid layout, icon + info side by side

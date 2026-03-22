@@ -2,7 +2,9 @@
 
   <section class="section grocery-lists">
     <h3>Recent Grocery Lists</h3>
-    @if (recentGroceryLists().length === 0) {
+    @if (loadingLists()) {
+      <div class="section-loading"><mat-spinner diameter="28"></mat-spinner></div>
+    } @else if (recentGroceryLists().length === 0) {
       <div class="empty-state">
         <mat-icon class="empty-icon">checklist</mat-icon>
         <p>No grocery lists yet.</p>
@@ -12,38 +14,44 @@
       </div>
     } @else {
       <div class="lists">
-        <a class="card-link list-card" *ngFor="let g of recentGroceryLists()" [routerLink]="['/grocery-lists', g.id]">
-          <span class="list-icon" aria-hidden="true">🛒</span>
-          <div class="list-info">
-            <div class="name">{{ g.name }}</div>
-            <div class="meta">{{ g.itemCount }} items · {{ g.date }}</div>
-          </div>
-        </a>
+        @for (g of recentGroceryLists(); track g.id) {
+          <a class="card-link list-card" [routerLink]="['/grocery-lists', g.id, 'edit']">
+            <span class="list-icon" aria-hidden="true">🛒</span>
+            <div class="list-info">
+              <div class="name">{{ g.name }}</div>
+              <div class="meta">{{ g.ingredients.length }} items</div>
+            </div>
+          </a>
+        }
       </div>
     }
   </section>
 
   <section class="section recipes">
-    <h3>Favorited Recipes</h3>
-    @if (favoriteRecipes().length === 0) {
+    <h3>Recent Recipes</h3>
+    @if (loadingRecipes()) {
+      <div class="section-loading"><mat-spinner diameter="28"></mat-spinner></div>
+    } @else if (recentRecipes().length === 0) {
       <div class="empty-state">
         <mat-icon class="empty-icon">menu_book</mat-icon>
-        <p>No favorited recipes yet.</p>
+        <p>No recipes yet.</p>
         <button mat-stroked-button color="primary" routerLink="/recipes">
           <mat-icon>search</mat-icon> Browse recipes
         </button>
       </div>
     } @else {
       <div class="recipes-grid">
-        <a class="card-link recipe-card" *ngFor="let r of favoriteRecipes()" [routerLink]="['/recipes', r.id]">
-          <div class="thumb" aria-hidden="true">
-            <span class="thumb-label">No image provided</span>
-          </div>
-          <div class="recipe-info">
-            <div class="title">{{ r.name }}</div>
-            <div class="meta">{{ r.category }}</div>
-          </div>
-        </a>
+        @for (r of recentRecipes(); track r.id) {
+          <a class="card-link recipe-card" [routerLink]="['/recipes', r.id, 'edit']">
+            <div class="thumb" aria-hidden="true">
+              <span class="thumb-label">No image provided</span>
+            </div>
+            <div class="recipe-info">
+              <div class="title">{{ r.name }}</div>
+              <div class="meta">{{ r.category }}</div>
+            </div>
+          </a>
+        }
       </div>
     }
   </section>
