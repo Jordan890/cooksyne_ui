@@ -26,7 +26,12 @@
 
   <!-- Content -->
   <div class="content">
-    @if (filteredLists().length === 0) {
+    @if (loading()) {
+      <div class="loading-state">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Loading grocery lists…</p>
+      </div>
+    } @else if (filteredLists().length === 0) {
       <div class="empty-state">
         <mat-icon class="empty-icon">checklist</mat-icon>
         <h3>No grocery lists yet</h3>

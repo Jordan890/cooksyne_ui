@@ -24,6 +24,12 @@
   </mat-toolbar>
 
   <!-- Form body -->
+  @if (loading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Loading list…</p>
+    </div>
+  } @else {
   <div class="form-body">
     <!-- ─── List name ─── -->
     <section class="section">
@@ -87,4 +93,5 @@
       </button>
     </section>
   </div>
+  }
 </div>

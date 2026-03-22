@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../../core/auth/auth';
 import { GroceryListCard } from '../../components/grocery-list-card/grocery-list-card';
 import { GroceryList } from '../../models/grocery-list.model';
@@ -18,12 +19,16 @@ import { GroceryList } from '../../models/grocery-list.model';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatProgressSpinnerModule,
     GroceryListCard,
   ],
   templateUrl: './grocery-lists-page.html',
   styleUrls: ['./grocery-lists-page.scss'],
 })
 export class GroceryListsPage {
+  /** Whether the initial data fetch is in progress */
+  readonly loading = signal(false);
+
   /** Mock data — replace with a service / HTTP call later */
   readonly lists = signal<GroceryList[]>([
     {

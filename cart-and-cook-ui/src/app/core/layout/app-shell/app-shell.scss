@@ -97,6 +97,13 @@
   }
 }
 
+/* ===== Global loading indicator ===== */
+.global-loading-bar {
+  position: sticky;
+  top: 64px;  // sits flush below the toolbar
+  z-index: 999;
+}
+
 .title {
   margin-left: 0.5rem;
   font-weight: 600;

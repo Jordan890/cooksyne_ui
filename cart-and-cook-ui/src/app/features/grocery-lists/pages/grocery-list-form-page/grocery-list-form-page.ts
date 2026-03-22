@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GroceryItem, GroceryList, GroceryListDto } from '../../models/grocery-list.model';
 
 @Component({
@@ -20,6 +21,7 @@ import { GroceryItem, GroceryList, GroceryListDto } from '../../models/grocery-l
     MatFormFieldModule,
     MatInputModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './grocery-list-form-page.html',
   styleUrls: ['./grocery-list-form-page.scss'],
@@ -39,6 +41,7 @@ export class GroceryListFormPage implements OnInit {
 
   /* ── UI state ── */
   readonly saving = signal(false);
+  readonly loading = signal(false);
 
   /* ── Validation ── */
   readonly isValid = computed(() => {

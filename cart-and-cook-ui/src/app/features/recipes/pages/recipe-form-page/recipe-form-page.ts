@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { IngredientQuantity, Recipe, RecipeRequest, UNITS, Unit } from '../../models/recipe.model';
 import { RecipeService } from '../../data/recipe.service';
@@ -22,6 +23,7 @@ import { RecipeService } from '../../data/recipe.service';
     MatFormFieldModule,
     MatInputModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
   ],
   templateUrl: './recipe-form-page.html',
@@ -50,6 +52,7 @@ export class RecipeFormPage implements OnInit {
 
   /* ── UI state ── */
   readonly saving = signal(false);
+  readonly loading = signal(false);
 
   /* ── Validation ── */
   readonly isValid = computed(() => {
@@ -64,6 +67,7 @@ export class RecipeFormPage implements OnInit {
     if (idParam) {
       const id = Number(idParam);
       this.recipeId.set(id);
+      this.loading.set(true);
       this.loadRecipe(id);
     }
   }
@@ -148,8 +152,12 @@ export class RecipeFormPage implements OnInit {
             ? recipe.ingredients
             : [{ name: '', quantity: { amount: 1, unit: 'COUNT' as Unit } }],
         );
+        this.loading.set(false);
       },
-      error: err => console.error('Failed to load recipe', err),
+      error: err => {
+        console.error('Failed to load recipe', err);
+        this.loading.set(false);
+      },
     });
   }
 }

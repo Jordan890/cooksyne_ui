@@ -25,7 +25,12 @@
 
   <!-- Content area -->
   <div class="content">
-    @if (filteredRecipes().length === 0) {
+    @if (loading()) {
+      <div class="loading-state">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Loading recipes…</p>
+      </div>
+    } @else if (filteredRecipes().length === 0) {
       <!-- Empty state -->
       <div class="empty-state">
         <mat-icon class="empty-icon">menu_book</mat-icon>
