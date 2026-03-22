@@ -7,7 +7,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { Ingredient, Recipe, RecipeDto } from '../../models/recipe.model';
+import { MatSelectModule } from '@angular/material/select';
+import { IngredientQuantity, Recipe, RecipeRequest, UNITS, Unit } from '../../models/recipe.model';
+import { RecipeService } from '../../data/recipe.service';
 
 @Component({
   selector: 'app-recipe-form-page',
@@ -20,6 +22,7 @@ import { Ingredient, Recipe, RecipeDto } from '../../models/recipe.model';
     MatFormFieldModule,
     MatInputModule,
     MatProgressBarModule,
+    MatSelectModule,
   ],
   templateUrl: './recipe-form-page.html',
   styleUrls: ['./recipe-form-page.scss'],
@@ -27,34 +30,39 @@ import { Ingredient, Recipe, RecipeDto } from '../../models/recipe.model';
 export class RecipeFormPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private recipeService = inject(RecipeService);
+
+  /* ── Constants ── */
+  readonly units = UNITS;
 
   /* ── Mode ── */
-  readonly recipeId = signal<string | null>(null);
-  readonly isEdit = computed(() => !!this.recipeId());
+  readonly recipeId = signal<number | null>(null);
+  readonly isEdit = computed(() => this.recipeId() !== null);
   readonly pageTitle = computed(() => (this.isEdit() ? 'Edit Recipe' : 'Create Recipe'));
 
   /* ── Form state (signals) ── */
-  readonly title = signal('');
+  readonly name = signal('');
+  readonly category = signal('');
   readonly description = signal('');
-  readonly imageUrl = signal('');
-  readonly minutes = signal<number | null>(null);
-  readonly servings = signal<number | null>(null);
-  readonly ingredients = signal<Ingredient[]>([{ name: '', quantity: '' }]);
+  readonly ingredients = signal<IngredientQuantity[]>([
+    { name: '', quantity: { amount: 1, unit: 'COUNT' } },
+  ]);
 
   /* ── UI state ── */
   readonly saving = signal(false);
 
   /* ── Validation ── */
   readonly isValid = computed(() => {
-    if (!this.title().trim()) return false;
-    // every existing ingredient row must have a name
+    if (!this.name().trim()) return false;
+    if (!this.category().trim()) return false;
     return this.ingredients().every(i => i.name.trim().length > 0);
   });
 
   /* ── Lifecycle ── */
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      const id = Number(idParam);
       this.recipeId.set(id);
       this.loadRecipe(id);
     }
@@ -62,16 +70,39 @@ export class RecipeFormPage implements OnInit {
 
   /* ── Ingredient list management ── */
   addIngredient(): void {
-    this.ingredients.update(list => [...list, { name: '', quantity: '' }]);
+    this.ingredients.update(list => [
+      ...list,
+      { name: '', quantity: { amount: 1, unit: 'COUNT' as Unit } },
+    ]);
   }
 
   removeIngredient(index: number): void {
     this.ingredients.update(list => list.filter((_, i) => i !== index));
   }
 
-  updateIngredient(index: number, field: keyof Ingredient, value: string): void {
+  updateIngredientName(index: number, value: string): void {
     this.ingredients.update(list =>
-      list.map((item, i) => (i === index ? { ...item, [field]: value } : item)),
+      list.map((item, i) => (i === index ? { ...item, name: value } : item)),
+    );
+  }
+
+  updateIngredientAmount(index: number, value: number): void {
+    this.ingredients.update(list =>
+      list.map((item, i) =>
+        i === index
+          ? { ...item, quantity: { ...item.quantity, amount: value } }
+          : item,
+      ),
+    );
+  }
+
+  updateIngredientUnit(index: number, value: Unit): void {
+    this.ingredients.update(list =>
+      list.map((item, i) =>
+        i === index
+          ? { ...item, quantity: { ...item.quantity, unit: value } }
+          : item,
+      ),
     );
   }
 
@@ -79,26 +110,26 @@ export class RecipeFormPage implements OnInit {
   save(): void {
     if (!this.isValid()) return;
 
-    const dto: RecipeDto = {
-      title: this.title().trim(),
-      minutes: this.minutes() ?? 0,
-      description: this.description().trim() || undefined,
-      imageUrl: this.imageUrl().trim() || undefined,
-      servings: this.servings() ?? undefined,
+    const request: RecipeRequest = {
+      id: this.recipeId(),
+      name: this.name().trim(),
+      category: this.category().trim(),
+      description: this.description().trim(),
       ingredients: this.ingredients().filter(i => i.name.trim()),
     };
 
     this.saving.set(true);
 
-    // TODO: replace with actual service call
-    // this.recipeService.save(this.recipeId(), dto).subscribe(...)
-    console.log(this.isEdit() ? 'Updating' : 'Creating', dto);
-
-    // Simulate async save
-    setTimeout(() => {
-      this.saving.set(false);
-      this.router.navigate(['/recipes']);
-    }, 600);
+    this.recipeService.upsert(request).subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.router.navigate(['/recipes']);
+      },
+      error: err => {
+        console.error('Failed to save recipe', err);
+        this.saving.set(false);
+      },
+    });
   }
 
   cancel(): void {
@@ -106,28 +137,19 @@ export class RecipeFormPage implements OnInit {
   }
 
   /* ── Private ── */
-  private loadRecipe(id: string): void {
-    // TODO: replace with actual service call
-    // For now, populate with mock data matching the ID
-    const mock: Recipe = {
-      id,
-      title: 'Lemon Garlic Salmon',
-      minutes: 30,
-      description: 'Bright, quick pan-seared salmon with a zesty garlic butter sauce.',
-      servings: 2,
-      ingredients: [
-        { name: 'Salmon fillet', quantity: '2 pieces' },
-        { name: 'Garlic cloves', quantity: '4, minced' },
-        { name: 'Lemon', quantity: '1, juiced' },
-        { name: 'Butter', quantity: '2 tbsp' },
-      ],
-    };
-
-    this.title.set(mock.title);
-    this.description.set(mock.description ?? '');
-    this.imageUrl.set(mock.imageUrl ?? '');
-    this.minutes.set(mock.minutes);
-    this.servings.set(mock.servings ?? null);
-    this.ingredients.set(mock.ingredients?.length ? mock.ingredients : [{ name: '', quantity: '' }]);
+  private loadRecipe(id: number): void {
+    this.recipeService.getById(id).subscribe({
+      next: (recipe: Recipe) => {
+        this.name.set(recipe.name);
+        this.category.set(recipe.category);
+        this.description.set(recipe.description ?? '');
+        this.ingredients.set(
+          recipe.ingredients?.length
+            ? recipe.ingredients
+            : [{ name: '', quantity: { amount: 1, unit: 'COUNT' as Unit } }],
+        );
+      },
+      error: err => console.error('Failed to load recipe', err),
+    });
   }
 }

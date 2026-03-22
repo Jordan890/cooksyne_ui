@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../../../core/auth/auth';
 import { RecipeCard } from '../../components/recipe-card/recipe-card';
 import { Recipe } from '../../models/recipe.model';
+import { RecipeService } from '../../data/recipe.service';
 
 @Component({
   selector: 'app-recipes-page',
@@ -23,13 +24,11 @@ import { Recipe } from '../../models/recipe.model';
   templateUrl: './recipes-page.html',
   styleUrls: ['./recipes-page.scss'],
 })
-export class RecipesPage {
-  /** Mock data — replace with a service / HTTP call later */
-  readonly recipes = signal<Recipe[]>([
-    { id: 'r1', title: 'Lemon Garlic Salmon', minutes: 30, description: 'Bright, quick pan-seared salmon with a zesty garlic butter sauce.' },
-    { id: 'r2', title: 'One-Pan Chicken & Veg', minutes: 40, description: 'Roasted chicken thighs with seasonal vegetables — minimal cleanup.' },
-    { id: 'r3', title: 'Vegan Chili', minutes: 50, description: 'Hearty three-bean chili loaded with warm spices and smoky heat.' },
-  ]);
+export class RecipesPage implements OnInit {
+  private recipeService = inject(RecipeService);
+
+  /** All recipes loaded from the API */
+  readonly recipes = signal<Recipe[]>([]);
 
   /** Reactive search query bound to the search input */
   readonly search = signal('');
@@ -40,8 +39,9 @@ export class RecipesPage {
     if (!q) return this.recipes();
     return this.recipes().filter(
       r =>
-        r.title.toLowerCase().includes(q) ||
-        (r.description ?? '').toLowerCase().includes(q),
+        r.name.toLowerCase().includes(q) ||
+        (r.description ?? '').toLowerCase().includes(q) ||
+        (r.category ?? '').toLowerCase().includes(q),
     );
   });
 
@@ -50,8 +50,20 @@ export class RecipesPage {
     private router: Router,
   ) {}
 
-  /** Navigate to future "add recipe" flow */
+  ngOnInit(): void {
+    this.loadRecipes();
+  }
+
+  /** Navigate to "add recipe" flow */
   goAdd(): void {
     this.router.navigate(['/recipes', 'new']);
+  }
+
+  /** Fetch all recipes from the backend */
+  private loadRecipes(): void {
+    this.recipeService.getAll().subscribe({
+      next: recipes => this.recipes.set(recipes),
+      error: err => console.error('Failed to load recipes', err),
+    });
   }
 }

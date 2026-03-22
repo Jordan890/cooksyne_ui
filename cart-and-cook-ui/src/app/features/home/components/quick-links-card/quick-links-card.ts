@@ -13,9 +13,9 @@ interface GroceryList {
 }
 
 interface Recipe {
-  id: string;
-  title: string;
-  minutes: number;
+  id: number;
+  name: string;
+  category: string;
 }
 
 @Component({
@@ -34,8 +34,8 @@ export class QuickLinksCard {
   ]);
 
   favoriteRecipes = signal<Recipe[]>([
-    { id: 'r1', title: 'Lemon Garlic Salmon', minutes: 30 },
-    { id: 'r2', title: 'One-Pan Chicken Veg', minutes: 40 },
-    { id: 'r3', title: 'Vegan Chili', minutes: 50 },
+    { id: 1, name: 'Lemon Garlic Salmon', category: 'seafood' },
+    { id: 2, name: 'One-Pan Chicken Veg', category: 'poultry' },
+    { id: 3, name: 'Vegan Chili', category: 'vegetarian' },
   ]);
 }

@@ -70,8 +70,9 @@
   align-items: flex-start;
   gap: 0.5rem;
 }
-.ing-name { flex: 2; }
-.ing-qty  { flex: 1; }
+.ing-name   { flex: 2; }
+.ing-amount { flex: 0.75; }
+.ing-unit   { flex: 0.75; }
 
 .add-ing-btn {
   align-self: flex-start;
@@ -87,6 +88,7 @@
     flex-wrap: wrap;
 
     .ing-name,
-    .ing-qty { flex: 1 1 100%; }
+    .ing-amount,
+    .ing-unit { flex: 1 1 100%; }
   }
 }

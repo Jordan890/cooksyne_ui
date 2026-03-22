@@ -1,9 +1,9 @@
 <mat-card class="recipe-card" tabindex="0" role="article" (click)="open()" (keydown.enter)="open()">
   <mat-card-header>
-    <mat-card-title class="recipe-title">{{ recipe().title }}</mat-card-title>
+    <mat-card-title class="recipe-title">{{ recipe().name }}</mat-card-title>
     <mat-card-subtitle class="recipe-meta">
-      <mat-icon class="meta-icon" fontIcon="schedule"></mat-icon>
-      {{ recipe().minutes }} min
+      <mat-icon class="meta-icon" fontIcon="category"></mat-icon>
+      {{ recipe().category }}
     </mat-card-subtitle>
   </mat-card-header>
 

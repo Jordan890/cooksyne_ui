@@ -22,6 +22,9 @@ export class RecipeCard {
 
   /** Navigate to the edit page for this recipe */
   open(): void {
-    this.router.navigate(['/recipes', this.recipe().id, 'edit']);
+    const id = this.recipe().id;
+    if (id != null) {
+      this.router.navigate(['/recipes', id, 'edit']);
+    }
   }
 }
