@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../../core/auth/auth';
 import { GroceryListCard } from '../../components/grocery-list-card/grocery-list-card';
 import { GroceryList } from '../../models/grocery-list.model';
+import { GroceryListService } from '../../data/grocery-list.service';
 
 @Component({
   selector: 'app-grocery-lists-page',
@@ -25,37 +26,24 @@ import { GroceryList } from '../../models/grocery-list.model';
   templateUrl: './grocery-lists-page.html',
   styleUrls: ['./grocery-lists-page.scss'],
 })
-export class GroceryListsPage {
-  /** Whether the initial data fetch is in progress */
-  readonly loading = signal(false);
+export class GroceryListsPage implements OnInit {
+  private groceryListService = inject(GroceryListService);
 
-  /** Mock data — replace with a service / HTTP call later */
-  readonly lists = signal<GroceryList[]>([
-    {
-      id: 'gl1',
-      name: 'Weekly Essentials',
-      items: [
-        { name: 'Milk', quantity: '1 gal' },
-        { name: 'Eggs', quantity: '1 dozen' },
-        { name: 'Bread', quantity: '1 loaf' },
-      ],
-    },
-    {
-      id: 'gl2',
-      name: 'BBQ Night',
-      items: [
-        { name: 'Burgers', quantity: '8 patties' },
-        { name: 'Buns', quantity: '8' },
-      ],
-    },
-  ]);
+  /** Whether the initial data fetch is in progress */
+  readonly loading = signal(true);
+
+  readonly lists = signal<GroceryList[]>([]);
 
   readonly search = signal('');
 
   readonly filteredLists = computed(() => {
     const q = this.search().trim().toLowerCase();
     if (!q) return this.lists();
-    return this.lists().filter(l => l.name.toLowerCase().includes(q));
+    return this.lists().filter(
+      l =>
+        l.name.toLowerCase().includes(q) ||
+        l.description?.toLowerCase().includes(q),
+    );
   });
 
   constructor(
@@ -63,7 +51,25 @@ export class GroceryListsPage {
     private router: Router,
   ) {}
 
+  ngOnInit(): void {
+    this.loadLists();
+  }
+
   goCreate(): void {
     this.router.navigate(['/grocery-lists', 'new']);
+  }
+
+  private loadLists(): void {
+    this.loading.set(true);
+    this.groceryListService.getAll().subscribe({
+      next: lists => {
+        this.lists.set(lists);
+        this.loading.set(false);
+      },
+      error: err => {
+        console.error('Failed to load grocery lists', err);
+        this.loading.set(false);
+      },
+    });
   }
 }

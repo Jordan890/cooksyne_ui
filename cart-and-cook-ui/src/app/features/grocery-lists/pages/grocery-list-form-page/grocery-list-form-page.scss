@@ -57,22 +57,24 @@
 }
 
 .full-width { width: 100%; }
-.item-row {
+.ingredient-row {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
 }
-.item-name { flex: 2; }
-.item-qty  { flex: 1; }
+.ing-name   { flex: 2; }
+.ing-amount { flex: 0.75; }
+.ing-unit   { flex: 0.75; }
 
-.add-item-btn { align-self: flex-start; }
+.add-ing-btn { align-self: flex-start; }
 
 /* ── XS responsive ── */
 @include xs {
   .toolbar { flex-wrap: wrap; gap: 0.25rem; }
-  .item-row {
+  .ingredient-row {
     flex-wrap: wrap;
-    .item-name,
-    .item-qty { flex: 1 1 100%; }
+    .ing-name { flex: 1 1 100%; }
+    .ing-amount,
+    .ing-unit { flex: 1 1 45%; }
   }
 }

@@ -19,9 +19,9 @@ export class GroceryListCard {
 
   list = input.required<GroceryList>();
 
-  /** Comma-separated preview of item names, truncated with "…" */
+  /** Comma-separated preview of ingredient names, truncated with "…" */
   itemPreview = computed(() => {
-    const names = this.list().items.map(i => i.name).filter(Boolean);
+    const names = this.list().ingredients.map(i => i.name).filter(Boolean);
     const maxLen = 60;
     let result = '';
     for (let i = 0; i < names.length; i++) {
@@ -35,6 +35,7 @@ export class GroceryListCard {
   });
 
   open(): void {
+    if (this.list().id == null) return;
     this.router.navigate(['/grocery-lists', this.list().id, 'edit']);
   }
 }

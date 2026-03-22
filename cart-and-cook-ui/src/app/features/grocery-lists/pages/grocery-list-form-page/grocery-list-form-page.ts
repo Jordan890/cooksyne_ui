@@ -8,7 +8,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { GroceryItem, GroceryList, GroceryListDto } from '../../models/grocery-list.model';
+import { MatSelectModule } from '@angular/material/select';
+import { GroceryList, GroceryListRequest, IngredientQuantity } from '../../models/grocery-list.model';
+import { UNITS, Unit } from '../../../recipes/models/recipe.model';
+import { GroceryListService } from '../../data/grocery-list.service';
 
 @Component({
   selector: 'app-grocery-list-form-page',
@@ -22,6 +25,7 @@ import { GroceryItem, GroceryList, GroceryListDto } from '../../models/grocery-l
     MatInputModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
   ],
   templateUrl: './grocery-list-form-page.html',
   styleUrls: ['./grocery-list-form-page.scss'],
@@ -29,15 +33,22 @@ import { GroceryItem, GroceryList, GroceryListDto } from '../../models/grocery-l
 export class GroceryListFormPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private groceryListService = inject(GroceryListService);
+
+  /* ── Constants ── */
+  readonly units = UNITS;
 
   /* ── Mode ── */
-  readonly listId = signal<string | null>(null);
-  readonly isEdit = computed(() => !!this.listId());
+  readonly listId = signal<number | null>(null);
+  readonly isEdit = computed(() => this.listId() !== null);
   readonly pageTitle = computed(() => (this.isEdit() ? 'Edit Grocery List' : 'Create Grocery List'));
 
   /* ── Form state ── */
   readonly name = signal('');
-  readonly items = signal<GroceryItem[]>([{ name: '', quantity: '' }]);
+  readonly description = signal('');
+  readonly ingredients = signal<IngredientQuantity[]>([
+    { name: '', quantity: { amount: 1, unit: 'COUNT' } },
+  ]);
 
   /* ── UI state ── */
   readonly saving = signal(false);
@@ -46,30 +57,55 @@ export class GroceryListFormPage implements OnInit {
   /* ── Validation ── */
   readonly isValid = computed(() => {
     if (!this.name().trim()) return false;
-    return this.items().every(i => i.name.trim().length > 0);
+    return this.ingredients().every(i => i.name.trim().length > 0);
   });
 
   /* ── Lifecycle ── */
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      const id = Number(idParam);
       this.listId.set(id);
+      this.loading.set(true);
       this.loadList(id);
     }
   }
 
-  /* ── Item list management ── */
-  addItem(): void {
-    this.items.update(list => [...list, { name: '', quantity: '' }]);
+  /* ── Ingredient list management ── */
+  addIngredient(): void {
+    this.ingredients.update(list => [
+      ...list,
+      { name: '', quantity: { amount: 1, unit: 'COUNT' as Unit } },
+    ]);
   }
 
-  removeItem(index: number): void {
-    this.items.update(list => list.filter((_, i) => i !== index));
+  removeIngredient(index: number): void {
+    this.ingredients.update(list => list.filter((_, i) => i !== index));
   }
 
-  updateItem(index: number, field: keyof GroceryItem, value: string): void {
-    this.items.update(list =>
-      list.map((item, i) => (i === index ? { ...item, [field]: value } : item)),
+  updateIngredientName(index: number, value: string): void {
+    this.ingredients.update(list =>
+      list.map((item, i) => (i === index ? { ...item, name: value } : item)),
+    );
+  }
+
+  updateIngredientAmount(index: number, value: number): void {
+    this.ingredients.update(list =>
+      list.map((item, i) =>
+        i === index
+          ? { ...item, quantity: { ...item.quantity, amount: value } }
+          : item,
+      ),
+    );
+  }
+
+  updateIngredientUnit(index: number, value: Unit): void {
+    this.ingredients.update(list =>
+      list.map((item, i) =>
+        i === index
+          ? { ...item, quantity: { ...item.quantity, unit: value } }
+          : item,
+      ),
     );
   }
 
@@ -77,20 +113,25 @@ export class GroceryListFormPage implements OnInit {
   save(): void {
     if (!this.isValid()) return;
 
-    const dto: GroceryListDto = {
+    const request: GroceryListRequest = {
+      id: this.listId(),
       name: this.name().trim(),
-      items: this.items().filter(i => i.name.trim()),
+      description: this.description().trim(),
+      ingredients: this.ingredients().filter(i => i.name.trim()),
     };
 
     this.saving.set(true);
 
-    // TODO: replace with actual service call
-    console.log(this.isEdit() ? 'Updating' : 'Creating', dto);
-
-    setTimeout(() => {
-      this.saving.set(false);
-      this.router.navigate(['/grocery-lists']);
-    }, 600);
+    this.groceryListService.upsert(request).subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.router.navigate(['/grocery-lists']);
+      },
+      error: err => {
+        console.error('Failed to save grocery list', err);
+        this.saving.set(false);
+      },
+    });
   }
 
   cancel(): void {
@@ -98,19 +139,22 @@ export class GroceryListFormPage implements OnInit {
   }
 
   /* ── Private ── */
-  private loadList(id: string): void {
-    // TODO: replace with actual service call
-    const mock: GroceryList = {
-      id,
-      name: 'Weekly Essentials',
-      items: [
-        { name: 'Milk', quantity: '1 gal' },
-        { name: 'Eggs', quantity: '1 dozen' },
-        { name: 'Bread', quantity: '1 loaf' },
-      ],
-    };
-
-    this.name.set(mock.name);
-    this.items.set(mock.items.length ? mock.items : [{ name: '', quantity: '' }]);
+  private loadList(id: number): void {
+    this.groceryListService.getById(id).subscribe({
+      next: (list: GroceryList) => {
+        this.name.set(list.name);
+        this.description.set(list.description ?? '');
+        this.ingredients.set(
+          list.ingredients?.length
+            ? list.ingredients
+            : [{ name: '', quantity: { amount: 1, unit: 'COUNT' as Unit } }],
+        );
+        this.loading.set(false);
+      },
+      error: err => {
+        console.error('Failed to load grocery list', err);
+        this.loading.set(false);
+      },
+    });
   }
 }

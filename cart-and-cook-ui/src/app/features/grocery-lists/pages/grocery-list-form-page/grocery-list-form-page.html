@@ -31,7 +31,7 @@
     </div>
   } @else {
   <div class="form-body">
-    <!-- ─── List name ─── -->
+    <!-- ─── List details ─── -->
     <section class="section">
       <h3 class="section-title">List Details</h3>
 
@@ -48,47 +48,72 @@
           <mat-error>List name is required</mat-error>
         }
       </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea
+          matInput
+          rows="3"
+          placeholder="A short description of this list…"
+          [value]="description()"
+          (input)="description.set($any($event.target).value)"
+        ></textarea>
+      </mat-form-field>
     </section>
 
-    <!-- ─── Items ─── -->
+    <!-- ─── Ingredients ─── -->
     <section class="section">
       <h3 class="section-title">Items</h3>
 
-      @for (item of items(); track $index) {
-        <div class="item-row">
-          <mat-form-field appearance="outline" class="item-name">
+      @for (ing of ingredients(); track $index) {
+        <div class="ingredient-row">
+          <mat-form-field appearance="outline" class="ing-name">
             <mat-label>Item</mat-label>
             <input
               matInput
               required
               placeholder="e.g. Milk"
-              [value]="item.name"
-              (input)="updateItem($index, 'name', $any($event.target).value)"
+              [value]="ing.name"
+              (input)="updateIngredientName($index, $any($event.target).value)"
             />
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="item-qty">
-            <mat-label>Qty</mat-label>
+          <mat-form-field appearance="outline" class="ing-amount">
+            <mat-label>Amount</mat-label>
             <input
               matInput
-              placeholder="e.g. 1 gal"
-              [value]="item.quantity"
-              (input)="updateItem($index, 'quantity', $any($event.target).value)"
+              type="number"
+              min="0"
+              step="0.25"
+              [value]="ing.quantity.amount"
+              (input)="updateIngredientAmount($index, +$any($event.target).value)"
             />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="ing-unit">
+            <mat-label>Unit</mat-label>
+            <mat-select
+              [value]="ing.quantity.unit"
+              (selectionChange)="updateIngredientUnit($index, $event.value)"
+            >
+              @for (u of units; track u) {
+                <mat-option [value]="u">{{ u }}</mat-option>
+              }
+            </mat-select>
           </mat-form-field>
 
           <button
             mat-icon-button
             color="warn"
             aria-label="Remove item"
-            (click)="removeItem($index)"
+            (click)="removeIngredient($index)"
           >
             <mat-icon>delete</mat-icon>
           </button>
         </div>
       }
 
-      <button mat-stroked-button (click)="addItem()" class="add-item-btn">
+      <button mat-stroked-button (click)="addIngredient()" class="add-ing-btn">
         <mat-icon>add</mat-icon> Add item
       </button>
     </section>
