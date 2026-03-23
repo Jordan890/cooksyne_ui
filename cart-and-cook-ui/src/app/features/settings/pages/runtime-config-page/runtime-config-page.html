@@ -18,7 +18,7 @@
         <mat-card-content>
           <div class="notice-row">
             <mat-icon>info</mat-icon>
-            <p>Core runtime settings (DB/OAuth/port) must be set as startup environment variables. This screen manages AI provider settings only.</p>
+            <p>Core runtime settings and AI API keys must be set as startup environment variables. This screen manages non-secret AI provider settings only.</p>
           </div>
         </mat-card-content>
       </mat-card>
@@ -50,10 +50,6 @@
       <section class="section">
         <h3>OpenAI</h3>
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>OpenAI API Key</mat-label>
-          <input matInput type="password" [(ngModel)]="config.openAiApiKey" name="openAiApiKey" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width">
           <mat-label>OpenAI Model</mat-label>
           <input matInput [(ngModel)]="config.openAiModel" name="openAiModel" />
         </mat-form-field>
@@ -73,10 +69,6 @@
 
       <section class="section">
         <h3>Hugging Face</h3>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Hugging Face API Key</mat-label>
-          <input matInput type="password" [(ngModel)]="config.huggingFaceApiKey" name="huggingFaceApiKey" />
-        </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Hugging Face Model</mat-label>
           <input matInput [(ngModel)]="config.huggingFaceModel" name="huggingFaceModel" />

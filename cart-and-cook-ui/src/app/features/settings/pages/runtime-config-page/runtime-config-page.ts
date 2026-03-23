@@ -37,11 +37,9 @@ export class RuntimeConfigPage implements OnInit {
     aiProvider: '',
     ollamaBaseUrl: '',
     ollamaModel: '',
-    openAiApiKey: '',
     openAiModel: '',
     awsRegion: '',
     bedrockModelId: '',
-    huggingFaceApiKey: '',
     huggingFaceModel: '',
   };
 

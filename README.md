@@ -36,7 +36,7 @@ Use this order to avoid common startup/auth issues.
 
 1. In the backend repository, start PostgreSQL.
 2. Start Keycloak and verify issuer URI is available (`http://localhost:8080/realms/cart_and_cook` by default).
-3. In the backend terminal, export startup environment variables (`DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `OAUTH2_ISSUER_URI`, `PORT`, `CONFIG_ENCRYPTION_KEY`).
+3. In the backend terminal, export startup environment variables (`DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `OAUTH2_ISSUER_URI`, `PORT`, and any AI API keys you need such as `OPENAI_API_KEY` or `HUGGINGFACE_API_KEY`).
 4. Start backend runtime and wait until it is listening on `http://localhost:8081`.
 5. In this UI repository, install dependencies and start the frontend (`npm install` then `npm start`).
 6. Open `http://localhost:4200` and complete OIDC login.
@@ -146,8 +146,9 @@ Default behavior:
 
 Important:
 
-- Core runtime settings are no longer editable in UI.
+- Core runtime settings and AI API keys are no longer editable in UI.
 - DB URL/credentials, OAuth issuer, and server port must be set as startup environment variables for the backend process.
+- OpenAI and Hugging Face API keys must be provided as backend startup environment variables.
 
 ## Running Tests and Builds
 
