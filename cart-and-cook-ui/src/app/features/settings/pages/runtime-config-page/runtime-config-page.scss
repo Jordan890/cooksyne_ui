@@ -43,6 +43,14 @@
   }
 }
 
+.warning-row {
+  margin-top: 0.5rem;
+
+  mat-icon {
+    color: #b45309;
+  }
+}
+
 .section {
   display: flex;
   flex-direction: column;
@@ -81,6 +89,18 @@
   margin: 0;
   font-size: 0.9rem;
   color: var(--cart-primary-color);
+}
+
+.db-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.db-test-message {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--cart-text-secondary);
 }
 
 @include xs {

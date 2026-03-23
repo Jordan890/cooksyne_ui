@@ -20,6 +20,12 @@
             <mat-icon>info</mat-icon>
             <p>These values replace environment variables for self-hosted runtime settings. Restart the backend after saving.</p>
           </div>
+          @if (config.dbSafeMode) {
+            <div class="notice-row warning-row">
+              <mat-icon>warning</mat-icon>
+              <p>DB Safe Mode is enabled. DB settings in this screen are not applied to runtime.</p>
+            </div>
+          }
         </mat-card-content>
       </mat-card>
 
@@ -52,6 +58,23 @@
           <mat-label>Server Port</mat-label>
           <input matInput [(ngModel)]="config.port" name="port" />
         </mat-form-field>
+
+        <div class="db-actions">
+          <button mat-stroked-button [disabled]="testingDb()" (click)="testDbConnection()">
+            {{ testingDb() ? 'Testing…' : 'Test DB Connection' }}
+          </button>
+          <button
+            mat-stroked-button
+            color="warn"
+            [disabled]="rollingBackDb() || !config.lastKnownGoodDbConfigured"
+            (click)="rollbackDb()"
+          >
+            {{ rollingBackDb() ? 'Rolling back…' : 'Rollback to Last Known Good DB' }}
+          </button>
+        </div>
+        @if (dbTestMessage()) {
+          <p class="db-test-message">{{ dbTestMessage() }}</p>
+        }
       </section>
 
       <section class="section">

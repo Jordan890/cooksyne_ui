@@ -33,7 +33,10 @@ export class RuntimeConfigPage implements OnInit {
 
   readonly loading = signal(true);
   readonly saving = signal(false);
+  readonly testingDb = signal(false);
+  readonly rollingBackDb = signal(false);
   readonly saveMessage = signal<string | null>(null);
+  readonly dbTestMessage = signal<string | null>(null);
 
   config: RuntimeConfig = {
     dbUrl: '',
@@ -42,6 +45,8 @@ export class RuntimeConfigPage implements OnInit {
     oauth2IssuerUri: '',
     port: '',
     autoRestartOnConfigSave: true,
+    dbSafeMode: false,
+    lastKnownGoodDbConfigured: false,
     aiProvider: '',
     ollamaBaseUrl: '',
     ollamaModel: '',
@@ -87,7 +92,42 @@ export class RuntimeConfigPage implements OnInit {
       error: err => {
         console.error('Failed to save runtime config', err);
         this.saving.set(false);
-        this.saveMessage.set('Failed to save configuration.');
+        this.saveMessage.set(err?.error?.error || 'Failed to save configuration.');
+      },
+    });
+  }
+
+  testDbConnection(): void {
+    this.testingDb.set(true);
+    this.dbTestMessage.set(null);
+
+    this.runtimeConfigService.testDbConnection(this.config).subscribe({
+      next: result => {
+        this.testingDb.set(false);
+        this.dbTestMessage.set(result.success ? `DB test successful: ${result.message}` : `DB test failed: ${result.message}`);
+      },
+      error: err => {
+        console.error('Failed to test DB connection', err);
+        this.testingDb.set(false);
+        this.dbTestMessage.set(err?.error?.error || 'Failed to test DB connection.');
+      },
+    });
+  }
+
+  rollbackDb(): void {
+    this.rollingBackDb.set(true);
+    this.saveMessage.set(null);
+
+    this.runtimeConfigService.rollbackDb().subscribe({
+      next: cfg => {
+        this.config = cfg;
+        this.rollingBackDb.set(false);
+        this.saveMessage.set('Rolled back to last-known-good DB configuration.');
+      },
+      error: err => {
+        console.error('Failed to rollback DB config', err);
+        this.rollingBackDb.set(false);
+        this.saveMessage.set(err?.error?.error || 'Failed to roll back DB configuration.');
       },
     });
   }

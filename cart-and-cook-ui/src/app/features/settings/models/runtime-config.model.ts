@@ -5,6 +5,8 @@ export interface RuntimeConfig {
   oauth2IssuerUri: string;
   port: string;
   autoRestartOnConfigSave: boolean;
+  dbSafeMode: boolean;
+  lastKnownGoodDbConfigured: boolean;
 
   aiProvider: string;
   ollamaBaseUrl: string;
