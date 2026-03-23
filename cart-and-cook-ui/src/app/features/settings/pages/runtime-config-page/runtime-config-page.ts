@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { RuntimeConfigService } from '../../data/runtime-config.service';
 import { RuntimeConfig } from '../../models/runtime-config.model';
 
@@ -22,12 +23,20 @@ import { RuntimeConfig } from '../../models/runtime-config.model';
     MatProgressSpinnerModule,
     MatCardModule,
     MatIconModule,
+    MatSelectModule,
   ],
   templateUrl: './runtime-config-page.html',
   styleUrls: ['./runtime-config-page.scss'],
 })
 export class RuntimeConfigPage implements OnInit {
   private runtimeConfigService = inject(RuntimeConfigService);
+
+  readonly providerOptions = [
+    { value: 'ollama', label: 'Ollama' },
+    { value: 'openai', label: 'OpenAI' },
+    { value: 'bedrock', label: 'AWS Bedrock' },
+    { value: 'huggingface', label: 'Hugging Face' },
+  ];
 
   readonly loading = signal(true);
   readonly saving = signal(false);
@@ -76,5 +85,9 @@ export class RuntimeConfigPage implements OnInit {
 
   canSave(): boolean {
     return !this.saving();
+  }
+
+  selectedProvider(): string {
+    return this.config.aiProvider.trim().toLowerCase();
   }
 }

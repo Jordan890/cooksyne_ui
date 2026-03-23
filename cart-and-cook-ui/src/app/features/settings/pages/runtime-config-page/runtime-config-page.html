@@ -30,50 +30,67 @@
       <section class="section">
         <h3>AI Provider</h3>
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>AI Provider (ollama, openai, bedrock, huggingface)</mat-label>
-          <input matInput [(ngModel)]="config.aiProvider" name="aiProvider" />
+          <mat-label>AI Provider</mat-label>
+          <mat-select [(ngModel)]="config.aiProvider" name="aiProvider">
+            <mat-option value="">Select provider</mat-option>
+            @for (option of providerOptions; track option.value) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
         </mat-form-field>
       </section>
 
-      <section class="section">
-        <h3>Ollama</h3>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Ollama Base URL</mat-label>
-          <input matInput [(ngModel)]="config.ollamaBaseUrl" name="ollamaBaseUrl" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Ollama Model</mat-label>
-          <input matInput [(ngModel)]="config.ollamaModel" name="ollamaModel" />
-        </mat-form-field>
-      </section>
+      @if (selectedProvider() === 'ollama') {
+        <section class="section">
+          <h3>Ollama</h3>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Ollama Base URL</mat-label>
+            <input matInput [(ngModel)]="config.ollamaBaseUrl" name="ollamaBaseUrl" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Ollama Model</mat-label>
+            <input matInput [(ngModel)]="config.ollamaModel" name="ollamaModel" />
+          </mat-form-field>
+        </section>
+      }
 
-      <section class="section">
-        <h3>OpenAI</h3>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>OpenAI Model</mat-label>
-          <input matInput [(ngModel)]="config.openAiModel" name="openAiModel" />
-        </mat-form-field>
-      </section>
+      @if (selectedProvider() === 'openai') {
+        <section class="section">
+          <h3>OpenAI</h3>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>OpenAI Model</mat-label>
+            <input matInput [(ngModel)]="config.openAiModel" name="openAiModel" />
+          </mat-form-field>
+        </section>
+      }
 
-      <section class="section">
-        <h3>AWS Bedrock</h3>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>AWS Region</mat-label>
-          <input matInput [(ngModel)]="config.awsRegion" name="awsRegion" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Bedrock Model ID</mat-label>
-          <input matInput [(ngModel)]="config.bedrockModelId" name="bedrockModelId" />
-        </mat-form-field>
-      </section>
+      @if (selectedProvider() === 'bedrock') {
+        <section class="section">
+          <h3>AWS Bedrock</h3>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>AWS Region</mat-label>
+            <input matInput [(ngModel)]="config.awsRegion" name="awsRegion" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Bedrock Model ID</mat-label>
+            <input matInput [(ngModel)]="config.bedrockModelId" name="bedrockModelId" />
+          </mat-form-field>
+        </section>
+      }
 
-      <section class="section">
-        <h3>Hugging Face</h3>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Hugging Face Model</mat-label>
-          <input matInput [(ngModel)]="config.huggingFaceModel" name="huggingFaceModel" />
-        </mat-form-field>
-      </section>
+      @if (selectedProvider() === 'huggingface') {
+        <section class="section">
+          <h3>Hugging Face</h3>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Hugging Face Model</mat-label>
+            <input matInput [(ngModel)]="config.huggingFaceModel" name="huggingFaceModel" />
+          </mat-form-field>
+        </section>
+      }
+
+      @if (!selectedProvider()) {
+        <p class="provider-hint">Select a provider to view provider-specific settings.</p>
+      }
     </div>
   }
 </div>
