@@ -32,14 +32,54 @@
   } @else {
   <div class="form-body">
     <!-- ─── AI Image Analysis ─── -->
-    <app-image-analyzer (analyzed)="applyAnalysis($event)" />
+    <app-image-analyzer
+      (analyzed)="applyAnalysis($event)"
+      (foodImageAnalyzed)="onFoodImageAnalyzed($event)"
+    />
 
-    @if (estimatedCalories()) {
+    @if (estimatedCalories() != null) {
       <div class="calorie-banner">
         <mat-icon class="calorie-icon">local_fire_department</mat-icon>
-        <span class="calorie-text">Estimated calories: <strong>{{ estimatedCalories() }}</strong></span>
+        <mat-form-field appearance="outline" class="calorie-field">
+          <mat-label>Estimated calories</mat-label>
+          <input
+            matInput
+            type="number"
+            min="0"
+            [value]="estimatedCalories()"
+            (input)="estimatedCalories.set(+$any($event.target).value || null)"
+          />
+        </mat-form-field>
       </div>
     }
+
+    <!-- ─── Recipe Photo ─── -->
+    <section class="section">
+      <h3 class="section-title">Recipe Photo</h3>
+      @if (imagePreviewUrl()) {
+        <div class="photo-preview-wrapper">
+          <img [src]="imagePreviewUrl()" alt="Recipe photo" class="photo-preview" />
+          <button mat-icon-button class="photo-remove-btn" aria-label="Remove photo" (click)="removeImage()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      } @else {
+        <label class="photo-drop-zone" tabindex="0" (keydown.enter)="photoInput.click()">
+          <mat-icon class="photo-drop-icon">add_a_photo</mat-icon>
+          <span>Click to upload a recipe photo</span>
+          <input
+            #photoInput
+            type="file"
+            accept="image/*"
+            hidden
+            (change)="onRecipeImageSelected($event)"
+          />
+        </label>
+      }
+      @if (uploadingImage()) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      }
+    </section>
 
     <!-- ─── Basic info ─── -->
     <section class="section">

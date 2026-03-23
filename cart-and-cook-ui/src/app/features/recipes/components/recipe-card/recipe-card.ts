@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Recipe } from '../../models/recipe.model';
+import { ImageUploadService } from '../../data/image-upload.service';
 
 export type { Recipe };
 
@@ -16,12 +17,19 @@ export type { Recipe };
 })
 export class RecipeCard {
   private router = inject(Router);
+  private imageUploadService = inject(ImageUploadService);
 
   /** The recipe data to display */
   recipe = input.required<Recipe>();
 
   /** Emitted when the user confirms deletion */
   deleted = output<number>();
+
+  /** Resolve the recipe image URL for display. */
+  get imageFullUrl(): string {
+    const url = this.recipe().imageUrl;
+    return url ? this.imageUploadService.resolveUrl(url) : '';
+  }
 
   /** Navigate to the edit page for this recipe */
   open(): void {

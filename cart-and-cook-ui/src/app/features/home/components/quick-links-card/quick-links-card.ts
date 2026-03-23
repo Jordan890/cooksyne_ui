@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { RecipeService } from '../../../recipes/data/recipe.service';
+import { ImageUploadService } from '../../../recipes/data/image-upload.service';
 import { GroceryListService } from '../../../grocery-lists/data/grocery-list.service';
 import { Recipe } from '../../../recipes/models/recipe.model';
 import { GroceryList } from '../../../grocery-lists/models/grocery-list.model';
@@ -20,6 +21,7 @@ import { GroceryList } from '../../../grocery-lists/models/grocery-list.model';
 export class QuickLinksCard implements OnInit {
   private recipeService = inject(RecipeService);
   private groceryListService = inject(GroceryListService);
+  readonly imageUploadService = inject(ImageUploadService);
 
   readonly loadingRecipes = signal(true);
   readonly loadingLists = signal(true);

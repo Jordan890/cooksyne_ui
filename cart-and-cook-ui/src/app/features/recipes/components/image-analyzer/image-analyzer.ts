@@ -28,6 +28,9 @@ export class ImageAnalyzer {
   /** Emitted when the AI returns a successful analysis. */
   analyzed = output<RecipeAnalysis>();
 
+  /** Emitted with the selected file when a food (dish) analysis succeeds. */
+  foodImageAnalyzed = output<File>();
+
   readonly analysisType = signal<AnalysisType>('food');
   readonly selectedFile = signal<File | null>(null);
   readonly previewUrl = signal<string | null>(null);
@@ -64,6 +67,9 @@ export class ImageAnalyzer {
     call.subscribe({
       next: result => {
         this.analyzed.emit(result);
+        if (this.analysisType() === 'food' && file) {
+          this.foodImageAnalyzed.emit(file);
+        }
         this.analyzing.set(false);
       },
       error: () => {

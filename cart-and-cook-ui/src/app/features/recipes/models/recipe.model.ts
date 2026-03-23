@@ -73,13 +73,16 @@ export interface RecipeRequest {
 /** Single ingredient returned by the AI analysis endpoint. */
 export interface IngredientEstimate {
   name: string;
-  amount: string;
+  amount: number;
+  unit: string;
   calories: number | null;
 }
 
 /** Response from POST /api/ai/analyze-food or /api/ai/analyze-recipe. */
 export interface RecipeAnalysis {
   title: string;
+  category: string;
+  description: string;
   ingredients: IngredientEstimate[];
   estimatedCalories: number | null;
 }

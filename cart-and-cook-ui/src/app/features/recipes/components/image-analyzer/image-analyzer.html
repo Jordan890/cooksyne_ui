@@ -57,12 +57,7 @@
     [disabled]="!selectedFile() || analyzing()"
     (click)="analyze()"
   >
-    @if (analyzing()) {
-      Analyzing…
-    } @else {
-      <ng-container>
-        <mat-icon>search</mat-icon> Analyze image
-      </ng-container>
-    }
+    <mat-icon>{{ analyzing() ? 'hourglass_empty' : 'search' }}</mat-icon>
+    {{ analyzing() ? 'Analyzing…' : 'Analyze image' }}
   </button>
 </section>

@@ -44,7 +44,11 @@
         @for (r of recentRecipes(); track r.id) {
           <a class="card-link recipe-card" [routerLink]="['/recipes', r.id, 'edit']">
             <div class="thumb" aria-hidden="true">
-              <span class="thumb-label">No image provided</span>
+              @if (r.imageUrl) {
+                <img [src]="imageUploadService.resolveUrl(r.imageUrl)" [alt]="r.name" class="thumb-img" />
+              } @else {
+                <span class="thumb-label">No image provided</span>
+              }
             </div>
             <div class="recipe-info">
               <div class="title">{{ r.name }}</div>

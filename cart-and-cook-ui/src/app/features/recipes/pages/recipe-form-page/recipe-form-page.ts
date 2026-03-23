@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { IngredientQuantity, Recipe, RecipeAnalysis, RecipeRequest, UNITS, Unit } from '../../models/recipe.model';
 import { RecipeService } from '../../data/recipe.service';
+import { ImageUploadService } from '../../data/image-upload.service';
 import { ImageAnalyzer } from '../../components/image-analyzer/image-analyzer';
 
 @Component({
@@ -37,6 +38,7 @@ export class RecipeFormPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private recipeService = inject(RecipeService);
+  private imageUploadService = inject(ImageUploadService);
 
   /* ── Constants ── */
   readonly units = UNITS;
@@ -56,6 +58,11 @@ export class RecipeFormPage implements OnInit {
 
   /* ── AI analysis ── */
   readonly estimatedCalories = signal<number | null>(null);
+
+  /* ── Recipe image ── */
+  readonly imageUrl = signal<string | null>(null);
+  readonly imagePreviewUrl = signal<string | null>(null);
+  readonly uploadingImage = signal(false);
 
   /* ── UI state ── */
   readonly saving = signal(false);
@@ -126,6 +133,7 @@ export class RecipeFormPage implements OnInit {
       name: this.name().trim(),
       category: this.category().trim(),
       description: this.description().trim(),
+      imageUrl: this.imageUrl() ?? undefined,
       ingredients: this.ingredients().filter(i => i.name.trim()),
       estimatedCalories: this.estimatedCalories(),
     };
@@ -149,15 +157,44 @@ export class RecipeFormPage implements OnInit {
     if (result.title && !this.name().trim()) {
       this.name.set(result.title);
     }
+    if (result.category && !this.category().trim()) {
+      this.category.set(result.category);
+    }
+    if (result.description && !this.description().trim()) {
+      this.description.set(result.description);
+    }
     this.estimatedCalories.set(result.estimatedCalories);
     if (result.ingredients?.length) {
       this.ingredients.set(
         result.ingredients.map(i => ({
           name: i.name,
-          quantity: { amount: parseFloat(i.amount) || 1, unit: 'COUNT' as Unit },
+          quantity: {
+            amount: i.amount || 1,
+            unit: (UNITS.includes(i.unit as Unit) ? i.unit : 'COUNT') as Unit,
+          },
         })),
       );
     }
+  }
+
+  /** Upload a recipe photo chosen by the user. */
+  onRecipeImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    this.uploadImage(file);
+  }
+
+  /** Upload a food analysis image as the recipe photo. */
+  onFoodImageAnalyzed(file: File): void {
+    if (!this.imageUrl()) {
+      this.uploadImage(file);
+    }
+  }
+
+  removeImage(): void {
+    this.imageUrl.set(null);
+    this.imagePreviewUrl.set(null);
   }
 
   cancel(): void {
@@ -165,6 +202,28 @@ export class RecipeFormPage implements OnInit {
   }
 
   /* ── Private ── */
+  private uploadImage(file: File): void {
+    this.uploadingImage.set(true);
+
+    // Show a local preview immediately
+    const reader = new FileReader();
+    reader.onload = () => this.imagePreviewUrl.set(reader.result as string);
+    reader.readAsDataURL(file);
+
+    this.imageUploadService.upload(file).subscribe({
+      next: url => {
+        this.imageUrl.set(url);
+        this.imagePreviewUrl.set(this.imageUploadService.resolveUrl(url));
+        this.uploadingImage.set(false);
+      },
+      error: err => {
+        console.error('Image upload failed', err);
+        this.imagePreviewUrl.set(null);
+        this.uploadingImage.set(false);
+      },
+    });
+  }
+
   private loadRecipe(id: number): void {
     this.recipeService.getById(id).subscribe({
       next: (recipe: Recipe) => {
@@ -172,6 +231,10 @@ export class RecipeFormPage implements OnInit {
         this.category.set(recipe.category);
         this.description.set(recipe.description ?? '');
         this.estimatedCalories.set(recipe.estimatedCalories ?? null);
+        if (recipe.imageUrl) {
+          this.imageUrl.set(recipe.imageUrl);
+          this.imagePreviewUrl.set(this.imageUploadService.resolveUrl(recipe.imageUrl));
+        }
         this.ingredients.set(
           recipe.ingredients?.length
             ? recipe.ingredients

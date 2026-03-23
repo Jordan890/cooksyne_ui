@@ -1,4 +1,7 @@
 <mat-card class="recipe-card" tabindex="0" role="article" (click)="open()" (keydown.enter)="open()">
+  @if (recipe().imageUrl) {
+    <img mat-card-image [src]="imageFullUrl" [alt]="recipe().name" class="card-image" />
+  }
   <mat-card-header>
     <mat-card-title class="recipe-title">{{ recipe().name }}</mat-card-title>
     <mat-card-subtitle class="recipe-meta">
