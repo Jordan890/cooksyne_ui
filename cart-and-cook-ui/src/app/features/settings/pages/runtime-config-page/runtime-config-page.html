@@ -2,7 +2,7 @@
   <mat-toolbar class="toolbar">
     <span class="toolbar-title">Runtime Configuration</span>
     <span class="spacer"></span>
-    <button mat-flat-button color="primary" [disabled]="saving()" (click)="save()">
+    <button mat-flat-button color="primary" [disabled]="!canSave()" (click)="save()">
       Save
     </button>
   </mat-toolbar>
@@ -40,15 +40,15 @@
         </mat-checkbox>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Database URL</mat-label>
-          <input matInput [(ngModel)]="config.dbUrl" name="dbUrl" />
+          <input matInput [(ngModel)]="config.dbUrl" (ngModelChange)="onDbConfigChanged()" name="dbUrl" />
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Database Username</mat-label>
-          <input matInput [(ngModel)]="config.dbUsername" name="dbUsername" />
+          <input matInput [(ngModel)]="config.dbUsername" (ngModelChange)="onDbConfigChanged()" name="dbUsername" />
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Database Password</mat-label>
-          <input matInput type="password" [(ngModel)]="config.dbPassword" name="dbPassword" />
+          <input matInput type="password" [(ngModel)]="config.dbPassword" (ngModelChange)="onDbConfigChanged()" name="dbPassword" />
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>OAuth2 Issuer URI</mat-label>

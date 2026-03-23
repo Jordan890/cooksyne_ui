@@ -37,6 +37,12 @@ export class RuntimeConfigPage implements OnInit {
   readonly rollingBackDb = signal(false);
   readonly saveMessage = signal<string | null>(null);
   readonly dbTestMessage = signal<string | null>(null);
+  private dbTestToken: string | null = null;
+  private lastLoadedDbConfig = {
+    dbUrl: '',
+    dbUsername: '',
+    dbPassword: '',
+  };
 
   config: RuntimeConfig = {
     dbUrl: '',
@@ -64,6 +70,11 @@ export class RuntimeConfigPage implements OnInit {
     this.runtimeConfigService.getConfig().subscribe({
       next: cfg => {
         this.config = cfg;
+        this.lastLoadedDbConfig = {
+          dbUrl: cfg.dbUrl,
+          dbUsername: cfg.dbUsername,
+          dbPassword: cfg.dbPassword,
+        };
         this.loading.set(false);
       },
       error: err => {
@@ -74,12 +85,23 @@ export class RuntimeConfigPage implements OnInit {
   }
 
   save(): void {
+    if (this.isDbChanged() && !this.config.dbSafeMode && !this.dbTestToken) {
+      this.saveMessage.set('Test DB connection before saving changed DB settings.');
+      return;
+    }
+
     this.saving.set(true);
     this.saveMessage.set(null);
 
-    this.runtimeConfigService.saveConfig(this.config).subscribe({
+    this.runtimeConfigService.saveConfig(this.config, this.dbTestToken).subscribe({
       next: cfg => {
         this.config = cfg;
+        this.lastLoadedDbConfig = {
+          dbUrl: cfg.dbUrl,
+          dbUsername: cfg.dbUsername,
+          dbPassword: cfg.dbPassword,
+        };
+        this.dbTestToken = null;
         this.saving.set(false);
         if (cfg.restartRequired && cfg.autoRestartOnConfigSave) {
           this.saveMessage.set('Configuration saved. Restart triggered automatically.');
@@ -104,6 +126,7 @@ export class RuntimeConfigPage implements OnInit {
     this.runtimeConfigService.testDbConnection(this.config).subscribe({
       next: result => {
         this.testingDb.set(false);
+        this.dbTestToken = result.success ? result.testToken : null;
         this.dbTestMessage.set(result.success ? `DB test successful: ${result.message}` : `DB test failed: ${result.message}`);
       },
       error: err => {
@@ -121,6 +144,12 @@ export class RuntimeConfigPage implements OnInit {
     this.runtimeConfigService.rollbackDb().subscribe({
       next: cfg => {
         this.config = cfg;
+        this.lastLoadedDbConfig = {
+          dbUrl: cfg.dbUrl,
+          dbUsername: cfg.dbUsername,
+          dbPassword: cfg.dbPassword,
+        };
+        this.dbTestToken = null;
         this.rollingBackDb.set(false);
         this.saveMessage.set('Rolled back to last-known-good DB configuration.');
       },
@@ -130,5 +159,23 @@ export class RuntimeConfigPage implements OnInit {
         this.saveMessage.set(err?.error?.error || 'Failed to roll back DB configuration.');
       },
     });
+  }
+
+  onDbConfigChanged(): void {
+    this.dbTestToken = null;
+    this.dbTestMessage.set(null);
+  }
+
+  isDbChanged(): boolean {
+    return this.config.dbUrl !== this.lastLoadedDbConfig.dbUrl
+      || this.config.dbUsername !== this.lastLoadedDbConfig.dbUsername
+      || this.config.dbPassword !== this.lastLoadedDbConfig.dbPassword;
+  }
+
+  canSave(): boolean {
+    if (this.saving()) return false;
+    if (this.config.dbSafeMode) return true;
+    if (!this.isDbChanged()) return true;
+    return !!this.dbTestToken;
   }
 }

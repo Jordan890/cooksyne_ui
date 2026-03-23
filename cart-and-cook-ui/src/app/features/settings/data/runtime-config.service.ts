@@ -7,6 +7,7 @@ import { RuntimeConfig } from '../models/runtime-config.model';
 export interface RuntimeDbTestResult {
   success: boolean;
   message: string;
+  testToken: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -18,8 +19,11 @@ export class RuntimeConfigService {
     return this.http.get<RuntimeConfig>(this.baseUrl);
   }
 
-  saveConfig(config: RuntimeConfig): Observable<RuntimeConfig> {
-    return this.http.put<RuntimeConfig>(this.baseUrl, config);
+  saveConfig(config: RuntimeConfig, dbTestToken: string | null): Observable<RuntimeConfig> {
+    return this.http.put<RuntimeConfig>(this.baseUrl, {
+      ...config,
+      dbTestToken,
+    });
   }
 
   testDbConnection(config: RuntimeConfig): Observable<RuntimeDbTestResult> {
