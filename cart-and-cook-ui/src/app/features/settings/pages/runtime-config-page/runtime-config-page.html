@@ -18,64 +18,14 @@
         <mat-card-content>
           <div class="notice-row">
             <mat-icon>info</mat-icon>
-            <p>These values replace environment variables for self-hosted runtime settings. Restart the backend after saving.</p>
+            <p>Core runtime settings (DB/OAuth/port) must be set as startup environment variables. This screen manages AI provider settings only.</p>
           </div>
-          @if (config.dbSafeMode) {
-            <div class="notice-row warning-row">
-              <mat-icon>warning</mat-icon>
-              <p>DB Safe Mode is enabled. DB settings in this screen are not applied to runtime.</p>
-            </div>
-          }
         </mat-card-content>
       </mat-card>
 
       @if (saveMessage()) {
         <p class="save-message">{{ saveMessage() }}</p>
       }
-
-      <section class="section">
-        <h3>Core Runtime</h3>
-        <mat-checkbox [(ngModel)]="config.autoRestartOnConfigSave" name="autoRestartOnConfigSave">
-          Auto-restart backend when restart-required settings change
-        </mat-checkbox>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Database URL</mat-label>
-          <input matInput [(ngModel)]="config.dbUrl" (ngModelChange)="onDbConfigChanged()" name="dbUrl" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Database Username</mat-label>
-          <input matInput [(ngModel)]="config.dbUsername" (ngModelChange)="onDbConfigChanged()" name="dbUsername" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Database Password</mat-label>
-          <input matInput type="password" [(ngModel)]="config.dbPassword" (ngModelChange)="onDbConfigChanged()" name="dbPassword" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>OAuth2 Issuer URI</mat-label>
-          <input matInput [(ngModel)]="config.oauth2IssuerUri" name="oauth2IssuerUri" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Server Port</mat-label>
-          <input matInput [(ngModel)]="config.port" name="port" />
-        </mat-form-field>
-
-        <div class="db-actions">
-          <button mat-stroked-button [disabled]="testingDb()" (click)="testDbConnection()">
-            {{ testingDb() ? 'Testing…' : 'Test DB Connection' }}
-          </button>
-          <button
-            mat-stroked-button
-            color="warn"
-            [disabled]="rollingBackDb() || !config.lastKnownGoodDbConfigured"
-            (click)="rollbackDb()"
-          >
-            {{ rollingBackDb() ? 'Rolling back…' : 'Rollback to Last Known Good DB' }}
-          </button>
-        </div>
-        @if (dbTestMessage()) {
-          <p class="db-test-message">{{ dbTestMessage() }}</p>
-        }
-      </section>
 
       <section class="section">
         <h3>AI Provider</h3>

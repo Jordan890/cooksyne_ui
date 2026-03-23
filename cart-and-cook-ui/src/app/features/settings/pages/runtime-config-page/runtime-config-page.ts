@@ -7,7 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RuntimeConfigService } from '../../data/runtime-config.service';
 import { RuntimeConfig } from '../../models/runtime-config.model';
 
@@ -23,7 +22,6 @@ import { RuntimeConfig } from '../../models/runtime-config.model';
     MatProgressSpinnerModule,
     MatCardModule,
     MatIconModule,
-    MatCheckboxModule,
   ],
   templateUrl: './runtime-config-page.html',
   styleUrls: ['./runtime-config-page.scss'],
@@ -33,26 +31,9 @@ export class RuntimeConfigPage implements OnInit {
 
   readonly loading = signal(true);
   readonly saving = signal(false);
-  readonly testingDb = signal(false);
-  readonly rollingBackDb = signal(false);
   readonly saveMessage = signal<string | null>(null);
-  readonly dbTestMessage = signal<string | null>(null);
-  private dbTestToken: string | null = null;
-  private lastLoadedDbConfig = {
-    dbUrl: '',
-    dbUsername: '',
-    dbPassword: '',
-  };
 
   config: RuntimeConfig = {
-    dbUrl: '',
-    dbUsername: '',
-    dbPassword: '',
-    oauth2IssuerUri: '',
-    port: '',
-    autoRestartOnConfigSave: true,
-    dbSafeMode: false,
-    lastKnownGoodDbConfigured: false,
     aiProvider: '',
     ollamaBaseUrl: '',
     ollamaModel: '',
@@ -62,19 +43,12 @@ export class RuntimeConfigPage implements OnInit {
     bedrockModelId: '',
     huggingFaceApiKey: '',
     huggingFaceModel: '',
-    restartRequired: true,
-    restartRequiredKeys: [],
   };
 
   ngOnInit(): void {
     this.runtimeConfigService.getConfig().subscribe({
       next: cfg => {
         this.config = cfg;
-        this.lastLoadedDbConfig = {
-          dbUrl: cfg.dbUrl,
-          dbUsername: cfg.dbUsername,
-          dbPassword: cfg.dbPassword,
-        };
         this.loading.set(false);
       },
       error: err => {
@@ -85,31 +59,14 @@ export class RuntimeConfigPage implements OnInit {
   }
 
   save(): void {
-    if (this.isDbChanged() && !this.config.dbSafeMode && !this.dbTestToken) {
-      this.saveMessage.set('Test DB connection before saving changed DB settings.');
-      return;
-    }
-
     this.saving.set(true);
     this.saveMessage.set(null);
 
-    this.runtimeConfigService.saveConfig(this.config, this.dbTestToken).subscribe({
+    this.runtimeConfigService.saveConfig(this.config).subscribe({
       next: cfg => {
         this.config = cfg;
-        this.lastLoadedDbConfig = {
-          dbUrl: cfg.dbUrl,
-          dbUsername: cfg.dbUsername,
-          dbPassword: cfg.dbPassword,
-        };
-        this.dbTestToken = null;
         this.saving.set(false);
-        if (cfg.restartRequired && cfg.autoRestartOnConfigSave) {
-          this.saveMessage.set('Configuration saved. Restart triggered automatically.');
-        } else if (cfg.restartRequired) {
-          this.saveMessage.set('Configuration saved. Restart runtime for changes to take effect.');
-        } else {
-          this.saveMessage.set('Configuration saved. No restart required.');
-        }
+        this.saveMessage.set('AI configuration saved.');
       },
       error: err => {
         console.error('Failed to save runtime config', err);
@@ -119,63 +76,7 @@ export class RuntimeConfigPage implements OnInit {
     });
   }
 
-  testDbConnection(): void {
-    this.testingDb.set(true);
-    this.dbTestMessage.set(null);
-
-    this.runtimeConfigService.testDbConnection(this.config).subscribe({
-      next: result => {
-        this.testingDb.set(false);
-        this.dbTestToken = result.success ? result.testToken : null;
-        this.dbTestMessage.set(result.success ? `DB test successful: ${result.message}` : `DB test failed: ${result.message}`);
-      },
-      error: err => {
-        console.error('Failed to test DB connection', err);
-        this.testingDb.set(false);
-        this.dbTestMessage.set(err?.error?.error || 'Failed to test DB connection.');
-      },
-    });
-  }
-
-  rollbackDb(): void {
-    this.rollingBackDb.set(true);
-    this.saveMessage.set(null);
-
-    this.runtimeConfigService.rollbackDb().subscribe({
-      next: cfg => {
-        this.config = cfg;
-        this.lastLoadedDbConfig = {
-          dbUrl: cfg.dbUrl,
-          dbUsername: cfg.dbUsername,
-          dbPassword: cfg.dbPassword,
-        };
-        this.dbTestToken = null;
-        this.rollingBackDb.set(false);
-        this.saveMessage.set('Rolled back to last-known-good DB configuration.');
-      },
-      error: err => {
-        console.error('Failed to rollback DB config', err);
-        this.rollingBackDb.set(false);
-        this.saveMessage.set(err?.error?.error || 'Failed to roll back DB configuration.');
-      },
-    });
-  }
-
-  onDbConfigChanged(): void {
-    this.dbTestToken = null;
-    this.dbTestMessage.set(null);
-  }
-
-  isDbChanged(): boolean {
-    return this.config.dbUrl !== this.lastLoadedDbConfig.dbUrl
-      || this.config.dbUsername !== this.lastLoadedDbConfig.dbUsername
-      || this.config.dbPassword !== this.lastLoadedDbConfig.dbPassword;
-  }
-
   canSave(): boolean {
-    if (this.saving()) return false;
-    if (this.config.dbSafeMode) return true;
-    if (!this.isDbChanged()) return true;
-    return !!this.dbTestToken;
+    return !this.saving();
   }
 }
