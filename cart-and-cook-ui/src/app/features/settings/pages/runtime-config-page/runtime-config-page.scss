@@ -1,0 +1,90 @@
+@use '../../../../../styles/breakpoints' as *;
+
+.config-shell {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+}
+
+.toolbar {
+  background: transparent;
+  color: var(--cart-text-primary);
+  padding: 0;
+}
+
+.toolbar-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.notice-card {
+  border: 1px solid var(--cart-divider);
+}
+
+.notice-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+
+  p {
+    margin: 0;
+    color: var(--cart-text-secondary);
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--cart-divider);
+  border-radius: 8px;
+  background: var(--cart-surface-alt);
+
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem 1rem;
+
+  p {
+    margin: 0;
+    color: var(--cart-text-secondary);
+  }
+}
+
+.save-message {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--cart-primary-color);
+}
+
+@include xs {
+  .config-shell {
+    padding: 0 0.75rem 2rem;
+  }
+}

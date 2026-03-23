@@ -1,0 +1,114 @@
+<div class="config-shell">
+  <mat-toolbar class="toolbar">
+    <span class="toolbar-title">Runtime Configuration</span>
+    <span class="spacer"></span>
+    <button mat-flat-button color="primary" [disabled]="saving()" (click)="save()">
+      Save
+    </button>
+  </mat-toolbar>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Loading configuration…</p>
+    </div>
+  } @else {
+    <div class="form-body">
+      <mat-card class="notice-card">
+        <mat-card-content>
+          <div class="notice-row">
+            <mat-icon>info</mat-icon>
+            <p>These values replace environment variables for self-hosted runtime settings. Restart the backend after saving.</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      @if (saveMessage()) {
+        <p class="save-message">{{ saveMessage() }}</p>
+      }
+
+      <section class="section">
+        <h3>Core Runtime</h3>
+        <mat-checkbox [(ngModel)]="config.autoRestartOnConfigSave" name="autoRestartOnConfigSave">
+          Auto-restart backend when restart-required settings change
+        </mat-checkbox>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Database URL</mat-label>
+          <input matInput [(ngModel)]="config.dbUrl" name="dbUrl" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Database Username</mat-label>
+          <input matInput [(ngModel)]="config.dbUsername" name="dbUsername" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Database Password</mat-label>
+          <input matInput type="password" [(ngModel)]="config.dbPassword" name="dbPassword" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>OAuth2 Issuer URI</mat-label>
+          <input matInput [(ngModel)]="config.oauth2IssuerUri" name="oauth2IssuerUri" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Server Port</mat-label>
+          <input matInput [(ngModel)]="config.port" name="port" />
+        </mat-form-field>
+      </section>
+
+      <section class="section">
+        <h3>AI Provider</h3>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>AI Provider (ollama, openai, bedrock, huggingface)</mat-label>
+          <input matInput [(ngModel)]="config.aiProvider" name="aiProvider" />
+        </mat-form-field>
+      </section>
+
+      <section class="section">
+        <h3>Ollama</h3>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Ollama Base URL</mat-label>
+          <input matInput [(ngModel)]="config.ollamaBaseUrl" name="ollamaBaseUrl" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Ollama Model</mat-label>
+          <input matInput [(ngModel)]="config.ollamaModel" name="ollamaModel" />
+        </mat-form-field>
+      </section>
+
+      <section class="section">
+        <h3>OpenAI</h3>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>OpenAI API Key</mat-label>
+          <input matInput type="password" [(ngModel)]="config.openAiApiKey" name="openAiApiKey" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>OpenAI Model</mat-label>
+          <input matInput [(ngModel)]="config.openAiModel" name="openAiModel" />
+        </mat-form-field>
+      </section>
+
+      <section class="section">
+        <h3>AWS Bedrock</h3>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>AWS Region</mat-label>
+          <input matInput [(ngModel)]="config.awsRegion" name="awsRegion" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Bedrock Model ID</mat-label>
+          <input matInput [(ngModel)]="config.bedrockModelId" name="bedrockModelId" />
+        </mat-form-field>
+      </section>
+
+      <section class="section">
+        <h3>Hugging Face</h3>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Hugging Face API Key</mat-label>
+          <input matInput type="password" [(ngModel)]="config.huggingFaceApiKey" name="huggingFaceApiKey" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Hugging Face Model</mat-label>
+          <input matInput [(ngModel)]="config.huggingFaceModel" name="huggingFaceModel" />
+        </mat-form-field>
+      </section>
+    </div>
+  }
+</div>

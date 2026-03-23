@@ -27,6 +27,7 @@
       @if (auth.isAuthenticated()) {
         <a mat-list-item routerLink="/recipes" (click)="isMobile() && sidenavOpen.set(false)">Recipes</a>
         <a mat-list-item routerLink="/grocery-lists" (click)="isMobile() && sidenavOpen.set(false)">Grocery Lists</a>
+        <a mat-list-item routerLink="/settings/runtime" (click)="isMobile() && sidenavOpen.set(false)">Runtime Settings</a>
       }
     </mat-nav-list>
   </mat-sidenav>
@@ -51,6 +52,7 @@
 
       <mat-menu #accountMenu="matMenu">
         @if (auth.isAuthenticated()) {
+          <button mat-menu-item routerLink="/settings/runtime">Runtime Settings</button>
           <button mat-menu-item (click)="auth.logout()">Logout</button>
         }
 

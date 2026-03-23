@@ -5,6 +5,7 @@ import { HomePage } from './features/home/pages/home-page/home-page';
 import { GroceryListsPage } from './features/grocery-lists/pages/grocery-lists-page/grocery-lists-page';
 import { GroceryListFormPage } from './features/grocery-lists/pages/grocery-list-form-page/grocery-list-form-page';
 import { LoginPage } from './features/auth/pages/login-page/login-page';
+import { RuntimeConfigPage } from './features/settings/pages/runtime-config-page/runtime-config-page';
 import { authGuard } from './core/guards/authguard';
 
 export const routes: Routes = [
@@ -44,6 +45,11 @@ export const routes: Routes = [
   {
     path: 'grocery-lists/:id/edit',
     loadComponent: () => GroceryListFormPage,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'settings/runtime',
+    loadComponent: () => RuntimeConfigPage,
     canActivate: [authGuard],
   },
 ];
