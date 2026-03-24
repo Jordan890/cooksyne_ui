@@ -25,11 +25,20 @@
 
 /* ── Search row ── */
 .search-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
   margin: 0.75rem 0 1rem;
 }
 .search-field {
-  width: 100%;
-  max-width: 480px;
+  flex: 1 1 420px;
+  min-width: 260px;
+  max-width: 680px;
+}
+
+.add-btn {
+  white-space: nowrap;
 }
 
 /* ── Content area ── */
@@ -51,13 +60,6 @@
   .recipes-grid {
     grid-template-columns: 1fr !important;
   }
-}
-
-/* ── Grid footer CTA ── */
-.grid-footer {
-  display: flex;
-  justify-content: center;
-  padding: 1.5rem 0 2rem;
 }
 
 /* ── Empty state ── */
@@ -85,6 +87,19 @@
   }
 
   p { margin: 0 0 1rem; }
+}
+
+@include xs {
+  .search-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-field,
+  .add-btn {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 /* ── Loading state ── */

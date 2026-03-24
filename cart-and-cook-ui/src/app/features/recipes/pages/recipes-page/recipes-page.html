@@ -6,7 +6,7 @@
 
   <!-- Search -->
   <div class="search-row">
-    <mat-form-field appearance="outline" class="search-field">
+    <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
       <mat-label>Search recipes</mat-label>
       <input
         matInput
@@ -21,6 +21,11 @@
         </button>
       }
     </mat-form-field>
+
+    <button mat-flat-button color="primary" class="add-btn" (click)="goAdd()">
+      <mat-icon>add</mat-icon>
+      Add Recipe
+    </button>
   </div>
 
   <!-- Content area -->
@@ -46,13 +51,6 @@
         @for (r of filteredRecipes(); track r.id) {
           <app-recipe-card [recipe]="r" (deleted)="deleteRecipe($event)" />
         }
-      </div>
-
-      <!-- Supporting CTA -->
-      <div class="grid-footer">
-        <button mat-stroked-button color="primary" (click)="goAdd()">
-          <mat-icon>add</mat-icon> Add another recipe
-        </button>
       </div>
     }
   </div>

@@ -7,7 +7,7 @@
 
   <!-- Search -->
   <div class="search-row">
-    <mat-form-field appearance="outline" class="search-field">
+    <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
       <mat-label>Search lists</mat-label>
       <input
         matInput
@@ -22,6 +22,11 @@
         </button>
       }
     </mat-form-field>
+
+    <button mat-flat-button color="primary" class="add-btn" (click)="goCreate()">
+      <mat-icon>add</mat-icon>
+      Add Grocery List
+    </button>
   </div>
 
   <!-- Content -->
@@ -45,12 +50,6 @@
         @for (l of filteredLists(); track l.id) {
           <app-grocery-list-card [list]="l" (deleted)="deleteList($event)" />
         }
-      </div>
-
-      <div class="grid-footer">
-        <button mat-stroked-button color="primary" (click)="goCreate()">
-          <mat-icon>add</mat-icon> Create another list
-        </button>
       </div>
     }
   </div>
