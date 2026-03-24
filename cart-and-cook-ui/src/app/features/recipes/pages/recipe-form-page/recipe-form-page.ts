@@ -4,16 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { IngredientQuantity, Recipe, RecipeAnalysis, RecipeRequest, UNITS, Unit } from '../../models/recipe.model';
 import { RecipeService } from '../../data/recipe.service';
 import { ImageUploadService } from '../../data/image-upload.service';
 import { ImageAnalyzer } from '../../components/image-analyzer/image-analyzer';
+import { AddToGroceryDialog, AddToGroceryDialogData } from '../../components/add-to-grocery-dialog/add-to-grocery-dialog';
 
 @Component({
   selector: 'app-recipe-form-page',
@@ -29,6 +32,8 @@ import { ImageAnalyzer } from '../../components/image-analyzer/image-analyzer';
     MatProgressSpinnerModule,
     MatSelectModule,
     MatChipsModule,
+    MatDialogModule,
+    MatSnackBarModule,
     ImageAnalyzer,
   ],
   templateUrl: './recipe-form-page.html',
@@ -39,6 +44,8 @@ export class RecipeFormPage implements OnInit {
   private router = inject(Router);
   private recipeService = inject(RecipeService);
   private imageUploadService = inject(ImageUploadService);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
 
   /* ── Constants ── */
   readonly units = UNITS;
@@ -199,6 +206,26 @@ export class RecipeFormPage implements OnInit {
 
   cancel(): void {
     this.router.navigate(['/recipes']);
+  }
+
+  /** Open dialog to add recipe ingredients to a grocery list. */
+  addToGroceryList(): void {
+    const filled = this.ingredients().filter(i => i.name.trim());
+    if (!filled.length) return;
+
+    const data: AddToGroceryDialogData = {
+      recipeName: this.name() || 'Untitled Recipe',
+      ingredients: filled,
+    };
+
+    this.dialog
+      .open(AddToGroceryDialog, { data, width: '440px' })
+      .afterClosed()
+      .subscribe(success => {
+        if (success) {
+          this.snackBar.open('Ingredients added to grocery list', 'OK', { duration: 3000 });
+        }
+      });
   }
 
   /* ── Private ── */

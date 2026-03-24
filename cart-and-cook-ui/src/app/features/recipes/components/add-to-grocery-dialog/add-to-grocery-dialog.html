@@ -1,0 +1,61 @@
+<h2 mat-dialog-title>Add Ingredients to Grocery List</h2>
+
+<mat-dialog-content>
+  @if (loading()) {
+    <div class="dialog-loading">
+      <mat-spinner diameter="36"></mat-spinner>
+      <p>Loading grocery lists…</p>
+    </div>
+  } @else {
+    <mat-radio-group [value]="mode()" (change)="mode.set($event.value)">
+      @if (lists().length > 0) {
+        <mat-radio-button value="existing">Add to existing list</mat-radio-button>
+      }
+      <mat-radio-button value="new">Create new list</mat-radio-button>
+    </mat-radio-group>
+
+    @if (mode() === 'existing') {
+      <mat-form-field appearance="outline" class="full-width picker-field">
+        <mat-label>Choose a grocery list</mat-label>
+        <mat-select [value]="selectedListId()" (selectionChange)="selectedListId.set($event.value)">
+          @for (l of lists(); track l.id) {
+            <mat-option [value]="l.id">{{ l.name }} ({{ l.ingredients.length }} items)</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @if (mode() === 'new') {
+      <mat-form-field appearance="outline" class="full-width picker-field">
+        <mat-label>New list name</mat-label>
+        <input matInput [value]="newListName()" (input)="newListName.set($any($event.target).value)" />
+      </mat-form-field>
+    }
+
+    <p class="ingredient-count">
+      <mat-icon class="count-icon">shopping_cart</mat-icon>
+      {{ data.ingredients.length }} ingredient{{ data.ingredients.length === 1 ? '' : 's' }} will be added.
+      @if (mode() === 'existing') {
+        Matching items will have their amounts combined.
+      }
+    </p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="loading() || saving() || (mode() === 'existing' && selectedListId() == null)"
+    (click)="confirm()"
+  >
+    @if (saving()) {
+      Adding…
+    } @else if (mode() === 'new') {
+      Create & Add
+    } @else {
+      Add to List
+    }
+  </button>
+</mat-dialog-actions>

@@ -177,9 +177,20 @@
         </div>
       }
 
-      <button mat-stroked-button (click)="addIngredient()" class="add-ing-btn">
-        <mat-icon>add</mat-icon> Add ingredient
-      </button>
+      <div class="ingredient-actions">
+        <button mat-stroked-button (click)="addIngredient()" class="add-ing-btn">
+          <mat-icon>add</mat-icon> Add ingredient
+        </button>
+        <button
+          mat-stroked-button
+          color="primary"
+          class="add-to-grocery-btn"
+          (click)="addToGroceryList()"
+          [disabled]="ingredients().length === 0 || !ingredients()[0]?.name?.trim()"
+        >
+          <mat-icon>shopping_cart</mat-icon> Add to Grocery List
+        </button>
+      </div>
     </section>
   </div>
   }
