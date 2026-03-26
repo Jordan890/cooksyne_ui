@@ -57,3 +57,7 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Windows Users
+
+All Docker commands (`docker compose pull`, `docker compose up -d`) work the same on Windows via Docker Desktop or WSL2. If building locally, run `npm ci && npm run build` from PowerShell or WSL — both work. The `setup.sh` script in the backend repo requires Bash; see the [backend README](https://github.com/Jordan890/cart_and_cook#windows-users) for alternatives.
