@@ -85,10 +85,10 @@ By default, this app uses the development environment file and expects a self-ho
   - `production: false`
   - `authRuntime: 'oidc'`
   - `apiUrl: 'http://localhost:8081'`
-- `cart-and-cook-ui/src/environments/environment.ts`
-  - `production: true`
-  - `authRuntime: 'desktop'`
-  - `apiUrl: 'http://localhost:9090'`
+- `cart-and-cook-ui/src/environments/environment.ts` (production)
+  - Reads `API_URL`, `AUTH_RUNTIME` from `window.__env` at runtime
+  - Fallback: `apiUrl: 'http://localhost:8081'`, `authRuntime: 'oidc'`
+  - In Docker, these are injected via `env.js` (see Docker Deployment section)
 
 ## Authentication Modes and Behavior
 
@@ -178,8 +178,9 @@ From `cart-and-cook-ui/`:
 
 ### CORS Errors
 
-- Backend allows origins `http://localhost:4200` and `http://localhost:9090`.
-- Make sure UI runs from one of those origins unless backend CORS is changed.
+- Backend CORS origins are configurable via the `CORS_ALLOWED_ORIGINS` env var (comma-separated).
+- Default local dev origins: `http://localhost:4200`, `http://localhost:9090`, `http://localhost:3000`.
+- In Docker, set `CORS_ALLOWED_ORIGINS` in `.env` to include the frontend's external URL.
 
 ### Login Redirect Loop
 
@@ -191,6 +192,68 @@ From `cart-and-cook-ui/`:
 
 - This is expected behavior.
 - Core runtime values are configured when backend starts (environment variables), not from the frontend settings page.
+
+## Docker Deployment
+
+The frontend is containerized with a multi-stage Dockerfile (Node build → nginx). It is typically used through the backend repository's `deploy/docker-compose.yml`, but can also be built standalone.
+
+### Building the Docker Image
+
+From `cart-and-cook-ui/`:
+
+```bash
+docker build -t cart-and-cook-ui:latest --build-arg APP_VERSION=1.0.0 .
+```
+
+### Running Standalone
+
+```bash
+docker run -d -p 3000:80 \
+  -e API_URL=http://localhost:8081 \
+  -e AUTH_AUTHORITY=http://localhost:8080/realms/cart_and_cook \
+  -e AUTH_CLIENT_ID=cart-and-cook-ui \
+  -e AUTH_RUNTIME=oidc \
+  cart-and-cook-ui:latest
+```
+
+### Runtime Environment Variables
+
+The Docker image injects environment variables into the Angular app at container startup via `env.js`. This means you do **not** need to rebuild the image to change these values.
+
+| Variable         | Purpose                                           | Default                                      |
+| ---------------- | ------------------------------------------------- | -------------------------------------------- |
+| `API_URL`        | Backend API base URL (as seen by the browser)     | `http://localhost:8081`                      |
+| `AUTH_AUTHORITY` | Keycloak/OIDC issuer URL (as seen by the browser) | `http://localhost:8080/realms/cart_and_cook` |
+| `AUTH_CLIENT_ID` | OIDC client ID                                    | `cart-and-cook-ui`                           |
+| `AUTH_RUNTIME`   | Auth mode: `oidc` or `desktop`                    | `oidc`                                       |
+
+### How Runtime Config Injection Works
+
+1. `public/env.js` ships as a default no-op file (`window.__env = {}`)
+2. At container startup, `docker-entrypoint.sh` regenerates `env.js` from environment variables
+3. `index.html` loads `env.js` before Angular bootstraps
+4. `environment.ts` and `auth.config.ts` read from `window.__env`, falling back to compile-time defaults
+
+This allows a single Docker image to be deployed across environments by only changing env vars.
+
+### Using with Docker Compose
+
+The recommended way to run the full stack is via the backend repository:
+
+```bash
+cd cart_and_cook/deploy
+./setup.sh
+```
+
+See the backend repository README for full Docker Compose documentation.
+
+### Health Check
+
+The container includes a health check that verifies nginx is serving on port 80:
+
+```
+wget -qO /dev/null http://localhost:80/
+```
 
 ## Development Notes
 
