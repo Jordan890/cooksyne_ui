@@ -195,14 +195,18 @@ From `cart-and-cook-ui/`:
 
 ## Docker Deployment
 
-The frontend is containerized with a multi-stage Dockerfile (Node build → nginx). It is typically used through the backend repository's `deploy/docker-compose.yml`, but can also be built standalone.
+Prebuilt Docker images are published to `ghcr.io/jordan890/cart-and-cook-ui`. End users don't need this source repo — they just pull the image via the backend repo's `docker-compose.yml`.
 
-### Building the Docker Image
+### For End Users
+
+See the [backend repository README](https://github.com/Jordan890/cart_and_cook#docker-deployment-self-hosted) — users only need `docker-compose.yml` and `.env`.
+
+### Building Locally (Contributors)
 
 From `cart-and-cook-ui/`:
 
 ```bash
-docker build -t cart-and-cook-ui:latest --build-arg APP_VERSION=1.0.0 .
+docker build -t ghcr.io/jordan890/cart-and-cook-ui:local .
 ```
 
 ### Running Standalone
@@ -213,7 +217,7 @@ docker run -d -p 3000:80 \
   -e AUTH_AUTHORITY=http://localhost:8080/realms/cart_and_cook \
   -e AUTH_CLIENT_ID=cart-and-cook-ui \
   -e AUTH_RUNTIME=oidc \
-  cart-and-cook-ui:latest
+  ghcr.io/jordan890/cart-and-cook-ui:release
 ```
 
 ### Runtime Environment Variables
