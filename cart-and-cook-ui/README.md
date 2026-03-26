@@ -2,13 +2,27 @@
 
 The frontend for [Cart & Cook](https://github.com/Jordan890/cart_and_cook) — a self-hosted recipe and grocery list manager with AI-powered food analysis.
 
-## Quick Start (Docker — Recommended)
+## Quick Start (Full-stack Docker — Recommended)
 
-The easiest way to run Cart & Cook (frontend + backend + database + auth) is via Docker. **No Node.js or build tools required.**
+This launches the frontend, backend, database, and auth with a single command — no build tools required.
 
-Follow the [Quick Start in the backend README](https://github.com/Jordan890/cart_and_cook#quick-start-docker--recommended) — it launches everything including this UI.
+```bash
+mkdir cart-and-cook && cd cart-and-cook
+curl -LO https://raw.githubusercontent.com/Jordan890/cart_and_cook/main/deploy/docker-compose.yml
+curl -LO https://raw.githubusercontent.com/Jordan890/cart_and_cook/main/deploy/.env.example
+cp .env.example .env    # edit .env with your values (optional)
+docker compose up -d
+```
 
-The frontend will be available at `http://localhost:3000`.
+Or use the setup script (generates secrets automatically):
+
+```bash
+curl -LO https://raw.githubusercontent.com/Jordan890/cart_and_cook/main/deploy/setup.sh
+chmod +x setup.sh
+./setup.sh
+```
+
+The frontend will be available at `http://localhost:3000` once services are up. If you prefer to run only the frontend locally for development, see the Local Development section below.
 
 ---
 
@@ -19,7 +33,7 @@ If you want to contribute or run the frontend from source:
 ### Prerequisites
 
 - Node.js 22+
-- The [backend](https://github.com/Jordan890/cart_and_cook) running locally (or via Docker)
+- The backend running locally or via Docker
 
 ### Development Server
 
@@ -51,8 +65,6 @@ Uses [Vitest](https://vitest.dev/) as the test runner.
 ```bash
 ng e2e
 ```
-
-Angular CLI does not include an e2e framework by default — choose one that suits your needs.
 
 ### Building the Docker Image Locally
 
