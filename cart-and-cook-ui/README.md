@@ -1,62 +1,78 @@
-# CartAndCookUi
+# Cart and Cook UI
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+The frontend for [Cart & Cook](https://github.com/Jordan890/cart_and_cook) — a self-hosted recipe and grocery list manager with AI-powered food analysis.
 
-## Development server
+## Quick Start (Docker — Recommended)
 
-To start a local development server, run:
+The easiest way to run Cart & Cook (frontend + backend + database + auth) is via Docker. **No Node.js or build tools required.**
+
+Follow the [Quick Start in the backend README](https://github.com/Jordan890/cart_and_cook#quick-start-docker--recommended) — it launches everything including this UI.
+
+The frontend will be available at `http://localhost:3000`.
+
+---
+
+## Local Development
+
+If you want to contribute or run the frontend from source:
+
+### Prerequisites
+
+- Node.js 22+
+- The [backend](https://github.com/Jordan890/cart_and_cook) running locally (or via Docker)
+
+### Development Server
 
 ```bash
+npm ci
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open `http://localhost:4200/`. The app reloads automatically on file changes.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+### Building
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Build artifacts are output to `dist/`.
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Running Unit Tests
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+Uses [Vitest](https://vitest.dev/) as the test runner.
 
-For end-to-end (e2e) testing, run:
+### Running End-to-End Tests
 
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Angular CLI does not include an e2e framework by default — choose one that suits your needs.
+
+### Building the Docker Image Locally
+
+```bash
+docker build -t ghcr.io/jordan890/cart-and-cook-ui:local .
+```
+
+Then set `CART_AND_COOK_VERSION=local` in the backend's `deploy/.env`.
+
+### Code Scaffolding
+
+```bash
+ng generate component component-name
+ng generate --help
+```
 
 ## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli)
+- [Backend repository & full Docker setup](https://github.com/Jordan890/cart_and_cook)
 
 ## Windows Users
 
