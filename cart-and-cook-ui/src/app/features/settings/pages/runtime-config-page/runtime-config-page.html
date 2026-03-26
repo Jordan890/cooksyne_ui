@@ -49,7 +49,13 @@
           </mat-form-field>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Ollama Model</mat-label>
-            <input matInput [(ngModel)]="config.ollamaModel" name="ollamaModel" />
+            <input matInput [(ngModel)]="config.ollamaModel" name="ollamaModel"
+                   [matAutocomplete]="ollamaModelAuto" placeholder="Type or select a model" />
+            <mat-autocomplete #ollamaModelAuto="matAutocomplete">
+              @for (m of modelOptions('ollama'); track m) {
+                <mat-option [value]="m">{{ m }}</mat-option>
+              }
+            </mat-autocomplete>
           </mat-form-field>
         </section>
       }
@@ -59,7 +65,13 @@
           <h3>OpenAI</h3>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>OpenAI Model</mat-label>
-            <input matInput [(ngModel)]="config.openAiModel" name="openAiModel" />
+            <input matInput [(ngModel)]="config.openAiModel" name="openAiModel"
+                   [matAutocomplete]="openAiModelAuto" placeholder="Type or select a model" />
+            <mat-autocomplete #openAiModelAuto="matAutocomplete">
+              @for (m of modelOptions('openai'); track m) {
+                <mat-option [value]="m">{{ m }}</mat-option>
+              }
+            </mat-autocomplete>
           </mat-form-field>
         </section>
       }
@@ -73,7 +85,13 @@
           </mat-form-field>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Bedrock Model ID</mat-label>
-            <input matInput [(ngModel)]="config.bedrockModelId" name="bedrockModelId" />
+            <input matInput [(ngModel)]="config.bedrockModelId" name="bedrockModelId"
+                   [matAutocomplete]="bedrockModelAuto" placeholder="Type or select a model" />
+            <mat-autocomplete #bedrockModelAuto="matAutocomplete">
+              @for (m of modelOptions('bedrock'); track m) {
+                <mat-option [value]="m">{{ m }}</mat-option>
+              }
+            </mat-autocomplete>
           </mat-form-field>
         </section>
       }
@@ -83,7 +101,13 @@
           <h3>Hugging Face</h3>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Hugging Face Model</mat-label>
-            <input matInput [(ngModel)]="config.huggingFaceModel" name="huggingFaceModel" />
+            <input matInput [(ngModel)]="config.huggingFaceModel" name="huggingFaceModel"
+                   [matAutocomplete]="hfModelAuto" placeholder="Type or select a model" />
+            <mat-autocomplete #hfModelAuto="matAutocomplete">
+              @for (m of modelOptions('huggingface'); track m) {
+                <mat-option [value]="m">{{ m }}</mat-option>
+              }
+            </mat-autocomplete>
           </mat-form-field>
         </section>
       }

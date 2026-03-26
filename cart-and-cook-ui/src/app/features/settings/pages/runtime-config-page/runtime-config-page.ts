@@ -8,6 +8,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { forkJoin } from 'rxjs';
 import { RuntimeConfigService } from '../../data/runtime-config.service';
 import { RuntimeConfig } from '../../models/runtime-config.model';
 
@@ -24,6 +26,7 @@ import { RuntimeConfig } from '../../models/runtime-config.model';
     MatCardModule,
     MatIconModule,
     MatSelectModule,
+    MatAutocompleteModule,
   ],
   templateUrl: './runtime-config-page.html',
   styleUrls: ['./runtime-config-page.scss'],
@@ -42,6 +45,9 @@ export class RuntimeConfigPage implements OnInit {
   readonly saving = signal(false);
   readonly saveMessage = signal<string | null>(null);
 
+  /** Suggested model names per provider, fetched from backend. */
+  providerModels: Record<string, string[]> = {};
+
   config: RuntimeConfig = {
     aiProvider: '',
     ollamaBaseUrl: '',
@@ -53,9 +59,13 @@ export class RuntimeConfigPage implements OnInit {
   };
 
   ngOnInit(): void {
-    this.runtimeConfigService.getConfig().subscribe({
-      next: cfg => {
-        this.config = cfg;
+    forkJoin({
+      config: this.runtimeConfigService.getConfig(),
+      models: this.runtimeConfigService.getModels(),
+    }).subscribe({
+      next: ({ config, models }) => {
+        this.config = config;
+        this.providerModels = models.models ?? {};
         this.loading.set(false);
       },
       error: err => {
@@ -63,6 +73,11 @@ export class RuntimeConfigPage implements OnInit {
         this.loading.set(false);
       },
     });
+  }
+
+  /** Get suggested model names for a provider. */
+  modelOptions(provider: string): string[] {
+    return this.providerModels[provider] ?? [];
   }
 
   save(): void {

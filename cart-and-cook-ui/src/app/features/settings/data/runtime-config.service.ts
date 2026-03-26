@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
-import { RuntimeConfig } from '../models/runtime-config.model';
+import { AiProviderModels, RuntimeConfig } from '../models/runtime-config.model';
 
 @Injectable({ providedIn: 'root' })
 export class RuntimeConfigService {
@@ -15,5 +15,9 @@ export class RuntimeConfigService {
 
   saveConfig(config: RuntimeConfig): Observable<RuntimeConfig> {
     return this.http.put<RuntimeConfig>(this.baseUrl, config);
+  }
+
+  getModels(): Observable<AiProviderModels> {
+    return this.http.get<AiProviderModels>(`${this.baseUrl}/models`);
   }
 }

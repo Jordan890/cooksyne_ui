@@ -7,3 +7,7 @@ export interface RuntimeConfig {
   bedrockModelId: string;
   huggingFaceModel: string;
 }
+
+export interface AiProviderModels {
+  models: Record<string, string[]>;
+}
