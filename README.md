@@ -1,275 +1,91 @@
 # Cart and Cook UI
 
-Comprehensive guide for setting up, running, and understanding default behavior of the Angular frontend.
+The frontend for [Cart & Cook](https://github.com/Jordan890/cart_and_cook) — a self-hosted recipe and grocery list manager with AI-powered food analysis.
 
-## What This Repository Contains
+## Quick Start (Full-stack Docker — Recommended)
 
-This repository contains the frontend application used by Cart and Cook.
-
-- Workspace root: this folder
-- Angular app root: `cart-and-cook-ui/`
-- Main source directory: `cart-and-cook-ui/src/`
-
-Most day-to-day frontend work is done inside `cart-and-cook-ui/`.
-
-## Tech Stack
-
-- Angular 21 (standalone APIs)
-- Angular Material
-- RxJS
-- `angular-auth-oidc-client` for OIDC login flow
-- TypeScript 5.9
-- Vitest for test execution through Angular CLI
-
-## Prerequisites
-
-Install these before starting:
-
-1. Node.js 22 LTS (recommended)
-2. npm (project currently uses npm and declares `npm@11.10.1`)
-3. Running backend API from the companion backend repository (default `http://localhost:8081`)
-4. Keycloak (or another OIDC provider compatible with the configured issuer) when using OIDC mode
-
-## Recommended Startup Sequence
-
-Use this order to avoid common startup/auth issues.
-
-1. In the backend repository, start PostgreSQL.
-2. Start Keycloak and verify issuer URI is available (`http://localhost:8080/realms/cart_and_cook` by default).
-3. In the backend terminal, export startup environment variables (`DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `OAUTH2_ISSUER_URI`, `PORT`, and any AI API keys you need such as `OPENAI_API_KEY` or `HUGGINGFACE_API_KEY`).
-4. Start backend runtime and wait until it is listening on `http://localhost:8081`.
-5. In this UI repository, install dependencies and start the frontend (`npm install` then `npm start`).
-6. Open `http://localhost:4200` and complete OIDC login.
-7. After login, use `/settings/runtime` for AI provider configuration only.
-
-## Quick Start
-
-1. Open a terminal in this repository.
-2. Move to the Angular app folder:
+This launches the frontend, backend, database, and auth with a single command — no build tools required.
 
 ```bash
-cd cart-and-cook-ui
+mkdir cart-and-cook && cd cart-and-cook
+curl -LO https://raw.githubusercontent.com/Jordan890/cart_and_cook/main/deploy/docker-compose.yml
+curl -LO https://raw.githubusercontent.com/Jordan890/cart_and_cook/main/deploy/.env.example
+cp .env.example .env    # edit .env with your values (optional)
+docker compose up -d
 ```
 
-3. Install dependencies:
+Or use the setup script (generates secrets automatically):
 
 ```bash
-npm install
+curl -LO https://raw.githubusercontent.com/Jordan890/cart_and_cook/main/deploy/setup.sh
+chmod +x setup.sh
+./setup.sh
 ```
 
-4. Start development server:
+The frontend will be available at `http://localhost:3000` once services are up. If you prefer to run only the frontend locally for development, see the Local Development section below.
+
+---
+
+## Local Development
+
+If you want to contribute or run the frontend from source:
+
+### Prerequisites
+
+- Node.js 22+
+- The backend running locally or via Docker
+
+### Development Server
 
 ```bash
-npm start
+npm ci
+ng serve
 ```
 
-5. Open the app:
+Open `http://localhost:4200/`. The app reloads automatically on file changes.
 
-- `http://localhost:4200`
+### Building
 
-## Default Runtime Configuration (Frontend)
+```bash
+ng build
+```
 
-By default, this app uses the development environment file and expects a self-hosted backend with OIDC.
+Build artifacts are output to `dist/`.
 
-- Frontend URL: `http://localhost:4200`
-- API base URL: `http://localhost:8081`
-- Auth runtime (development): `oidc`
-- OIDC authority default: `http://localhost:8080/realms/cart_and_cook`
-- OIDC client ID default: `cart-and-cook-ui`
-- OIDC response type: `code`
-- Token renew: enabled with refresh token support
+### Running Unit Tests
 
-### Environment Files
+```bash
+ng test
+```
 
-- `cart-and-cook-ui/src/environments/environment.development.ts`
-  - `production: false`
-  - `authRuntime: 'oidc'`
-  - `apiUrl: 'http://localhost:8081'`
-- `cart-and-cook-ui/src/environments/environment.ts` (production)
-  - Reads `API_URL`, `AUTH_RUNTIME` from `window.__env` at runtime
-  - Fallback: `apiUrl: 'http://localhost:8081'`, `authRuntime: 'oidc'`
-  - In Docker, these are injected via `env.js` (see Docker Deployment section)
+Uses [Vitest](https://vitest.dev/) as the test runner.
 
-## Authentication Modes and Behavior
+### Running End-to-End Tests
 
-The app supports two auth runtimes.
+```bash
+ng e2e
+```
 
-1. `oidc` mode
-2. `desktop` mode
-
-### OIDC Mode (Default During Local Web Development)
-
-- Used for self-hosted/cloud-style login.
-- Clicking login initiates an OIDC redirect.
-- Angular does not render a username/password form for OIDC.
-- Access token is acquired through the OIDC client and attached by interceptor to API calls.
-
-### Desktop Mode
-
-- Intended for local desktop/offline-style flow.
-- Uses built-in login page and posts credentials to `http://localhost:9090/auth/login`.
-- Session token/user are stored in localStorage keys:
-  - `cc_desktop_token`
-  - `cc_desktop_user`
-
-## Routing and Access Defaults
-
-Public routes:
-
-- `/`
-- `/login`
-
-Protected routes (require authentication guard):
-
-- `/recipes`
-- `/recipes/new`
-- `/recipes/:id/edit`
-- `/grocery-lists`
-- `/grocery-lists/new`
-- `/grocery-lists/:id/edit`
-- `/settings/runtime`
-
-Guard behavior by runtime:
-
-- `desktop`: unauthenticated users are redirected to `/login`
-- `oidc`: unauthenticated users are redirected to `/` (where login trigger performs OIDC redirect)
-
-## Runtime Settings UI Behavior
-
-The settings page (`/settings/runtime`) is tightly coupled to backend runtime config APIs.
-
-Default behavior:
-
-1. Loads config from `GET /config/runtime`
-2. Allows AI provider and AI model/key edits
-3. Save call: `PUT /config/runtime`
-
-Important:
-
-- Core runtime settings and AI API keys are no longer editable in UI.
-- DB URL/credentials, OAuth issuer, and server port must be set as startup environment variables for the backend process.
-- OpenAI and Hugging Face API keys must be provided as backend startup environment variables.
-
-## Running Tests and Builds
-
-From `cart-and-cook-ui/`:
-
-- Start dev server: `npm start`
-- Build: `npm run build`
-- Watch build: `npm run watch`
-- Unit tests: `npm test`
-
-## Local Integration Setup (UI + Backend + Keycloak)
-
-1. Start backend service at `http://localhost:8081`.
-2. Start Keycloak with realm issuer matching:
-   - `http://localhost:8080/realms/cart_and_cook`
-3. Configure OIDC client `cart-and-cook-ui` with redirect URI:
-   - `http://localhost:4200/*`
-4. Start UI (`npm start`) and login through OIDC.
-
-## Troubleshooting
-
-### 401 from API
-
-- Verify user is logged in.
-- Verify frontend is in `oidc` mode when calling backend on `8081`.
-- Confirm issuer URL and realm in OIDC config match the token issuer.
-
-### CORS Errors
-
-- Backend CORS origins are configurable via the `CORS_ALLOWED_ORIGINS` env var (comma-separated).
-- Default local dev origins: `http://localhost:4200`, `http://localhost:9090`, `http://localhost:3000`.
-- In Docker, set `CORS_ALLOWED_ORIGINS` in `.env` to include the frontend's external URL.
-
-### Login Redirect Loop
-
-- Confirm Keycloak client ID: `cart-and-cook-ui`.
-- Confirm redirect URI includes `http://localhost:4200/*`.
-- Confirm backend `OAUTH2_ISSUER_URI` matches actual Keycloak issuer.
-
-### Core Runtime Changes Not In UI
-
-- This is expected behavior.
-- Core runtime values are configured when backend starts (environment variables), not from the frontend settings page.
-
-## Docker Deployment
-
-Prebuilt Docker images are published to `ghcr.io/jordan890/cart-and-cook-ui`. End users don't need this source repo — they just pull the image via the backend repo's `docker-compose.yml`.
-
-### For End Users
-
-See the [backend repository README](https://github.com/Jordan890/cart_and_cook#docker-deployment-self-hosted) — users only need `docker-compose.yml` and `.env`.
-
-### Building Locally (Contributors)
-
-From `cart-and-cook-ui/`:
+### Building the Docker Image Locally
 
 ```bash
 docker build -t ghcr.io/jordan890/cart-and-cook-ui:local .
 ```
 
-### Running Standalone
+Then set `CART_AND_COOK_VERSION=local` in the backend's `deploy/.env`.
+
+### Code Scaffolding
 
 ```bash
-docker run -d -p 3000:80 \
-  -e API_URL=http://localhost:8081 \
-  -e AUTH_AUTHORITY=http://localhost:8080/realms/cart_and_cook \
-  -e AUTH_CLIENT_ID=cart-and-cook-ui \
-  -e AUTH_RUNTIME=oidc \
-  ghcr.io/jordan890/cart-and-cook-ui:release
+ng generate component component-name
+ng generate --help
 ```
 
-### Runtime Environment Variables
+## Additional Resources
 
-The Docker image injects environment variables into the Angular app at container startup via `env.js`. This means you do **not** need to rebuild the image to change these values.
+- [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli)
+- [Backend repository & full Docker setup](https://github.com/Jordan890/cart_and_cook)
 
-| Variable         | Purpose                                           | Default                                      |
-| ---------------- | ------------------------------------------------- | -------------------------------------------- |
-| `API_URL`        | Backend API base URL (as seen by the browser)     | `http://localhost:8081`                      |
-| `AUTH_AUTHORITY` | Keycloak/OIDC issuer URL (as seen by the browser) | `http://localhost:8080/realms/cart_and_cook` |
-| `AUTH_CLIENT_ID` | OIDC client ID                                    | `cart-and-cook-ui`                           |
-| `AUTH_RUNTIME`   | Auth mode: `oidc` or `desktop`                    | `oidc`                                       |
+## Windows Users
 
-### How Runtime Config Injection Works
-
-1. `public/env.js` ships as a default no-op file (`window.__env = {}`)
-2. At container startup, `docker-entrypoint.sh` regenerates `env.js` from environment variables
-3. `index.html` loads `env.js` before Angular bootstraps
-4. `environment.ts` and `auth.config.ts` read from `window.__env`, falling back to compile-time defaults
-
-This allows a single Docker image to be deployed across environments by only changing env vars.
-
-### Using with Docker Compose
-
-The recommended way to run the full stack is via the backend repository:
-
-```bash
-cd cart_and_cook/deploy
-./setup.sh
-```
-
-See the backend repository README for full Docker Compose documentation.
-
-### Health Check
-
-The container includes a health check that verifies nginx is serving on port 80:
-
-```
-wget -qO /dev/null http://localhost:80/
-```
-
-## Development Notes
-
-- API interceptor attaches bearer tokens only for requests to:
-  - `http://localhost:8081`
-  - `http://localhost:9090`
-- Static/public paths may be visible without auth, but feature pages are guarded by route auth checks.
-
-## Repository Workflow Recommendation
-
-For contributors:
-
-1. Keep frontend and backend running in separate terminals.
-2. Use the runtime settings page for backend AI adjustments during development.
-3. Re-test auth flow any time issuer/client settings are changed.
+All Docker commands (`docker compose pull`, `docker compose up -d`) work the same on Windows via Docker Desktop or WSL2. If building locally, run `npm ci && npm run build` from PowerShell or WSL — both work. The `setup.sh` script in the backend repo requires Bash; see the [backend README](https://github.com/Jordan890/cart_and_cook#windows-users) for alternatives.
