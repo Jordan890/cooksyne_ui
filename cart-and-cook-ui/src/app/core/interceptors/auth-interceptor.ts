@@ -16,7 +16,10 @@ import { AuthService } from '../auth/auth';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Only attach to your own API — bail early for everything else
   // (including OIDC discovery requests) to avoid the circular dependency.
-  const API_URLS = ['http://localhost:8081', 'http://localhost:9090'];
+  // Read runtime API URL from env.js (generated at container start). Fall
+  // back to the local default when not present.
+  const runtimeApi = (window as any).__env?.API_URL ?? 'http://localhost:8081';
+  const API_URLS = [runtimeApi, 'http://localhost:9090'];
   const isApiRequest = API_URLS.some((url) => req.url.startsWith(url));
 
   if (!isApiRequest) {
