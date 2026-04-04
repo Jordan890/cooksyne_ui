@@ -7,7 +7,7 @@ import { RecipeAnalysis } from '../models/recipe.model';
 @Injectable({ providedIn: 'root' })
 export class AiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/api/ai`;
+  private readonly baseUrl = `${environment.apiUrl}/ai`;
 
   /** Upload a photo of a prepared dish for AI analysis. */
   analyzeFood(image: File): Observable<RecipeAnalysis> {

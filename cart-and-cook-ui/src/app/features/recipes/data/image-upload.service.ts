@@ -6,7 +6,7 @@ import { environment } from '../../../../environments/environment.development';
 @Injectable({ providedIn: 'root' })
 export class ImageUploadService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/api/images`;
+  private readonly baseUrl = `${environment.apiUrl}/images`;
 
   /** Upload an image file and return the server-relative URL. */
   upload(image: File): Observable<string> {
