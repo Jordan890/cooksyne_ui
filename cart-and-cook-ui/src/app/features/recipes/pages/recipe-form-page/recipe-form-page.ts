@@ -1,7 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -23,7 +22,6 @@ import { AddToGroceryDialog, AddToGroceryDialogData } from '../../components/add
   standalone: true,
   imports: [
     FormsModule,
-    MatToolbarModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,

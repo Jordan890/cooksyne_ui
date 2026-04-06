@@ -30,18 +30,29 @@
   }
 }
 
-/* ── Toolbar ── */
-.toolbar {
-  background: transparent;
-  color: var(--cart-text-primary);
-  padding: 0;
+/* ── Header ── */
+.form-header {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
+  padding: 1rem 0;
 }
-.toolbar-title {
+.form-title {
+  margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
+  color: var(--cart-text-primary);
 }
-.spacer { flex: 1 1 auto; }
+.form-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+.bottom-actions {
+  justify-content: flex-end;
+  padding: 1rem 0 0;
+}
 
 /* ── Form body ── */
 .form-body {
@@ -154,13 +165,22 @@
 
 /* ── Ingredient rows ── */
 .ingredient-row {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 0.85fr) minmax(0, 0.85fr) auto;
+  align-items: start;
   gap: 0.5rem;
 }
-.ing-name   { flex: 2; }
-.ing-amount { flex: 0.75; }
-.ing-unit   { flex: 0.75; }
+.ing-name,
+.ing-amount,
+.ing-unit {
+  min-width: 0;
+}
+
+.ing-delete-btn {
+  justify-self: end;
+  align-self: center;
+  margin-top: 0.125rem;
+}
 
 .add-ing-btn {
   align-self: flex-start;
@@ -176,15 +196,38 @@
 
 /* ── Responsive tweaks ── */
 @include xs {
-  .toolbar {
+  .form-header {
     flex-wrap: wrap;
     gap: 0.25rem;
+    align-items: flex-start;
   }
-  .ingredient-row {
-    flex-wrap: wrap;
 
-    .ing-name,
-    .ing-amount,
-    .ing-unit { flex: 1 1 100%; }
+  .form-title {
+    flex: 1 1 100%;
+  }
+
+  .form-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .ingredient-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  }
+
+  .ing-name {
+    grid-column: 1 / -1;
+  }
+
+  .ing-amount {
+    grid-column: 1;
+  }
+
+  .ing-unit {
+    grid-column: 2;
+  }
+
+  .ing-delete-btn {
+    grid-column: 3;
   }
 }

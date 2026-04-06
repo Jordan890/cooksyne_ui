@@ -1,7 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,7 +17,6 @@ import { GroceryListService } from '../../data/grocery-list.service';
   standalone: true,
   imports: [
     FormsModule,
-    MatToolbarModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,

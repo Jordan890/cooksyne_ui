@@ -5,23 +5,9 @@
   }
 
   <!-- Header -->
-  <mat-toolbar class="toolbar">
-    <span class="toolbar-title">{{ pageTitle() }}</span>
-    <span class="spacer"></span>
-    <button mat-button (click)="cancel()">Cancel</button>
-    <button
-      mat-flat-button
-      color="primary"
-      [disabled]="!isValid() || saving()"
-      (click)="save()"
-    >
-      @if (saving()) {
-        Saving…
-      } @else {
-        Save
-      }
-    </button>
-  </mat-toolbar>
+  <div class="form-header">
+    <h2 class="form-title">{{ pageTitle() }}</h2>
+  </div>
 
   <!-- Form body -->
   @if (loading()) {
@@ -168,6 +154,7 @@
           <button
             mat-icon-button
             color="warn"
+            class="ing-delete-btn"
             aria-label="Remove ingredient"
             (click)="removeIngredient($index)"
           >
@@ -191,6 +178,23 @@
         </button>
       </div>
     </section>
+
+    <!-- ─── Bottom actions ─── -->
+    <div class="form-actions bottom-actions">
+      <button mat-button type="button" (click)="cancel()">Cancel</button>
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="!isValid() || saving()"
+        (click)="save()"
+      >
+        @if (saving()) {
+          Saving…
+        } @else {
+          Save
+        }
+      </button>
+    </div>
   </div>
   }
 </div>

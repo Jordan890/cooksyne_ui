@@ -9,7 +9,6 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
-  overflow: hidden;
 }
 
 /* ── Toolbar ── */
@@ -49,15 +48,10 @@
   @include lg-up  { grid-template-columns: repeat(4, 1fr); }
 }
 
-/* Portrait devices: 1 col on small, 2 col on wider */
-@media (orientation: portrait) and (max-width: #{$bp-sm - 1}) {
+/* Portrait devices: always single scrollable list */
+@media (orientation: portrait) {
   .lists-grid {
     grid-template-columns: 1fr !important;
-  }
-}
-@media (orientation: portrait) and (min-width: #{$bp-sm}) {
-  .lists-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 

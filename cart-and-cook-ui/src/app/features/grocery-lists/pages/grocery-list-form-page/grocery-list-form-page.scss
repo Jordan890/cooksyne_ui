@@ -30,10 +30,29 @@
   }
 }
 
-/* ── Toolbar ── */
-.toolbar { background: transparent; color: var(--cart-text-primary); padding: 0; gap: 0.5rem; }
-.toolbar-title { font-size: 1.25rem; font-weight: 600; }
-.spacer { flex: 1 1 auto; }
+/* ── Header ── */
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+.form-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--cart-text-primary);
+}
+.form-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+.bottom-actions {
+  justify-content: flex-end;
+  padding: 1rem 0 0;
+}
 
 /* ── Form body ── */
 .form-body {
@@ -58,23 +77,59 @@
 
 .full-width { width: 100%; }
 .ingredient-row {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 0.85fr) minmax(0, 0.85fr) auto;
+  align-items: start;
   gap: 0.5rem;
 }
-.ing-name   { flex: 2; }
-.ing-amount { flex: 0.75; }
-.ing-unit   { flex: 0.75; }
+.ing-name,
+.ing-amount,
+.ing-unit {
+  min-width: 0;
+}
+
+.ing-delete-btn {
+  justify-self: end;
+  align-self: center;
+  margin-top: 0.125rem;
+}
 
 .add-ing-btn { align-self: flex-start; }
 
 /* ── XS responsive ── */
 @include xs {
-  .toolbar { flex-wrap: wrap; gap: 0.25rem; }
-  .ingredient-row {
+  .form-header {
     flex-wrap: wrap;
-    .ing-name { flex: 1 1 100%; }
-    .ing-amount,
-    .ing-unit { flex: 1 1 45%; }
+    gap: 0.25rem;
+    align-items: flex-start;
+  }
+
+  .form-title {
+    flex: 1 1 100%;
+  }
+
+  .form-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .ingredient-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  }
+
+  .ing-name {
+    grid-column: 1 / -1;
+  }
+
+  .ing-amount {
+    grid-column: 1;
+  }
+
+  .ing-unit {
+    grid-column: 2;
+  }
+
+  .ing-delete-btn {
+    grid-column: 3;
   }
 }
