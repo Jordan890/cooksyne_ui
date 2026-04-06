@@ -1,8 +1,10 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, output, signal, computed } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { AiService } from '../../data/ai.service';
 import { RecipeAnalysis } from '../../models/recipe.model';
@@ -17,6 +19,8 @@ export type AnalysisType = 'food' | 'recipe';
     MatIconModule,
     MatProgressBarModule,
     MatRadioModule,
+    MatFormFieldModule,
+    MatInputModule,
     FormsModule,
   ],
   templateUrl: './image-analyzer.html',
@@ -32,10 +36,16 @@ export class ImageAnalyzer {
   foodImageAnalyzed = output<File>();
 
   readonly analysisType = signal<AnalysisType>('food');
+  readonly dishTitle = signal('');
   readonly selectedFile = signal<File | null>(null);
   readonly previewUrl = signal<string | null>(null);
   readonly analyzing = signal(false);
   readonly error = signal<string | null>(null);
+
+  /** At least a title or an image must be provided. */
+  readonly canAnalyze = computed(() => {
+    return !!(this.dishTitle().trim() || this.selectedFile()) && !this.analyzing();
+  });
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -53,16 +63,17 @@ export class ImageAnalyzer {
   }
 
   analyze(): void {
-    const file = this.selectedFile();
-    if (!file) return;
+    const file = this.selectedFile() ?? undefined;
+    const title = this.dishTitle().trim() || undefined;
+    if (!file && !title) return;
 
     this.analyzing.set(true);
     this.error.set(null);
 
     const call =
       this.analysisType() === 'food'
-        ? this.aiService.analyzeFood(file)
-        : this.aiService.analyzeRecipe(file);
+        ? this.aiService.analyzeFood(file, title)
+        : this.aiService.analyzeRecipe(file, title);
 
     call.subscribe({
       next: result => {

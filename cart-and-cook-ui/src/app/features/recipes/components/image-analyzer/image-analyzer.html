@@ -3,7 +3,7 @@
     <mat-icon class="title-icon">auto_awesome</mat-icon>
     AI Image Analysis
   </h3>
-  <p class="hint">Upload a photo of a dish or a recipe to auto-detect ingredients and calories.</p>
+  <p class="hint">Enter a dish name, upload a photo, or both to auto-detect ingredients and calories.</p>
 
   <!-- Analysis type toggle -->
   <mat-radio-group
@@ -14,6 +14,17 @@
     <mat-radio-button value="food">Photo of a dish</mat-radio-button>
     <mat-radio-button value="recipe">Photo of a recipe</mat-radio-button>
   </mat-radio-group>
+
+  <!-- Dish title input -->
+  <mat-form-field appearance="outline" class="title-field">
+    <mat-label>Dish name (optional)</mat-label>
+    <input
+      matInput
+      [value]="dishTitle()"
+      (input)="dishTitle.set($any($event.target).value)"
+      placeholder="e.g. Chicken Parmesan"
+    />
+  </mat-form-field>
 
   <!-- File picker + preview -->
   <div class="upload-area">
@@ -27,7 +38,7 @@
     } @else {
       <label class="drop-zone" tabindex="0" (keydown.enter)="fileInput.click()">
         <mat-icon class="drop-icon">cloud_upload</mat-icon>
-        <span>Click to select an image</span>
+        <span>Click to select an image (optional)</span>
         <input
           #fileInput
           type="file"
@@ -54,10 +65,10 @@
     mat-flat-button
     color="primary"
     class="analyze-btn"
-    [disabled]="!selectedFile() || analyzing()"
+    [disabled]="!canAnalyze()"
     (click)="analyze()"
   >
     <mat-icon>{{ analyzing() ? 'hourglass_empty' : 'search' }}</mat-icon>
-    {{ analyzing() ? 'Analyzing…' : 'Analyze image' }}
+    {{ analyzing() ? 'Analyzing…' : 'Analyze' }}
   </button>
 </section>
