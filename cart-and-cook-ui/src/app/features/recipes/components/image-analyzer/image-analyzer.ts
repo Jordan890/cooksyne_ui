@@ -1,24 +1,57 @@
 import { Component, inject, output, signal, computed } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { AiService } from '../../data/ai.service';
 import { RecipeAnalysis } from '../../models/recipe.model';
 
-export type AnalysisType = 'food' | 'recipe';
+/** Max dimension (px) for OCR images — keeps file size well under server limits. */
+const OCR_MAX_DIMENSION = 2048;
+const OCR_JPEG_QUALITY = 0.85;
+
+function resizeImage(file: File, maxDim: number, quality: number): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const { width, height } = img;
+      if (width <= maxDim && height <= maxDim) {
+        resolve(file); // already small enough
+        return;
+      }
+      const scale = maxDim / Math.max(width, height);
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(width * scale);
+      canvas.height = Math.round(height * scale);
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(
+        blob => {
+          if (!blob) { reject(new Error('Canvas toBlob failed')); return; }
+          resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
+        },
+        'image/jpeg',
+        quality,
+      );
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Failed to load image')); };
+    img.src = url;
+  });
+}
 
 @Component({
   selector: 'app-image-analyzer',
   standalone: true,
   imports: [
     MatButtonModule,
+    MatDividerModule,
     MatIconModule,
     MatProgressBarModule,
-    MatRadioModule,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
@@ -32,19 +65,20 @@ export class ImageAnalyzer {
   /** Emitted when the AI returns a successful analysis. */
   analyzed = output<RecipeAnalysis>();
 
-  /** Emitted with the selected file when a food (dish) analysis succeeds. */
-  foodImageAnalyzed = output<File>();
-
-  readonly analysisType = signal<AnalysisType>('food');
   readonly dishTitle = signal('');
   readonly selectedFile = signal<File | null>(null);
   readonly previewUrl = signal<string | null>(null);
   readonly analyzing = signal(false);
   readonly error = signal<string | null>(null);
 
-  /** At least a title or an image must be provided. */
-  readonly canAnalyze = computed(() => {
-    return !!(this.dishTitle().trim() || this.selectedFile()) && !this.analyzing();
+  /** Can generate from dish name. */
+  readonly canAnalyzeFood = computed(() => {
+    return !!this.dishTitle().trim() && !this.analyzing();
+  });
+
+  /** Can scan recipe image. */
+  readonly canAnalyzeRecipe = computed(() => {
+    return !!this.selectedFile() && !this.analyzing();
   });
 
   onFileSelected(event: Event): void {
@@ -62,32 +96,48 @@ export class ImageAnalyzer {
     }
   }
 
-  analyze(): void {
-    const file = this.selectedFile() ?? undefined;
-    const title = this.dishTitle().trim() || undefined;
-    if (!file && !title) return;
+  analyzeFood(): void {
+    const title = this.dishTitle().trim();
+    if (!title) return;
 
     this.analyzing.set(true);
     this.error.set(null);
 
-    const call =
-      this.analysisType() === 'food'
-        ? this.aiService.analyzeFood(file, title)
-        : this.aiService.analyzeRecipe(file, title);
-
-    call.subscribe({
+    this.aiService.analyzeFood(title).subscribe({
       next: result => {
         this.analyzed.emit(result);
-        if (this.analysisType() === 'food' && file) {
-          this.foodImageAnalyzed.emit(file);
-        }
         this.analyzing.set(false);
       },
       error: () => {
-        this.error.set('Analysis failed. Please try again.');
+        this.error.set('Failed to generate ingredients. Please try again.');
         this.analyzing.set(false);
       },
     });
+  }
+
+  async analyzeRecipe(): Promise<void> {
+    const file = this.selectedFile();
+    if (!file) return;
+
+    this.analyzing.set(true);
+    this.error.set(null);
+
+    try {
+      const resized = await resizeImage(file, OCR_MAX_DIMENSION, OCR_JPEG_QUALITY);
+      this.aiService.analyzeRecipe(resized).subscribe({
+        next: result => {
+          this.analyzed.emit(result);
+          this.analyzing.set(false);
+        },
+        error: () => {
+          this.error.set('Failed to scan recipe. Please try a clearer image.');
+          this.analyzing.set(false);
+        },
+      });
+    } catch {
+      this.error.set('Failed to process image. Please try a different file.');
+      this.analyzing.set(false);
+    }
   }
 
   clear(): void {

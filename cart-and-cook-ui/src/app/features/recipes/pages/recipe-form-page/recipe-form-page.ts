@@ -192,13 +192,6 @@ export class RecipeFormPage implements OnInit {
     this.uploadImage(file);
   }
 
-  /** Upload a food analysis image as the recipe photo. */
-  onFoodImageAnalyzed(file: File): void {
-    if (!this.imageUrl()) {
-      this.uploadImage(file);
-    }
-  }
-
   removeImage(): void {
     this.imageUrl.set(null);
     this.imagePreviewUrl.set(null);

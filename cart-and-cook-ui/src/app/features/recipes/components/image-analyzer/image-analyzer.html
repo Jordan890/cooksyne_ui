@@ -1,53 +1,81 @@
 <section class="analyzer">
   <h3 class="section-title">
     <mat-icon class="title-icon">auto_awesome</mat-icon>
-    AI Image Analysis
+    AI Ingredient Generator
   </h3>
-  <p class="hint">Enter a dish name, upload a photo, or both to auto-detect ingredients and calories.</p>
+  <p class="hint">Enter a dish name or upload a recipe photo to auto-detect ingredients.</p>
 
-  <!-- Analysis type toggle -->
-  <mat-radio-group
-    [value]="analysisType()"
-    (change)="analysisType.set($event.value)"
-    class="type-toggle"
-  >
-    <mat-radio-button value="food">Photo of a dish</mat-radio-button>
-    <mat-radio-button value="recipe">Photo of a recipe</mat-radio-button>
-  </mat-radio-group>
+  <!-- Generate from dish name -->
+  <div class="analysis-section">
+    <h4 class="analysis-section-title">
+      <mat-icon>restaurant</mat-icon>
+      Generate from Dish Name
+    </h4>
 
-  <!-- Dish title input -->
-  <mat-form-field appearance="outline" class="title-field">
-    <mat-label>Dish name (optional)</mat-label>
-    <input
-      matInput
-      [value]="dishTitle()"
-      (input)="dishTitle.set($any($event.target).value)"
-      placeholder="e.g. Chicken Parmesan"
-    />
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="title-field">
+      <mat-label>Dish name</mat-label>
+      <input
+        matInput
+        [value]="dishTitle()"
+        (input)="dishTitle.set($any($event.target).value)"
+        placeholder="e.g. Chicken Parmesan"
+      />
+    </mat-form-field>
 
-  <!-- File picker + preview -->
-  <div class="upload-area">
-    @if (previewUrl()) {
-      <div class="preview-wrapper">
-        <img [src]="previewUrl()" alt="Selected image preview" class="preview-img" />
-        <button mat-icon-button class="clear-btn" aria-label="Remove image" (click)="clear()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-    } @else {
-      <label class="drop-zone" tabindex="0" (keydown.enter)="fileInput.click()">
-        <mat-icon class="drop-icon">cloud_upload</mat-icon>
-        <span>Click to select an image (optional)</span>
-        <input
-          #fileInput
-          type="file"
-          accept="image/*"
-          hidden
-          (change)="onFileSelected($event)"
-        />
-      </label>
-    }
+    <button
+      mat-flat-button
+      color="primary"
+      class="analyze-btn"
+      [disabled]="!canAnalyzeFood()"
+      (click)="analyzeFood()"
+    >
+      <mat-icon>{{ analyzing() ? 'hourglass_empty' : 'auto_awesome' }}</mat-icon>
+      {{ analyzing() ? 'Generating…' : 'Generate Ingredients' }}
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Scan recipe image -->
+  <div class="analysis-section">
+    <h4 class="analysis-section-title">
+      <mat-icon>document_scanner</mat-icon>
+      Scan Recipe Image
+    </h4>
+
+    <div class="upload-area">
+      @if (previewUrl()) {
+        <div class="preview-wrapper">
+          <img [src]="previewUrl()" alt="Selected image preview" class="preview-img" />
+          <button mat-icon-button class="clear-btn" aria-label="Remove image" (click)="clear()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      } @else {
+        <label class="drop-zone" tabindex="0" (keydown.enter)="fileInput.click()">
+          <mat-icon class="drop-icon">cloud_upload</mat-icon>
+          <span>Click to select a recipe image</span>
+          <input
+            #fileInput
+            type="file"
+            accept="image/*"
+            hidden
+            (change)="onFileSelected($event)"
+          />
+        </label>
+      }
+    </div>
+
+    <button
+      mat-flat-button
+      color="primary"
+      class="analyze-btn"
+      [disabled]="!canAnalyzeRecipe()"
+      (click)="analyzeRecipe()"
+    >
+      <mat-icon>{{ analyzing() ? 'hourglass_empty' : 'document_scanner' }}</mat-icon>
+      {{ analyzing() ? 'Scanning…' : 'Scan Recipe' }}
+    </button>
   </div>
 
   <!-- Progress -->
@@ -59,16 +87,4 @@
   @if (error()) {
     <p class="error-msg">{{ error() }}</p>
   }
-
-  <!-- Analyze button -->
-  <button
-    mat-flat-button
-    color="primary"
-    class="analyze-btn"
-    [disabled]="!canAnalyze()"
-    (click)="analyze()"
-  >
-    <mat-icon>{{ analyzing() ? 'hourglass_empty' : 'search' }}</mat-icon>
-    {{ analyzing() ? 'Analyzing…' : 'Analyze' }}
-  </button>
 </section>

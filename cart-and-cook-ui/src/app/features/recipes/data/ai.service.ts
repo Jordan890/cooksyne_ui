@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
 import { RecipeAnalysis } from '../models/recipe.model';
@@ -9,19 +9,16 @@ export class AiService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/ai`;
 
-  /** Analyze a prepared dish — accepts image, title, or both. */
-  analyzeFood(image?: File, title?: string): Observable<RecipeAnalysis> {
-    const form = new FormData();
-    if (image) form.append('image', image);
-    if (title) form.append('title', title);
-    return this.http.post<RecipeAnalysis>(`${this.baseUrl}/analyze-food`, form);
+  /** Generate ingredients from a dish name (text-only, no image). */
+  analyzeFood(title: string): Observable<RecipeAnalysis> {
+    const params = new HttpParams().set('title', title);
+    return this.http.post<RecipeAnalysis>(`${this.baseUrl}/analyze-food`, null, { params });
   }
 
-  /** Analyze a recipe — accepts image, title, or both. */
-  analyzeRecipe(image?: File, title?: string): Observable<RecipeAnalysis> {
+  /** Upload a recipe image for OCR extraction and AI analysis. */
+  analyzeRecipe(image: File): Observable<RecipeAnalysis> {
     const form = new FormData();
-    if (image) form.append('image', image);
-    if (title) form.append('title', title);
+    form.append('image', image);
     return this.http.post<RecipeAnalysis>(`${this.baseUrl}/analyze-recipe`, form);
   }
 }

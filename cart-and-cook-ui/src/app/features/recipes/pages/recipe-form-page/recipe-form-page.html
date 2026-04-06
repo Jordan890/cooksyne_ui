@@ -34,7 +34,6 @@
     <!-- ─── AI Image Analysis ─── -->
     <app-image-analyzer
       (analyzed)="applyAnalysis($event)"
-      (foodImageAnalyzed)="onFoodImageAnalyzed($event)"
     />
 
     @if (estimatedCalories() != null) {
