@@ -23,8 +23,11 @@
   </mat-card-content>
 
   <mat-card-actions align="end">
-    <button mat-button color="warn" (click)="confirmDelete($event)">
+    <button mat-button color="warn" class="delete-btn-full" (click)="confirmDelete($event)">
       <mat-icon>delete</mat-icon> Delete
+    </button>
+    <button mat-icon-button color="warn" class="delete-btn-icon" aria-label="Delete" (click)="confirmDelete($event)">
+      <mat-icon>close</mat-icon>
     </button>
     <button mat-button color="primary" (click)="open(); $event.stopPropagation()">Edit</button>
   </mat-card-actions>

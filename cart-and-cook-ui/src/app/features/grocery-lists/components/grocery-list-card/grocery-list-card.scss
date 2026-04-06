@@ -7,6 +7,8 @@
   cursor: pointer;
   transition: box-shadow 0.2s ease, transform 0.15s ease;
   border: 1px solid var(--cart-divider);
+  min-width: 0;
+  overflow: hidden;
 
   &:hover,
   &:focus-visible {
@@ -39,4 +41,17 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.delete-btn-icon {
+  display: none;
+}
+
+@include xs {
+  .delete-btn-full {
+    display: none;
+  }
+  .delete-btn-icon {
+    display: inline-flex;
+  }
 }

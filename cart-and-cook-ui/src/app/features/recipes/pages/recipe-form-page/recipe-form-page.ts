@@ -170,7 +170,7 @@ export class RecipeFormPage implements OnInit {
     if (result.description && !this.description().trim()) {
       this.description.set(result.description);
     }
-    this.estimatedCalories.set(result.estimatedCalories);
+    this.estimatedCalories.set(result.estimatedCalories ?? 0);
     if (result.ingredients?.length) {
       this.ingredients.set(
         result.ingredients.map(i => ({
