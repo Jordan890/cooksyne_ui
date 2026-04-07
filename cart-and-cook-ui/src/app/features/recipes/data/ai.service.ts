@@ -21,4 +21,21 @@ export class AiService {
     form.append('image', image);
     return this.http.post<RecipeAnalysis>(`${this.baseUrl}/analyze-recipe`, form);
   }
+
+  /** Estimate calories for a recipe based on serving size and ingredients. */
+  estimateCalories(
+    recipeName: string,
+    ingredientsSummary: string,
+    servingSize: string,
+  ): Observable<{ estimatedCalories: number }> {
+    const params = new HttpParams()
+      .set('recipeName', recipeName)
+      .set('ingredientsSummary', ingredientsSummary)
+      .set('servingSize', servingSize);
+    return this.http.post<{ estimatedCalories: number }>(
+      `${this.baseUrl}/estimate-calories`,
+      null,
+      { params },
+    );
+  }
 }

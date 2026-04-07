@@ -98,6 +98,32 @@
   height: 28px;
 }
 
+/* ── Serving size row ── */
+.serving-size-row {
+  display: flex;
+  align-items: start;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.serving-amount {
+  width: 140px;
+}
+
+.serving-unit {
+  width: 140px;
+}
+
+.estimate-btn {
+  align-self: center;
+  white-space: nowrap;
+
+  mat-spinner {
+    display: inline-block;
+    margin-right: 0.5rem;
+  }
+}
+
 /* ── Recipe photo ── */
 .photo-drop-zone {
   display: flex;

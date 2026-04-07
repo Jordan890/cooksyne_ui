@@ -13,6 +13,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { IngredientQuantity, Recipe, RecipeAnalysis, RecipeRequest, UNITS, Unit } from '../../models/recipe.model';
 import { RecipeService } from '../../data/recipe.service';
+import { AiService } from '../../data/ai.service';
 import { ImageUploadService } from '../../data/image-upload.service';
 import { ImageAnalyzer } from '../../components/image-analyzer/image-analyzer';
 import { AddToGroceryDialog, AddToGroceryDialogData } from '../../components/add-to-grocery-dialog/add-to-grocery-dialog';
@@ -41,6 +42,7 @@ export class RecipeFormPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private recipeService = inject(RecipeService);
+  private aiService = inject(AiService);
   private imageUploadService = inject(ImageUploadService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
@@ -63,6 +65,11 @@ export class RecipeFormPage implements OnInit {
 
   /* ── AI analysis ── */
   readonly estimatedCalories = signal<number | null>(null);
+
+  /* ── Serving size ── */
+  readonly servingSizeAmount = signal<number | null>(null);
+  readonly servingSizeUnit = signal<Unit>('COUNT');
+  readonly estimatingCalories = signal(false);
 
   /* ── Recipe image ── */
   readonly imageUrl = signal<string | null>(null);
@@ -141,6 +148,10 @@ export class RecipeFormPage implements OnInit {
       imageUrl: this.imageUrl() ?? undefined,
       ingredients: this.ingredients().filter(i => i.name.trim()),
       estimatedCalories: this.estimatedCalories(),
+      servingSize:
+        this.servingSizeAmount() && this.servingSizeAmount()! > 0
+          ? { amount: this.servingSizeAmount()!, unit: this.servingSizeUnit() }
+          : null,
     };
 
     this.saving.set(true);
@@ -219,6 +230,33 @@ export class RecipeFormPage implements OnInit {
       });
   }
 
+  /** Ask AI to estimate calories based on serving size and ingredients. */
+  estimateCalories(): void {
+    const amount = this.servingSizeAmount();
+    const unit = this.servingSizeUnit();
+    if (!amount || amount <= 0) return;
+
+    const filled = this.ingredients().filter(i => i.name.trim());
+    if (!filled.length) return;
+
+    const ingredientsSummary = filled
+      .map(i => `${i.quantity.amount} ${i.quantity.unit} ${i.name}`)
+      .join(', ');
+    const servingSize = `${amount} ${unit}`;
+
+    this.estimatingCalories.set(true);
+    this.aiService.estimateCalories(this.name() || 'Unknown', ingredientsSummary, servingSize).subscribe({
+      next: result => {
+        this.estimatedCalories.set(result.estimatedCalories);
+        this.estimatingCalories.set(false);
+      },
+      error: err => {
+        console.error('Failed to estimate calories', err);
+        this.estimatingCalories.set(false);
+      },
+    });
+  }
+
   /* ── Private ── */
   private uploadImage(file: File): void {
     this.uploadingImage.set(true);
@@ -249,6 +287,10 @@ export class RecipeFormPage implements OnInit {
         this.category.set(recipe.category);
         this.description.set(recipe.description ?? '');
         this.estimatedCalories.set(recipe.estimatedCalories ?? null);
+        if (recipe.servingSize) {
+          this.servingSizeAmount.set(recipe.servingSize.amount);
+          this.servingSizeUnit.set(recipe.servingSize.unit);
+        }
         if (recipe.imageUrl) {
           this.imageUrl.set(recipe.imageUrl);
           this.imagePreviewUrl.set(this.imageUploadService.resolveUrl(recipe.imageUrl));

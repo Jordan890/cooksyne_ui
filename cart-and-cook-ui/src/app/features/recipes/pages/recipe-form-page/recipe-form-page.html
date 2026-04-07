@@ -22,22 +22,6 @@
       (analyzed)="applyAnalysis($event)"
     />
 
-    @if (estimatedCalories() !== null) {
-      <div class="calorie-banner">
-        <mat-icon class="calorie-icon">local_fire_department</mat-icon>
-        <mat-form-field appearance="outline" class="calorie-field">
-          <mat-label>Estimated calories</mat-label>
-          <input
-            matInput
-            type="number"
-            min="0"
-            [value]="estimatedCalories()"
-            (input)="estimatedCalories.set(+$any($event.target).value)"
-          />
-        </mat-form-field>
-      </div>
-    }
-
     <!-- ─── Recipe Photo ─── -->
     <section class="section">
       <h3 class="section-title">Recipe Photo</h3>
@@ -177,6 +161,68 @@
           <mat-icon>shopping_cart</mat-icon> Add to Grocery List
         </button>
       </div>
+    </section>
+
+    <!-- ─── Serving Size & Calories ─── -->
+    <section class="section">
+      <h3 class="section-title">Serving Size & Calories</h3>
+
+      <div class="serving-size-row">
+        <mat-form-field appearance="outline" class="serving-amount">
+          <mat-label>Serving size</mat-label>
+          <input
+            matInput
+            type="number"
+            min="0"
+            step="0.25"
+            [value]="servingSizeAmount()"
+            (input)="servingSizeAmount.set(+$any($event.target).value)"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="serving-unit">
+          <mat-label>Unit</mat-label>
+          <mat-select
+            [value]="servingSizeUnit()"
+            (selectionChange)="servingSizeUnit.set($event.value)"
+          >
+            @for (u of units; track u) {
+              <mat-option [value]="u">{{ u }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <button
+          mat-stroked-button
+          color="primary"
+          class="estimate-btn"
+          (click)="estimateCalories()"
+          [disabled]="estimatingCalories() || !servingSizeAmount() || ingredients().length === 0"
+        >
+          @if (estimatingCalories()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            <mat-icon>calculate</mat-icon>
+          }
+          {{ estimatedCalories() !== null ? 'Re-estimate Calories' : 'Estimate Calories' }}
+        </button>
+      </div>
+
+      @if (estimatedCalories() !== null) {
+        <div class="calorie-banner">
+          <mat-icon class="calorie-icon">local_fire_department</mat-icon>
+          <mat-form-field appearance="outline" class="calorie-field">
+            <mat-label>Estimated calories</mat-label>
+            <input
+              matInput
+              type="number"
+              min="0"
+              [value]="estimatedCalories()"
+              (input)="estimatedCalories.set(+$any($event.target).value)"
+            />
+          </mat-form-field>
+        </div>
+      }
     </section>
 
     <!-- ─── Bottom actions ─── -->
