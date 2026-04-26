@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────────────────────────────
-# Build & push the Cart & Cook UI image to ghcr.io
+# Build & push the Cooksyne UI image to ghcr.io
 # ─────────────────────────────────────────────────────────────────────
 name: Build & Push UI Image
 
@@ -12,7 +12,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/cart-and-cook-ui
+  IMAGE_NAME: ${{ github.repository_owner }}/cooksyne-ui
 
 jobs:
   build-and-push:
@@ -64,7 +64,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: ./cart-and-cook-ui
+          context: ./cooksyne-ui
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

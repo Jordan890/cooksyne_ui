@@ -1,0 +1,53 @@
+@use 'breakpoints' as *;
+
+// ===== Cooksyne Color Palette =====
+
+// Primary – muted fresh green (header, nav, interactive states)
+$color-primary:          #4a7c59;
+$color-primary-light:    #6a9b78;
+$color-primary-dark:     #345740;
+$color-primary-contrast:  #ffffff;
+
+// Accent – soft terracotta / warm orange (CTAs, highlights, focus)
+$color-accent:           #c4724e;
+$color-accent-light:     #d99472;
+$color-accent-dark:      #a05a3a;
+$color-accent-contrast:   #ffffff;
+
+// Surfaces
+$color-background:       #f8f6f2;   // warm off-white global background
+$color-surface:          #ffffff;   // cards, forms, lists
+$color-surface-dim:      #f0ede8;   // subtle alt surface (hover rows, etc.)
+
+// Text
+$color-text:             #2c2c2c;   // dark charcoal (not pure black)
+$color-text-secondary:   #6b6b6b;   // secondary / helper text
+$color-text-hint:        #9e9e9e;   // placeholder / disabled
+
+// Borders & dividers
+$color-border:           #e0dcd6;
+$color-divider:          #eae6e0;
+
+// Shadows
+$shadow-card:            0 1px 4px rgba(0, 0, 0, 0.06);
+$shadow-card-hover:      0 4px 14px rgba(0, 0, 0, 0.10);
+
+// ===== Responsive Spacing =====
+// Base spacing scale (mobile-first)
+$space-xs: 0.5rem;   // 8px
+$space-sm: 0.75rem;  // 12px
+$space-md: 1rem;     // 16px
+$space-lg: 1.5rem;   // 24px
+$space-xl: 2rem;     // 32px
+$space-2xl: 3rem;    // 48px
+
+// ===== Responsive Typography =====
+$font-size-body:    clamp(0.875rem, 1.6vw, 1rem);
+$font-size-h1:      clamp(1.5rem,   4vw,  2.25rem);
+$font-size-h2:      clamp(1.25rem,  3vw,  1.75rem);
+$font-size-h3:      clamp(1.1rem,   2.5vw, 1.375rem);
+$font-size-small:   clamp(0.75rem,  1.4vw, 0.875rem);
+
+// ===== Layout =====
+$content-max-width: 1200px;
+$content-max-width-xl: 1440px;

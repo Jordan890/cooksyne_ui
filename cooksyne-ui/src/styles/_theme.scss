@@ -1,0 +1,139 @@
+@use '@angular/material' as mat;
+
+/* ===== Cooksyne Material Theme (Light) ===== */
+
+$cooksyne-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$green-palette,
+    tertiary: mat.$orange-palette,
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+/* ===== Cooksyne Material Theme (Dark) ===== */
+
+$cooksyne-dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$green-palette,
+    tertiary: mat.$orange-palette,
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+/* ===== Apply light theme globally ===== */
+
+@include mat.core();
+@include mat.all-component-themes($cooksyne-theme);
+
+/* ===== Apply dark Material colors when data-theme="dark" ===== */
+
+:root[data-theme='dark'] {
+  @include mat.all-component-colors($cooksyne-dark-theme);
+}
+
+/* ================================================================
+   LIGHT MODE — Material CSS variable overrides
+   ================================================================ */
+
+:root {
+  /* Toolbar */
+  --mat-toolbar-container-background-color: #4a7c59;
+  --mat-toolbar-container-text-color: #ffffff;
+
+  /* Sidenav */
+  --mat-sidenav-container-background-color: #f8f6f2;
+  --mat-sidenav-content-background-color: #f8f6f2;
+
+  /* Card */
+  --mat-card-container-color: #ffffff;
+
+  /* Form fields */
+  --mdc-outlined-text-field-outline-color: #e0dcd6;
+  --mdc-outlined-text-field-focus-outline-color: #4a7c59;
+  --mdc-outlined-text-field-label-text-color: #6b6b6b;
+
+  /* Menu */
+  --mat-menu-container-color: #ffffff;
+
+  /* ── Cooksyne CSS custom properties (light defaults) ── */
+
+  --cart-background:      #f8f6f2;
+  --cart-surface:         #ffffff;
+  --cart-surface-alt:     #f0ede8;
+  --cart-surface-green:   rgba(74, 124, 89, 0.07);
+  --cart-text-primary:    #2c2c2c;
+  --cart-text-secondary:  #6b6b6b;
+  --cart-text-heading:    #2c2c2c;
+  --cart-text-green:      #4a7c59;
+  --cart-primary-color:   #4a7c59;
+  --cart-accent-color:    #c4724e;
+  --cart-divider:         #e0dcd6;
+  --cart-shadow:          0 1px 4px rgba(0, 0, 0, 0.06);
+  --cart-shadow-hover:    0 4px 14px rgba(0, 0, 0, 0.10);
+  --cart-image-overlay:   rgba(0, 0, 0, 0.03);
+  --cart-error-bg:        #fef2f2;
+  --cart-error-text:      #b91c1c;
+}
+
+/* ================================================================
+   DARK MODE — triggered by data-theme="dark" on <html>
+   ================================================================ */
+
+:root[data-theme='dark'] {
+  /* ── Material component overrides ── */
+
+  /* Toolbar */
+  --mat-toolbar-container-background-color: #1e1e1e;
+  --mat-toolbar-container-text-color: #E0E0E0;
+
+  /* Sidenav */
+  --mat-sidenav-container-background-color: #1e1e1e;
+  --mat-sidenav-content-background-color: #121212;
+
+  /* Card */
+  --mat-card-container-color: #1e1e1e;
+
+  /* Form fields */
+  --mdc-outlined-text-field-outline-color: #555555;
+  --mdc-outlined-text-field-focus-outline-color: #7FB77E;
+  --mdc-outlined-text-field-label-text-color: #B0B0B0;
+
+  /* Menu */
+  --mat-menu-container-color: #1e1e1e;
+
+  /* Buttons (M3 variable names) */
+  --mat-sys-primary: #7FB77E;
+  --mat-sys-on-primary: #121212;
+  --mat-button-filled-container-color: #7FB77E;
+  --mat-button-filled-label-text-color: #121212;
+  --mat-button-text-label-text-color: #7FB77E;
+  --mat-button-outlined-label-text-color: #7FB77E;
+  --mat-button-outlined-outline-color: rgba(255, 255, 255, 0.12);
+  --mat-button-protected-label-text-color: #7FB77E;
+
+  /* ── Cooksyne CSS custom properties (dark) ── */
+
+  --cart-background:      #121212;
+  --cart-surface:         #1e1e1e;
+  --cart-surface-alt:     #2a2a2a;
+  --cart-surface-green:   rgba(127, 183, 126, 0.10);
+  --cart-text-primary:    #E0E0E0;
+  --cart-text-secondary:  #B0B0B0;
+  --cart-text-heading:    #F5F5F5;
+  --cart-text-green:      #4E7D4E;
+  --cart-primary-color:   #7FB77E;
+  --cart-accent-color:    #ECA56C;
+  --cart-divider:         rgba(255, 255, 255, 0.12);
+  --cart-shadow:          0 1px 6px rgba(0, 0, 0, 0.50);
+  --cart-shadow-hover:    0 4px 16px rgba(0, 0, 0, 0.60);
+  --cart-image-overlay:   rgba(0, 0, 0, 0.25);
+  --cart-error-bg:        #3b1515;
+  --cart-error-text:      #f87171;
+}
+

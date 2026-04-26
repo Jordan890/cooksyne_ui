@@ -1,0 +1,229 @@
+@use '../../../../styles/breakpoints' as *;
+
+/* ===== Auth loading overlay ===== */
+
+.auth-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  background: var(--cart-background);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.auth-loading-icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  color: var(--cart-primary-color);
+}
+
+.auth-loading-text {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--cart-text-secondary);
+  letter-spacing: 0.01em;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Hide the shell while loading so there's no flash of logged-out UI */
+.shell.hidden {
+  visibility: hidden;
+}
+
+.shell {
+  height: 100vh;
+}
+
+/* ===== Sidenav ===== */
+
+.sidenav {
+  width: 14rem;
+  border-right: 1px solid var(--cart-divider);
+  padding: 0.5rem 0;
+  transition: none; /* prevent CSS width transitions conflicting with Material's transform animation */
+}
+
+.logo-link {
+  font-size: clamp(0.95rem, 2.2vw, 1.125rem);
+  font-weight: 600;
+  padding: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logo-text {
+  display: none;
+  margin-left: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== Toolbar ===== */
+
+.title-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  /* Cooksyne primary green toolbar */
+  background: var(--mat-toolbar-container-background-color, #4a7c59);
+  color: var(--mat-toolbar-container-text-color, #fff);
+
+  /* Force all icons / icon-buttons in the app toolbar to match */
+  .mat-icon,
+  .mat-mdc-icon-button {
+    color: var(--mat-toolbar-container-text-color, #fff);
+  }
+}
+
+/* ===== Global loading indicator ===== */
+.global-loading-bar {
+  position: sticky;
+  top: 64px;  // sits flush below the toolbar
+  z-index: 999;
+}
+
+.title {
+  margin-left: 0.5rem;
+  font-weight: 600;
+  font-size: clamp(1rem, 2.6vw, 1.25rem);
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* ===== Main Content ===== */
+
+/*
+ * mat-sidenav-content is the scroll container (overflow: auto by default).
+ * The sticky toolbar stays pinned at the top of that scroll container.
+ * <main class="content"> simply provides padding below the toolbar —
+ * no extra overflow or height so there's only ONE scroll context.
+ */
+.content {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  /* Create a stacking context below the toolbar so child elements
+     (Material buttons, form fields, etc.) can never overlap the
+     sticky toolbar on scroll — especially visible on mobile. */
+  position: relative;
+  z-index: 1;
+  /* Do NOT set height / overflow here — let mat-sidenav-content scroll */
+}
+
+/* show logo text when sidenav is opened */
+.sidenav.opened .logo-text {
+  display: inline-block;
+}
+
+/* Ensure the Material drawer transform is smooth when opening/closing */
+.mat-drawer, .mat-sidenav {
+  will-change: transform;
+}
+
+/* ensure nav items aren't clipped */
+.sidenav .mat-list-item {
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+/* ===== XS: extra-small phones (0 – 599px) ===== */
+@include xs {
+  .sidenav,
+  .sidenav.opened {
+    width: 9rem;
+  }
+
+  .title {
+    display: none;
+  }
+
+  .content {
+    padding: 0.75rem;
+  }
+}
+
+/* ===== SM: phones / small tablets (600 – 959px) ===== */
+@include sm {
+  .sidenav,
+  .sidenav.opened {
+    width: 10rem;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+}
+
+/* ===== MD: tablets / small laptops (960 – 1279px) ===== */
+@include md {
+  .sidenav,
+  .sidenav.opened {
+    width: 12rem;
+  }
+
+  .logo-text {
+    display: inline-block;
+  }
+
+  .content {
+    padding: 1.25rem;
+  }
+}
+
+/* ===== LG: laptops / desktops (1280 – 1919px) ===== */
+@include lg {
+  .sidenav,
+  .sidenav.opened {
+    width: 14rem;
+  }
+
+  .logo-text {
+    display: inline-block;
+  }
+
+  .content {
+    padding: 1.5rem;
+  }
+}
+
+/* ===== XL: large desktops / wide-screens (1920px+) ===== */
+@include xl {
+  .sidenav,
+  .sidenav.opened {
+    width: 16rem;
+  }
+
+  .logo-text {
+    display: inline-block;
+  }
+
+  .content {
+    max-width: 1440px;
+    padding: 2rem;
+  }
+}

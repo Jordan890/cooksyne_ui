@@ -1,0 +1,15 @@
+<mat-toolbar>
+  <span class="brand">Cooksyne</span>
+
+  <span class="spacer"></span>
+
+  @if (auth.isAuthenticated()) {
+    <span class="user">
+      {{ auth.user()?.name || auth.user()?.email }}
+    </span>
+
+    <button mat-button (click)="auth.logout()">Logout</button>
+  } @else {
+    <button mat-button (click)="auth.login()">Login</button>
+  }
+</mat-toolbar>

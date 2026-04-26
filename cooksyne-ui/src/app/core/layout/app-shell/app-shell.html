@@ -1,0 +1,72 @@
+@if (auth.isLoading()) {
+  <div class="auth-loading">
+    <mat-icon class="auth-loading-icon">local_grocery_store</mat-icon>
+    <mat-spinner diameter="48" color="primary"></mat-spinner>
+    <p class="auth-loading-text">Signing you in…</p>
+  </div>
+}
+
+<mat-sidenav-container class="shell" [class.hidden]="auth.isLoading()">
+
+  <!-- Side Navigation -->
+  <mat-sidenav
+    #drawer="matSidenav"
+    class="sidenav"
+    [class.opened]="sidenavOpen()"
+    [mode]="sidenavMode()"
+    [opened]="sidenavOpen()"
+    (openedChange)="onOpenedChange($event)"
+  >
+    <a routerLink="/" class="logo-link" title="Cooksyne" (click)="isMobile() && sidenavOpen.set(false)">
+      <mat-icon aria-hidden="false" aria-label="Cooksyne icon">local_grocery_store</mat-icon>
+    </a>
+
+    <mat-nav-list>
+      <a mat-list-item routerLink="/" (click)="isMobile() && sidenavOpen.set(false)">Home</a>
+
+      @if (auth.isAuthenticated()) {
+        <a mat-list-item routerLink="/recipes" (click)="isMobile() && sidenavOpen.set(false)">Recipes</a>
+        <a mat-list-item routerLink="/grocery-lists" (click)="isMobile() && sidenavOpen.set(false)">Grocery Lists</a>
+        <a mat-list-item routerLink="/settings/runtime" (click)="isMobile() && sidenavOpen.set(false)">Runtime Settings</a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Main Content -->
+  <mat-sidenav-content>
+
+    <!-- Top Toolbar -->
+    <mat-toolbar class="toolbar">
+
+      <button mat-icon-button (click)="toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <a routerLink="/" class="title title-link" (click)="isMobile() && sidenavOpen.set(false)">Cooksyne</a>
+
+      <span class="spacer"></span>
+
+      <button mat-icon-button [matMenuTriggerFor]="accountMenu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+
+      <mat-menu #accountMenu="matMenu">
+        @if (auth.isAuthenticated()) {
+          <button mat-menu-item routerLink="/settings/runtime">Runtime Settings</button>
+          <button mat-menu-item (click)="auth.logout()">Logout</button>
+        }
+
+        @if (!auth.isAuthenticated()) {
+          <button mat-menu-item (click)="auth.login()">Login</button>
+        }
+      </mat-menu>
+
+    </mat-toolbar>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
